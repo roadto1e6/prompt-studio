@@ -12,7 +12,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children, detailPanel })
     <div className="h-screen w-screen flex bg-dark-900 text-sm overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
-      
+
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 bg-dark-900 relative">
         <Header />

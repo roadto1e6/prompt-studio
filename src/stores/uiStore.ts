@@ -1,11 +1,20 @@
 import { create } from 'zustand';
-import { TabType, ModalType } from '@/types';
+import { TabType, ModalType, SharedPromptData } from '@/types';
+
+interface ConfirmConfig {
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  variant?: 'danger' | 'warning' | 'info';
+  onConfirm: () => void;
+}
 
 interface UIState {
   // Sidebar
   sidebarCollapsed: boolean;
   toggleSidebar: () => void;
-  
+
   // Detail Panel
   detailPanelOpen: boolean;
   activeTab: TabType;
@@ -13,16 +22,22 @@ interface UIState {
   openDetailPanel: () => void;
   closeDetailPanel: () => void;
   toggleDetailPanel: () => void;
-  
+
   // Modals
   modals: Record<ModalType, boolean>;
   openModal: (modal: ModalType) => void;
   closeModal: (modal: ModalType) => void;
   closeAllModals: () => void;
-  
-  // Theme
-  theme: 'dark' | 'light';
-  toggleTheme: () => void;
+
+  // Confirm Dialog
+  confirmConfig: ConfirmConfig | null;
+  showConfirm: (config: ConfirmConfig) => void;
+  hideConfirm: () => void;
+
+  // Share/Import
+  pendingImportData: SharedPromptData | null;
+  setPendingImportData: (data: SharedPromptData | null) => void;
+
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -44,6 +59,8 @@ export const useUIStore = create<UIState>((set) => ({
     createCollection: false,
     settings: false,
     deleteConfirm: false,
+    sharePrompt: false,
+    importPrompt: false,
   },
   openModal: (modal) => set((state) => ({
     modals: { ...state.modals, [modal]: true }
@@ -57,12 +74,18 @@ export const useUIStore = create<UIState>((set) => ({
       createCollection: false,
       settings: false,
       deleteConfirm: false,
+      sharePrompt: false,
+      importPrompt: false,
     }
   }),
-  
-  // Theme
-  theme: 'dark',
-  toggleTheme: () => set((state) => ({
-    theme: state.theme === 'dark' ? 'light' : 'dark'
-  })),
+
+  // Confirm Dialog
+  confirmConfig: null,
+  showConfirm: (config) => set({ confirmConfig: config }),
+  hideConfirm: () => set({ confirmConfig: null }),
+
+  // Share/Import
+  pendingImportData: null,
+  setPendingImportData: (data) => set({ pendingImportData: data }),
+
 }));

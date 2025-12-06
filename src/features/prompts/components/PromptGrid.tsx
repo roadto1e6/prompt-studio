@@ -1,14 +1,15 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Download } from 'lucide-react';
-import { usePromptStore, useUIStore } from '@/stores';
+import { usePromptStore, useUIStore, useI18nStore } from '@/stores';
 import { PromptCard } from './PromptCard';
 import { EmptyState } from '@/components/shared';
+import { cn } from '@/utils';
 
 export const PromptGrid: React.FC = () => {
-  const { getFilteredPrompts, activePromptId, setActivePrompt } = usePromptStore();
-  const { openModal, openDetailPanel } = useUIStore();
-  
+  const { getFilteredPrompts, activePromptId, setActivePrompt, viewMode, toggleFavorite, moveToTrash, permanentDelete, restoreFromTrash, filter } = usePromptStore();
+  const { openModal, openDetailPanel, detailPanelOpen, showConfirm } = useUIStore();
+  const { t } = useI18nStore();
+
   const prompts = getFilteredPrompts();
 
   const handleSelectPrompt = (id: string) => {
@@ -16,37 +17,68 @@ export const PromptGrid: React.FC = () => {
     openDetailPanel();
   };
 
-  const handleDownloadSource = () => {
-    const html = document.documentElement.outerHTML;
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'prompt-studio.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleDelete = (id: string) => {
+    const prompt = prompts.find(p => p.id === id);
+    if (!prompt) return;
+
+    const isTrash = filter === 'trash';
+
+    showConfirm({
+      title: isTrash ? t.confirm.deletePermanently.title : t.confirm.moveToTrash.title,
+      message: isTrash
+        ? `${t.confirm.deletePermanently.message.replace('this prompt', `"${prompt.title}"`)}`
+        : `${t.confirm.moveToTrash.message.replace('this prompt', `"${prompt.title}"`)}`  ,
+      confirmText: isTrash ? t.confirm.deletePermanently.confirmText : t.metadata.moveToTrash,
+      variant: 'danger',
+      onConfirm: () => {
+        if (isTrash) {
+          permanentDelete(id);
+        } else {
+          moveToTrash(id);
+        }
+      },
+    });
+  };
+
+  // Determine empty state content based on filter
+  const getEmptyState = () => {
+    if (filter === 'favorites') {
+      return { title: t.promptGrid.emptyFavoritesTitle, description: t.promptGrid.emptyFavoritesDescription };
+    }
+    if (filter === 'trash') {
+      return { title: t.promptGrid.emptyTrashTitle, description: t.promptGrid.emptyTrashDescription };
+    }
+    return { title: t.promptGrid.emptyTitle, description: t.promptGrid.emptyDescription };
   };
 
   if (prompts.length === 0) {
+    const emptyState = getEmptyState();
     return (
       <div className="p-6 h-full">
         <EmptyState
-          title="No prompts found"
-          description="Create a new prompt to get started."
-          action={{
-            label: 'New Prompt',
+          title={emptyState.title}
+          description={emptyState.description}
+          action={filter !== 'trash' ? {
+            label: t.promptGrid.createFirst,
             onClick: () => openModal('createPrompt'),
-          }}
+          } : undefined}
         />
       </div>
     );
   }
 
   return (
-    <div className="p-6 relative h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div className="p-6 relative h-full overflow-auto">
+      <div className={cn(
+        viewMode === 'grid'
+          ? cn(
+              'grid gap-5',
+              detailPanelOpen
+                ? 'grid-cols-1 lg:grid-cols-2'
+                : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            )
+          : 'flex flex-col gap-3'
+      )}>
         <AnimatePresence mode="popLayout">
           {prompts.map((prompt) => (
             <PromptCard
@@ -54,19 +86,15 @@ export const PromptGrid: React.FC = () => {
               prompt={prompt}
               isSelected={activePromptId === prompt.id}
               onClick={() => handleSelectPrompt(prompt.id)}
+              viewMode={viewMode}
+              onToggleFavorite={toggleFavorite}
+              onDelete={handleDelete}
+              onRestore={restoreFromTrash}
+              isTrashView={filter === 'trash'}
             />
           ))}
         </AnimatePresence>
       </div>
-
-      {/* Floating Download Button */}
-      <button
-        onClick={handleDownloadSource}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full shadow-2xl shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 animate-float"
-      >
-        <Download className="w-5 h-5" />
-        <span className="font-bold pr-1">Download Source Code</span>
-      </button>
     </div>
   );
 };

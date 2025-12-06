@@ -109,3 +109,40 @@ export function matchesSearch(prompt: { title: string; description: string; tags
     prompt.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
   );
 }
+
+// Share code generation and parsing
+const SHARE_PREFIX = 'PS-';
+
+export function encodeShareData(data: object): string {
+  try {
+    const jsonString = JSON.stringify(data);
+    const base64 = btoa(unescape(encodeURIComponent(jsonString)));
+    return SHARE_PREFIX + base64;
+  } catch {
+    return '';
+  }
+}
+
+export function decodeShareData<T>(shareCode: string): T | null {
+  try {
+    if (!shareCode.startsWith(SHARE_PREFIX)) return null;
+    const base64 = shareCode.slice(SHARE_PREFIX.length);
+    const jsonString = decodeURIComponent(escape(atob(base64)));
+    return JSON.parse(jsonString) as T;
+  } catch {
+    return null;
+  }
+}
+
+export function isShareCode(text: string): boolean {
+  return text.trim().startsWith(SHARE_PREFIX);
+}
+
+export function getShareUrl(shareCode: string): string {
+  return `${window.location.origin}${window.location.pathname}?share=${encodeURIComponent(shareCode)}`;
+}
+
+export function getShareCodeFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('share');
+}

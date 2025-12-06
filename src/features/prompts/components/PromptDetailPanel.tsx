@@ -1,26 +1,28 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Trash2, X } from 'lucide-react';
-import { usePromptStore, useCollectionStore, useUIStore } from '@/stores';
+import { Trash2, X, RotateCcw, Share2 } from 'lucide-react';
+import { usePromptStore, useCollectionStore, useUIStore, useI18nStore } from '@/stores';
 import { Tabs, TabPanel } from '@/components/ui';
 import { PromptEditor } from './PromptEditor';
 import { PromptMetadata } from './PromptMetadata';
 import { PromptVersions } from './PromptVersions';
 import { cn } from '@/utils';
 
-const TABS = [
-  { id: 'editor', label: 'Editor' },
-  { id: 'metadata', label: 'Metadata' },
-  { id: 'versions', label: 'Version History' },
-];
-
 export const PromptDetailPanel: React.FC = () => {
-  const { getActivePrompt, toggleFavorite, moveToTrash, updatePrompt } = usePromptStore();
+  const { getActivePrompt, restoreFromTrash, permanentDelete, updatePrompt } = usePromptStore();
   const { getCollectionById } = useCollectionStore();
-  const { detailPanelOpen, activeTab, setActiveTab, closeDetailPanel } = useUIStore();
-  
+  const { detailPanelOpen, activeTab, setActiveTab, closeDetailPanel, showConfirm, openModal } = useUIStore();
+  const { t } = useI18nStore();
+
+  const TABS = [
+    { id: 'editor', label: t.detailPanel.tabs.editor },
+    { id: 'metadata', label: t.detailPanel.tabs.metadata },
+    { id: 'versions', label: t.detailPanel.tabs.versions },
+  ];
+
   const prompt = getActivePrompt();
   const collection = prompt?.collectionId ? getCollectionById(prompt.collectionId) : null;
+  const isInTrash = prompt?.status === 'trash';
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (prompt) {
@@ -28,16 +30,26 @@ export const PromptDetailPanel: React.FC = () => {
     }
   };
 
-  const handleToggleFavorite = () => {
+  const handleRestore = () => {
     if (prompt) {
-      toggleFavorite(prompt.id);
+      restoreFromTrash(prompt.id);
+      closeDetailPanel();
     }
   };
 
-  const handleDelete = () => {
-    if (prompt && confirm('Move this prompt to trash?')) {
-      moveToTrash(prompt.id);
-      closeDetailPanel();
+  const handlePermanentDelete = () => {
+    if (prompt) {
+      showConfirm({
+        title: t.confirm.deletePermanently.title,
+        message: `${t.confirm.deletePermanently.message.replace('this prompt', `"${prompt.title}"`)}`,
+        confirmText: t.confirm.deletePermanently.confirmText,
+        cancelText: t.common.cancel,
+        variant: 'danger',
+        onConfirm: () => {
+          permanentDelete(prompt.id);
+          closeDetailPanel();
+        },
+      });
     }
   };
 
@@ -70,7 +82,7 @@ export const PromptDetailPanel: React.FC = () => {
                       categoryColors[prompt.category] || 'bg-slate-500'
                     )} />
                     <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-                      {collection?.name || 'Uncategorized'}
+                      {collection?.name || t.detailPanel.uncategorized}
                     </span>
                   </div>
                   <input
@@ -80,23 +92,34 @@ export const PromptDetailPanel: React.FC = () => {
                     className="bg-transparent text-white font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-indigo-500 truncate transition-all"
                   />
                 </div>
-                
+
                 <div className="flex items-center gap-1">
-                  <button
-                    onClick={handleToggleFavorite}
-                    className={cn(
-                      'p-2 rounded-lg hover:bg-white/5 transition-colors',
-                      prompt.favorite ? 'text-yellow-500' : 'text-slate-400 hover:text-yellow-400'
-                    )}
-                  >
-                    <Star className={cn('w-5 h-5', prompt.favorite && 'fill-current')} />
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="p-2 text-slate-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                  {isInTrash ? (
+                    <>
+                      <button
+                        onClick={handleRestore}
+                        className="p-2 text-slate-400 hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors"
+                        title={t.detailPanel.restore}
+                      >
+                        <RotateCcw className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={handlePermanentDelete}
+                        className="p-2 text-slate-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors"
+                        title={t.detailPanel.deletePermanently}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => openModal('sharePrompt')}
+                      className="p-2 text-slate-400 hover:text-indigo-400 rounded-lg hover:bg-white/5 transition-colors"
+                      title={t.detailPanel.share}
+                    >
+                      <Share2 className="w-5 h-5" />
+                    </button>
+                  )}
                   <button
                     onClick={closeDetailPanel}
                     className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
@@ -130,8 +153,8 @@ export const PromptDetailPanel: React.FC = () => {
           ) : (
             <div className="h-full flex items-center justify-center text-slate-500">
               <div className="text-center">
-                <p className="text-lg font-medium">No prompt selected</p>
-                <p className="text-sm mt-1">Select a prompt from the list to view details</p>
+                <p className="text-lg font-medium">{t.detailPanel.noPromptSelected}</p>
+                <p className="text-sm mt-1">{t.detailPanel.selectPrompt}</p>
               </div>
             </div>
           )}

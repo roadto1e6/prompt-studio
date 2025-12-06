@@ -17,6 +17,28 @@ export default {
           DEFAULT: '#6366f1',
           hover: '#818cf8',
           muted: 'rgba(99, 102, 241, 0.1)',
+        },
+        // Theme-aware colors
+        theme: {
+          bg: {
+            primary: 'var(--color-bg-primary)',
+            secondary: 'var(--color-bg-secondary)',
+            tertiary: 'var(--color-bg-tertiary)',
+            hover: 'var(--color-bg-hover)',
+          },
+          border: {
+            DEFAULT: 'var(--color-border)',
+            light: 'var(--color-border-light)',
+          },
+          text: {
+            primary: 'var(--color-text-primary)',
+            secondary: 'var(--color-text-secondary)',
+            muted: 'var(--color-text-muted)',
+          },
+          accent: {
+            DEFAULT: 'var(--color-accent)',
+            hover: 'var(--color-accent-hover)',
+          },
         }
       },
       fontFamily: {

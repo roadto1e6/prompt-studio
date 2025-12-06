@@ -5,3 +5,5 @@ export { PromptMetadata } from './PromptMetadata';
 export { PromptVersions } from './PromptVersions';
 export { PromptDetailPanel } from './PromptDetailPanel';
 export { CreatePromptModal } from './CreatePromptModal';
+export { SharePromptModal } from './SharePromptModal';
+export { ImportPromptModal } from './ImportPromptModal';

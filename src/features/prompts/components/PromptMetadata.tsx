@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { usePromptStore, useCollectionStore } from '@/stores';
 import { Select, Slider, Input, Badge } from '@/components/ui';
-import { AI_MODELS } from '@/constants';
+import { MODELS_BY_CATEGORY } from '@/constants';
 
 export const PromptMetadata: React.FC = () => {
   const { getActivePrompt, updatePrompt } = usePromptStore();
@@ -89,8 +89,8 @@ export const PromptMetadata: React.FC = () => {
     );
   }
 
-  // Prepare model options for Select
-  const modelGroups = AI_MODELS.map(group => ({
+  // Prepare model options for Select based on prompt category
+  const modelGroups = MODELS_BY_CATEGORY[prompt.category].map(group => ({
     label: group.group,
     options: group.models.map(m => ({ value: m.id, label: m.name })),
   }));

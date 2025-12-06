@@ -64,9 +64,9 @@ export const usePromptStore = create<PromptState>()(
       sortOrder: 'desc',
 
       // Filter Actions
-      setFilter: (filter) => set({ filter, categoryFilter: null, collectionFilter: null }),
-      setCategory: (category) => set({ categoryFilter: category, filter: 'all', collectionFilter: null }),
-      setCollection: (collectionId) => set({ collectionFilter: collectionId, filter: 'all', categoryFilter: null }),
+      setFilter: (filter) => set({ filter, categoryFilter: null, collectionFilter: null, activePromptId: null }),
+      setCategory: (category) => set({ categoryFilter: category, filter: 'all', collectionFilter: null, activePromptId: null }),
+      setCollection: (collectionId) => set({ collectionFilter: collectionId, filter: 'all', categoryFilter: null, activePromptId: null }),
       setSearch: (query) => set({ searchQuery: query }),
       setActivePrompt: (id) => set({ activePromptId: id }),
       setViewMode: (mode) => set({ viewMode: mode }),
@@ -246,7 +246,8 @@ export const usePromptStore = create<PromptState>()(
           if (categoryFilter && p.category !== categoryFilter) return false;
           
           // Collection filter
-          if (collectionFilter && p.collectionId !== collectionFilter) return false;
+          if (collectionFilter === 'uncategorized' && p.collectionId) return false;
+          if (collectionFilter && collectionFilter !== 'uncategorized' && p.collectionId !== collectionFilter) return false;
           
           // Search filter
           if (searchQuery && !matchesSearch(p, searchQuery)) return false;

@@ -56,7 +56,22 @@ export type SortOrder = 'asc' | 'desc';
 export type TabType = 'editor' | 'metadata' | 'versions';
 
 // UI Types
-export type ModalType = 'createPrompt' | 'createCollection' | 'settings' | 'deleteConfirm';
+export type ModalType = 'createPrompt' | 'createCollection' | 'settings' | 'deleteConfirm' | 'sharePrompt' | 'importPrompt';
+
+// Share Types
+export interface SharedPromptData {
+  title: string;
+  description: string;
+  category: Category;
+  systemPrompt: string;
+  userTemplate: string;
+  model: string;
+  temperature: number;
+  maxTokens: number;
+  tags: string[];
+  sharedAt: string;
+  sharedBy: string;
+}
 
 // User Types
 export interface User {
@@ -66,3 +81,9 @@ export interface User {
   avatar?: string;
   plan: 'free' | 'pro' | 'team';
 }
+
+// i18n Types
+export type Language = 'en' | 'zh';
+
+// Theme Types
+export type Theme = 'dark' | 'light';

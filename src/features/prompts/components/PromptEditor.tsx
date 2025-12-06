@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Copy, Check } from 'lucide-react';
 import { usePromptStore } from '@/stores';
 import { Button } from '@/components/ui';
 import { estimateTokens, countChars } from '@/utils';
@@ -10,6 +11,7 @@ export const PromptEditor: React.FC = () => {
   const [systemPrompt, setSystemPrompt] = useState('');
   const [userTemplate, setUserTemplate] = useState('');
   const [isDirty, setIsDirty] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Sync with selected prompt
   useEffect(() => {
@@ -32,17 +34,27 @@ export const PromptEditor: React.FC = () => {
 
   const handleSave = () => {
     if (!prompt) return;
-    
+
     // Update prompt
     updatePrompt(prompt.id, {
       systemPrompt,
       userTemplate,
     });
-    
+
     // Create new version
     createVersion(prompt.id, 'Updated system prompt and user template.');
-    
+
     setIsDirty(false);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(systemPrompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   if (!prompt) {
@@ -61,9 +73,23 @@ export const PromptEditor: React.FC = () => {
     <div className="h-full flex flex-col p-6">
       {/* System Prompt */}
       <div className="mb-4 flex items-center justify-between">
-        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-          System Prompt
-        </label>
+        <div className="flex items-center gap-2">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            System Prompt
+          </label>
+          <button
+            onClick={handleCopy}
+            disabled={!systemPrompt}
+            className="p-1 rounded text-slate-500 hover:text-indigo-400 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            title="Copy to clipboard"
+          >
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
+        </div>
         <div className="flex gap-2">
           {currentVersion && (
             <span className="text-[10px] text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
