@@ -16,15 +16,15 @@ interface I18nState {
 
 export const useI18nStore = create<I18nState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       language: 'en',
       setLanguage: (lang) => set({ language: lang, t: translations[lang] }),
       t: translations['en'],
     }),
     {
       name: 'prompt-studio-i18n',
-      onRehydrate: () => (state) => {
-        // Ensure translations are set after rehydration
+      partialize: (state) => ({ language: state.language }),
+      onRehydrateStorage: () => (state) => {
         if (state) {
           state.t = translations[state.language];
         }

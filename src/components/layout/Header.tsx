@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, LayoutGrid, List, Download, Sun, Moon, Languages } from 'lucide-react';
+import { Plus, LayoutGrid, List, Download, Sun, Moon } from 'lucide-react';
 import { usePromptStore, useUIStore, useI18nStore, useThemeStore } from '@/stores';
 import { Button } from '@/components/ui';
 import { cn } from '@/utils';
