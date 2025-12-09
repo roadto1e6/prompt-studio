@@ -150,7 +150,7 @@ export const zh: TranslationKeys = {
     title: '创建新提示词',
     subtitle: '开始构建您的 AI 提示词',
     titleLabel: '标题',
-    titlePlaceholder: '给您的提示词起个容易记住的名字',
+    titlePlaceholder: '给您的提示词起个名字',
     descriptionLabel: '描述',
     descriptionPlaceholder: '这个提示词是做什么的？',
     categoryLabel: '分类',
@@ -180,17 +180,22 @@ export const zh: TranslationKeys = {
     copyLink: '复制链接',
     copyCode: '复制代码',
     sharedBy: '分享者',
+    generating: '生成分享链接中...',
+    generateError: '生成分享链接失败',
+    retry: '重试',
+    viewCount: '次查看',
   },
 
   // Import Modal
   import: {
     title: '导入提示词',
     subtitle: '将分享的提示词导入到您的库中',
-    pasteLabel: '粘贴分享链接或代码',
-    pastePlaceholder: '在此粘贴分享 URL 或代码...',
-    parseButton: '解析分享数据',
-    invalidCode: '无效的分享码或 URL，请确保它以 "PS-" 开头',
-    decodeFailed: '解码分享数据失败，代码可能已损坏。',
+    pasteLabel: '粘贴分享链接或短码',
+    pastePlaceholder: '在此粘贴分享链接或 8 位短码...',
+    parseButton: '获取分享内容',
+    fetching: '获取中...',
+    invalidCode: '无效的分享链接或短码',
+    decodeFailed: '获取分享内容失败，链接可能已过期或不存在。',
     duplicateTitle: '检测到重复',
     duplicateMessage: '您的库中已存在具有相同标题和内容的提示词。',
     importButton: '导入到库',
@@ -232,16 +237,39 @@ export const zh: TranslationKeys = {
     chinese: '中文',
     dark: '深色',
     light: '浅色',
+    // Profile tab
+    profile: '个人资料',
+    displayName: '显示名称',
+    displayNamePlaceholder: '您的姓名',
+    email: '邮箱',
+    emailCannotChange: '邮箱不可更改',
+    saveChanges: '保存更改',
+    saving: '保存中...',
+    saved: '已保存！',
+    // Security tab
+    security: '安全',
+    changePassword: '修改密码',
+    currentPassword: '当前密码',
+    currentPasswordPlaceholder: '请输入当前密码',
+    newPassword: '新密码',
+    newPasswordPlaceholder: '请输入新密码',
+    confirmNewPassword: '确认新密码',
+    confirmNewPasswordPlaceholder: '请再次输入新密码',
+    updatePassword: '更新密码',
+    changing: '更新中...',
+    accountInfo: '账户信息',
+    emailVerified: '邮箱验证',
+    yes: '是',
+    no: '否',
+    passwordRequired: '请填写所有密码字段',
+    passwordTooShort: '密码长度至少为 8 个字符',
+    passwordChangeFailed: '修改密码失败',
+    // Preferences tab
+    preferences: '偏好设置',
   },
 
   // User
-  user: {
-    plan: {
-      free: '免费版',
-      pro: '专业版',
-      team: '团队版',
-    },
-  },
+  user: {},
 
   // Auth
   auth: {

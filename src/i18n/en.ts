@@ -178,6 +178,10 @@ export const en = {
     copyLink: 'Copy Link',
     copyCode: 'Copy Code',
     sharedBy: 'Shared by',
+    generating: 'Generating share link...',
+    generateError: 'Failed to generate share link',
+    retry: 'Retry',
+    viewCount: 'views',
   },
 
   // Import Modal
@@ -185,10 +189,11 @@ export const en = {
     title: 'Import Prompt',
     subtitle: 'Import a shared prompt to your library',
     pasteLabel: 'Paste Share Link or Code',
-    pastePlaceholder: 'Paste the share URL or code here...',
-    parseButton: 'Parse Share Data',
-    invalidCode: 'Invalid share code or URL. Make sure it starts with "PS-"',
-    decodeFailed: 'Failed to decode share data. The code may be corrupted.',
+    pastePlaceholder: 'Paste share link or 8-char code here...',
+    parseButton: 'Fetch Share',
+    fetching: 'Fetching...',
+    invalidCode: 'Invalid share link or code',
+    decodeFailed: 'Failed to fetch share. Link may be expired or not exist.',
     duplicateTitle: 'Duplicate Detected',
     duplicateMessage: 'A prompt with the same title and content already exists in your library.',
     importButton: 'Import to Library',
@@ -230,16 +235,39 @@ export const en = {
     chinese: 'Chinese',
     dark: 'Dark',
     light: 'Light',
+    // Profile tab
+    profile: 'Profile',
+    displayName: 'Display Name',
+    displayNamePlaceholder: 'Your name',
+    email: 'Email',
+    emailCannotChange: 'Email cannot be changed',
+    saveChanges: 'Save Changes',
+    saving: 'Saving...',
+    saved: 'Saved!',
+    // Security tab
+    security: 'Security',
+    changePassword: 'Change Password',
+    currentPassword: 'Current Password',
+    currentPasswordPlaceholder: 'Enter current password',
+    newPassword: 'New Password',
+    newPasswordPlaceholder: 'Enter new password',
+    confirmNewPassword: 'Confirm New Password',
+    confirmNewPasswordPlaceholder: 'Confirm new password',
+    updatePassword: 'Update Password',
+    changing: 'Changing...',
+    accountInfo: 'Account Information',
+    emailVerified: 'Email Verified',
+    yes: 'Yes',
+    no: 'No',
+    passwordRequired: 'Please fill in all password fields',
+    passwordTooShort: 'Password must be at least 8 characters',
+    passwordChangeFailed: 'Failed to change password',
+    // Preferences tab
+    preferences: 'Preferences',
   },
 
   // User
-  user: {
-    plan: {
-      free: 'Free Plan',
-      pro: 'Pro Plan',
-      team: 'Team Plan',
-    },
-  },
+  user: {},
 
   // Auth
   auth: {

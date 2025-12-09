@@ -79,27 +79,27 @@ export const CreatePromptModal: React.FC = () => {
       title={t.createPrompt.title}
       size="lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Title */}
-        <Input
-          label={t.createPrompt.titleLabel}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder={t.createPrompt.titlePlaceholder}
-          autoFocus
-        />
-
-        {/* Description */}
-        <Input
-          label={t.createPrompt.descriptionLabel}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder={t.createPrompt.descriptionPlaceholder}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Title & Description Row */}
+        <div className="grid grid-cols-2 gap-3">
+          <Input
+            label={t.createPrompt.titleLabel}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t.createPrompt.titlePlaceholder}
+            autoFocus
+          />
+          <Input
+            label={t.createPrompt.descriptionLabel}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t.createPrompt.descriptionPlaceholder}
+          />
+        </div>
 
         {/* Category Selection */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
             {t.createPrompt.categoryLabel}
           </label>
           <div className="grid grid-cols-4 gap-2">
@@ -113,13 +113,13 @@ export const CreatePromptModal: React.FC = () => {
                   type="button"
                   onClick={() => handleCategoryChange(cat.id as Category)}
                   className={cn(
-                    'flex flex-col items-center gap-2 p-3 rounded-lg border transition-all',
+                    'flex flex-col items-center gap-1 py-2 px-3 rounded-lg border transition-all',
                     isSelected
                       ? 'border-indigo-500 bg-indigo-500/10'
                       : 'border-slate-700 bg-dark-900 hover:border-slate-600'
                   )}
                 >
-                  <Icon className={cn('w-5 h-5', cat.color)} />
+                  <Icon className={cn('w-4 h-4', cat.color)} />
                   <span className={cn(
                     'text-xs font-medium',
                     isSelected ? 'text-indigo-400' : 'text-slate-400'
@@ -133,12 +133,15 @@ export const CreatePromptModal: React.FC = () => {
         </div>
 
         {/* Model & Collection Row */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <Select
             label={t.editor.model}
             value={model}
             onChange={(e) => setModel(e.target.value)}
             groups={modelGroups}
+            searchable
+            searchPlaceholder={t.common?.search || 'Search models...'}
+            placeholder="Select a model..."
           />
           <Select
             label={t.createPrompt.collectionLabel}
@@ -148,24 +151,25 @@ export const CreatePromptModal: React.FC = () => {
               { value: '', label: t.metadata.noCollection },
               ...collections.map(c => ({ value: c.id, label: c.name })),
             ]}
+            placeholder={t.metadata?.noCollection || 'No collection'}
           />
         </div>
 
         {/* System Prompt */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
             {t.editor.systemPrompt}
           </label>
           <Textarea
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
             placeholder={t.editor.systemPromptPlaceholder}
-            className="h-32"
+            className="h-24"
           />
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+        <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
           <Button type="button" variant="ghost" onClick={handleClose}>
             {t.common.cancel}
           </Button>

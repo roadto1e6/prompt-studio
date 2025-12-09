@@ -28,7 +28,7 @@ export const PromptMetadata: React.FC = () => {
     }
   }, [prompt?.id]);
 
-  const handleModelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleModelChange = (e: { target: { value: string } }) => {
     const newModel = e.target.value;
     setModel(newModel);
     if (prompt) {
@@ -73,7 +73,7 @@ export const PromptMetadata: React.FC = () => {
     }
   };
 
-  const handleCollectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCollectionChange = (e: { target: { value: string } }) => {
     const value = e.target.value || null;
     setCollectionId(value);
     if (prompt) {
@@ -104,6 +104,9 @@ export const PromptMetadata: React.FC = () => {
           value={model}
           onChange={handleModelChange}
           groups={modelGroups}
+          searchable
+          searchPlaceholder="Search models..."
+          placeholder="Select a model..."
         />
 
         {/* Temperature Slider */}
@@ -144,6 +147,7 @@ export const PromptMetadata: React.FC = () => {
             { value: '', label: 'No Collection' },
             ...collections.map(c => ({ value: c.id, label: c.name })),
           ]}
+          placeholder="No Collection"
         />
 
         {/* Tags */}
