@@ -25,6 +25,7 @@ export default {
             secondary: 'var(--color-bg-secondary)',
             tertiary: 'var(--color-bg-tertiary)',
             hover: 'var(--color-bg-hover)',
+            card: 'var(--color-bg-card)',
           },
           border: {
             DEFAULT: 'var(--color-border)',
@@ -34,10 +35,54 @@ export default {
             primary: 'var(--color-text-primary)',
             secondary: 'var(--color-text-secondary)',
             muted: 'var(--color-text-muted)',
+            label: 'var(--color-label)',
+            caption: 'var(--color-caption)',
           },
           accent: {
             DEFAULT: 'var(--color-accent)',
             hover: 'var(--color-accent-hover)',
+          },
+          // Component-specific tokens
+          input: {
+            bg: 'var(--input-bg)',
+            border: 'var(--input-border)',
+            text: 'var(--input-text)',
+            placeholder: 'var(--input-placeholder)',
+            'border-focus': 'var(--input-border-focus)',
+          },
+          select: {
+            bg: 'var(--select-bg)',
+            border: 'var(--select-border)',
+            'option-bg': 'var(--select-option-bg)',
+            'option-hover': 'var(--select-option-hover)',
+            'option-selected': 'var(--select-option-selected)',
+          },
+          textarea: {
+            bg: 'var(--textarea-bg)',
+            border: 'var(--textarea-border)',
+            text: 'var(--textarea-text)',
+          },
+          button: {
+            secondary: 'var(--button-secondary-bg)',
+            'secondary-hover': 'var(--button-secondary-hover)',
+            'secondary-text': 'var(--button-secondary-text)',
+            'secondary-border': 'var(--button-secondary-border)',
+            'ghost-hover': 'var(--button-ghost-hover)',
+            'outline-border': 'var(--button-outline-border)',
+          },
+          badge: {
+            bg: 'var(--badge-default-bg)',
+            text: 'var(--badge-default-text)',
+            border: 'var(--badge-default-border)',
+          },
+          card: {
+            bg: 'var(--card-bg)',
+            border: 'var(--card-border)',
+            'hover-border': 'var(--card-hover-border)',
+          },
+          overlay: {
+            bg: 'var(--overlay-bg)',
+            backdrop: 'var(--overlay-backdrop)',
           },
         }
       },

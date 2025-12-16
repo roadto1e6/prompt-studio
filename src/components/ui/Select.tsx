@@ -247,7 +247,7 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div className="w-full" ref={containerRef}>
       {label && (
-        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2">
           {label}
         </label>
       )}
@@ -261,13 +261,13 @@ export const Select: React.FC<SelectProps> = ({
           disabled={disabled}
           className={cn(
             'w-full flex items-center justify-between',
-            'bg-dark-800 border rounded-lg',
+            'bg-theme-select-bg border rounded-lg',
             'transition-colors',
             'text-left cursor-pointer',
             sizeClasses[size],
             isOpen
-              ? 'border-indigo-500'
-              : 'border-slate-700 hover:border-slate-600',
+              ? 'border-theme-accent'
+              : 'border-theme-select-border hover:border-theme-border-light',
             error && 'border-red-500',
             disabled && 'opacity-50 cursor-not-allowed',
             className
@@ -275,13 +275,13 @@ export const Select: React.FC<SelectProps> = ({
         >
           <span className={cn(
             'truncate',
-            selectedLabel ? 'text-slate-300' : 'text-slate-500'
+            selectedLabel ? 'text-theme-text-primary' : 'text-theme-text-muted'
           )}>
             {selectedLabel || placeholder}
           </span>
           <ChevronDown
             className={cn(
-              'w-4 h-4 text-slate-500 transition-transform duration-200 flex-shrink-0 ml-2',
+              'w-4 h-4 text-theme-text-muted transition-transform duration-200 flex-shrink-0 ml-2',
               isOpen && 'rotate-180'
             )}
           />
@@ -298,8 +298,8 @@ export const Select: React.FC<SelectProps> = ({
           data-select-dropdown
           className={cn(
             'fixed z-[9999]',
-            'bg-dark-800',
-            'border border-slate-700',
+            'bg-theme-card-bg',
+            'border border-theme-card-border',
             'rounded-xl shadow-2xl',
             'overflow-hidden'
           )}
@@ -311,9 +311,9 @@ export const Select: React.FC<SelectProps> = ({
         >
           {/* Search Input */}
           {searchable && (
-            <div className="p-3 border-b border-slate-700/80">
+            <div className="p-3 border-b border-theme-border/80">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -326,11 +326,11 @@ export const Select: React.FC<SelectProps> = ({
                   placeholder={searchPlaceholder}
                   className={cn(
                     'w-full pl-9 pr-9 py-2 text-sm',
-                    'bg-dark-900 border border-slate-700',
+                    'bg-theme-input-bg border border-theme-input-border',
                     'rounded-lg',
-                    'text-slate-300',
-                    'placeholder:text-slate-500',
-                    'focus:outline-none focus:border-indigo-500 transition-colors'
+                    'text-theme-input-text',
+                    'placeholder:text-theme-text-muted',
+                    'focus:outline-none focus:border-theme-accent transition-colors'
                   )}
                 />
                 {searchQuery && (
@@ -340,7 +340,7 @@ export const Select: React.FC<SelectProps> = ({
                       setSearchQuery('');
                       inputRef.current?.focus();
                     }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-text-muted hover:text-theme-text-primary transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -356,7 +356,7 @@ export const Select: React.FC<SelectProps> = ({
             style={{ maxHeight }}
           >
               {isEmpty ? (
-                <div className="px-3 py-8 text-center text-sm text-slate-500">
+                <div className="px-3 py-8 text-center text-sm text-theme-text-muted">
                   {emptyMessage}
                 </div>
               ) : hasGroups ? (
@@ -366,10 +366,10 @@ export const Select: React.FC<SelectProps> = ({
                     <div key={group.label}>
                       {/* Group Header */}
                       <div className="flex items-center justify-between px-2 py-1.5 mb-1">
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <span className="text-xs font-semibold text-theme-text-label uppercase tracking-wider">
                           {group.label}
                         </span>
-                        <span className="text-[10px] text-slate-600 bg-dark-700 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] text-theme-text-muted bg-theme-bg-tertiary px-1.5 py-0.5 rounded">
                           {group.options.length}
                         </span>
                       </div>
@@ -392,12 +392,12 @@ export const Select: React.FC<SelectProps> = ({
                                 isHighlighted
                                   ? 'bg-indigo-500/10 text-indigo-400'
                                   : isSelected
-                                    ? 'bg-dark-700 text-slate-200'
-                                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                    ? 'bg-theme-select-option-selected text-theme-text-primary'
+                                    : 'text-theme-text-secondary hover:bg-theme-select-option-hover hover:text-theme-text-primary'
                               )}
                             >
                               {option.icon && (
-                                <span className="flex-shrink-0 text-slate-500 group-hover:text-slate-400">
+                                <span className="flex-shrink-0 text-theme-text-muted group-hover:text-theme-text-secondary">
                                   {option.icon}
                                 </span>
                               )}
@@ -409,7 +409,7 @@ export const Select: React.FC<SelectProps> = ({
                                   {option.label}
                                 </div>
                                 {option.description && (
-                                  <div className="text-xs text-slate-500 truncate mt-0.5">
+                                  <div className="text-xs text-theme-text-muted truncate mt-0.5">
                                     {option.description}
                                   </div>
                                 )}
@@ -443,12 +443,12 @@ export const Select: React.FC<SelectProps> = ({
                           isHighlighted
                             ? 'bg-indigo-500/10 text-indigo-400'
                             : isSelected
-                              ? 'bg-dark-700 text-slate-200'
-                              : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                              ? 'bg-theme-select-option-selected text-theme-text-primary'
+                              : 'text-theme-text-secondary hover:bg-theme-select-option-hover hover:text-theme-text-primary'
                         )}
                       >
                         {option.icon && (
-                          <span className="flex-shrink-0 text-slate-500 group-hover:text-slate-400">
+                          <span className="flex-shrink-0 text-theme-text-muted group-hover:text-theme-text-secondary">
                             {option.icon}
                           </span>
                         )}
@@ -460,7 +460,7 @@ export const Select: React.FC<SelectProps> = ({
                             {option.label}
                           </div>
                           {option.description && (
-                            <div className="text-xs text-slate-500 truncate mt-0.5">
+                            <div className="text-xs text-theme-text-muted truncate mt-0.5">
                               {option.description}
                             </div>
                           )}

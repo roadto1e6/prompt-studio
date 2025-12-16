@@ -22,17 +22,17 @@ export const Textarea: React.FC<TextareaProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2">
           {label}
         </label>
       )}
       <div className="relative">
         <textarea
           className={cn(
-            'w-full bg-dark-800 border border-slate-700 text-slate-300 rounded-lg p-3',
+            'w-full bg-theme-textarea-bg border border-theme-textarea-border text-theme-textarea-text rounded-lg p-3',
             'font-mono text-sm leading-relaxed resize-none',
-            'focus:outline-none focus:border-indigo-500 transition-colors',
-            'placeholder:text-slate-500',
+            'focus:outline-none focus:border-theme-accent transition-colors',
+            'placeholder:text-theme-text-muted',
             error && 'border-red-500',
             className
           )}
@@ -41,7 +41,7 @@ export const Textarea: React.FC<TextareaProps> = ({
           {...props}
         />
         {showCount && (
-          <div className="absolute bottom-3 right-3 text-[10px] text-slate-600 bg-dark-900/80 px-2 py-1 rounded backdrop-blur-sm">
+          <div className="absolute bottom-3 right-3 text-[10px] text-theme-text-muted bg-theme-bg-primary/80 px-2 py-1 rounded backdrop-blur-sm">
             {charCount}{maxLength && ` / ${maxLength}`}
           </div>
         )}

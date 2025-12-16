@@ -33,7 +33,7 @@ export const Slider: React.FC<SliderProps> = ({
       {(label || showValue) && (
         <div className="flex justify-between mb-2">
           {label && (
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider">
               {label}
             </label>
           )}
@@ -44,7 +44,7 @@ export const Slider: React.FC<SliderProps> = ({
           )}
         </div>
       )}
-      
+
       <input
         type="range"
         min={min}
@@ -53,7 +53,7 @@ export const Slider: React.FC<SliderProps> = ({
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         className={cn(
-          'w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer',
+          'w-full h-2 bg-theme-border rounded-lg appearance-none cursor-pointer',
           'accent-indigo-500',
           '[&::-webkit-slider-thumb]:appearance-none',
           '[&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4',
@@ -63,9 +63,9 @@ export const Slider: React.FC<SliderProps> = ({
           '[&::-webkit-slider-thumb]:hover:scale-110'
         )}
       />
-      
+
       {(minLabel || maxLabel) && (
-        <div className="flex justify-between text-[10px] text-slate-600 mt-1">
+        <div className="flex justify-between text-[10px] text-theme-text-muted mt-1">
           <span>{minLabel}</span>
           <span>{maxLabel}</span>
         </div>

@@ -21,6 +21,44 @@
   --color-scrollbar-hover: #475569;
   --color-input-bg: #1a1a2e;
   --color-input-border: #334155;
+
+  /* Component-specific semantic tokens */
+  --input-text: #e2e8f0;            /* slate-200 */
+  --input-placeholder: #64748b;     /* slate-500 */
+  --input-border-focus: #6366f1;    /* indigo-500 */
+
+  --select-bg: #1a1a2e;             /* dark-800 */
+  --select-option-bg: #1a1a2e;      /* dark-800 */
+  --select-option-hover: #1e293b;   /* slate-800 */
+  --select-option-selected: #252542; /* dark-700 */
+  --select-border: #334155;         /* slate-700 */
+
+  --textarea-bg: #1a1a2e;           /* dark-800 */
+  --textarea-border: #334155;       /* slate-700 */
+  --textarea-text: #cbd5e1;         /* slate-300 */
+
+  --button-secondary-bg: #1a1a2e;   /* dark-800 */
+  --button-secondary-hover: #334155; /* slate-700 */
+  --button-secondary-text: #cbd5e1; /* slate-300 */
+  --button-secondary-border: #334155; /* slate-700 */
+  --button-ghost-hover: rgba(255, 255, 255, 0.05);
+  --button-outline-border: #475569; /* slate-600 */
+
+  --badge-default-bg: #1e293b;      /* slate-800 */
+  --badge-default-text: #94a3b8;    /* slate-400 */
+  --badge-default-border: #334155;  /* slate-700 */
+
+  --card-bg: #1a1a2e;               /* dark-800 */
+  --card-border: #1e293b;           /* slate-800 */
+  --card-hover-border: #334155;     /* slate-700 */
+  --card-hover-shadow: rgba(0, 0, 0, 0.2);
+
+  --overlay-bg: rgba(255, 255, 255, 0.05);
+  --overlay-backdrop: rgba(15, 15, 26, 0.95); /* dark-900 with transparency */
+
+  /* Label/Caption colors */
+  --color-label: #64748b;           /* slate-500 */
+  --color-caption: #475569;         /* slate-600 */
 }
 
 [data-theme="light"] {
@@ -40,6 +78,44 @@
   --color-scrollbar-hover: #94a3b8;
   --color-input-bg: #ffffff;
   --color-input-border: #e2e8f0;
+
+  /* Component-specific semantic tokens - light theme */
+  --input-text: #1e293b;            /* slate-800 */
+  --input-placeholder: #94a3b8;     /* slate-400 */
+  --input-border-focus: #4f46e5;    /* indigo-600 for better contrast */
+
+  --select-bg: #ffffff;
+  --select-option-bg: #ffffff;
+  --select-option-hover: #f1f5f9;   /* slate-100 */
+  --select-option-selected: #e2e8f0; /* slate-200 */
+  --select-border: #e2e8f0;         /* slate-200 */
+
+  --textarea-bg: #ffffff;
+  --textarea-border: #e2e8f0;
+  --textarea-text: #334155;         /* slate-700 */
+
+  --button-secondary-bg: #ffffff;
+  --button-secondary-hover: #f8fafc; /* slate-50 */
+  --button-secondary-text: #334155; /* slate-700 */
+  --button-secondary-border: #e2e8f0; /* slate-200 */
+  --button-ghost-hover: rgba(0, 0, 0, 0.05);
+  --button-outline-border: #cbd5e1; /* slate-300 */
+
+  --badge-default-bg: #f1f5f9;      /* slate-100 */
+  --badge-default-text: #64748b;    /* slate-500 */
+  --badge-default-border: #e2e8f0;  /* slate-200 */
+
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;           /* slate-200 */
+  --card-hover-border: #cbd5e1;     /* slate-300 */
+  --card-hover-shadow: rgba(0, 0, 0, 0.08);
+
+  --overlay-bg: rgba(0, 0, 0, 0.03);
+  --overlay-backdrop: rgba(255, 255, 255, 0.95);
+
+  /* Label/Caption colors */
+  --color-label: #64748b;           /* slate-500 */
+  --color-caption: #64748b;         /* slate-500 */
 }
 
 /* Light Theme Overrides */
