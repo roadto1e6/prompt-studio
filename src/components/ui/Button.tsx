@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/utils';
-import { useThemeStore } from '@/stores';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
@@ -21,23 +20,14 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
-
   const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100';
 
   const variants = {
     primary: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20',
-    secondary: isDark
-      ? 'bg-dark-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
-      : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm',
-    ghost: isDark
-      ? 'bg-transparent hover:bg-white/5 text-slate-400 hover:text-white'
-      : 'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900',
+    secondary: 'bg-theme-button-secondary hover:bg-theme-button-secondary-hover text-theme-button-secondary-text border border-theme-button-secondary-border shadow-sm',
+    ghost: 'bg-transparent hover:bg-theme-button-ghost-hover text-theme-text-secondary hover:text-theme-text-primary',
     danger: 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/20',
-    outline: isDark
-      ? 'bg-transparent border border-slate-600 text-slate-300 hover:bg-slate-800'
-      : 'bg-transparent border border-slate-300 text-slate-700 hover:bg-slate-100',
+    outline: 'bg-transparent border border-theme-button-outline-border text-theme-text-primary hover:bg-theme-overlay',
   };
 
   const sizes = {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/utils';
-import { useThemeStore } from '@/stores';
 
 interface BadgeProps {
   children: React.ReactNode;
@@ -19,25 +18,12 @@ export const Badge: React.FC<BadgeProps> = ({
   onRemove,
   className,
 }) => {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
-
   const variants = {
-    default: isDark
-      ? 'bg-slate-800 text-slate-400 border-slate-700'
-      : 'bg-slate-100 text-slate-600 border-slate-200',
-    primary: isDark
-      ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
-      : 'bg-indigo-50 text-indigo-600 border-indigo-200',
-    success: isDark
-      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-      : 'bg-emerald-50 text-emerald-600 border-emerald-200',
-    warning: isDark
-      ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-      : 'bg-amber-50 text-amber-600 border-amber-200',
-    danger: isDark
-      ? 'bg-red-500/20 text-red-300 border-red-500/30'
-      : 'bg-red-50 text-red-600 border-red-200',
+    default: 'bg-theme-badge-bg text-theme-badge-text border-theme-badge-border',
+    primary: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
+    success: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    warning: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    danger: 'bg-red-500/20 text-red-400 border-red-500/30',
   };
 
   const sizes = {
@@ -58,10 +44,7 @@ export const Badge: React.FC<BadgeProps> = ({
       {removable && (
         <button
           onClick={onRemove}
-          className={cn(
-            'ml-1.5 transition-colors',
-            isDark ? 'hover:text-white' : 'hover:text-slate-900'
-          )}
+          className="ml-1.5 transition-colors hover:text-theme-text-primary"
         >
           ×
         </button>
