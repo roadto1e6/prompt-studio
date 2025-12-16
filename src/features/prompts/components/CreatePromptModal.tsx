@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Image, AudioLines, Video } from 'lucide-react';
-import { usePromptStore, useCollectionStore, useUIStore, useI18nStore } from '@/stores';
+import { usePromptStore, useCollectionStore, useUIStore, useI18nStore, useModelStore } from '@/stores';
 import { Modal, Input, Textarea, Select, Button } from '@/components/ui';
-import { MODELS_BY_CATEGORY, DEFAULT_MODEL_BY_CATEGORY, CATEGORIES } from '@/constants';
+import { CATEGORIES } from '@/constants';
 import { Category } from '@/types';
 import { cn } from '@/utils';
 
@@ -18,18 +18,26 @@ export const CreatePromptModal: React.FC = () => {
   const { collections } = useCollectionStore();
   const { modals, closeModal, openDetailPanel } = useUIStore();
   const { t } = useI18nStore();
+  const { getModelOptions, getDefaultModelId, initialized, initialize } = useModelStore();
+
+  // 初始化模型数据
+  useEffect(() => {
+    if (!initialized) {
+      initialize();
+    }
+  }, [initialized, initialize]);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<Category>('text');
-  const [model, setModel] = useState(DEFAULT_MODEL_BY_CATEGORY['text']);
+  const [model, setModel] = useState(() => getDefaultModelId('text'));
   const [collectionId, setCollectionId] = useState<string>('');
   const [systemPrompt, setSystemPrompt] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const newPrompt = createPrompt({
+
+    const newPrompt = await createPrompt({
       title: title.trim() || 'Untitled Prompt',
       description,
       category,
@@ -41,7 +49,7 @@ export const CreatePromptModal: React.FC = () => {
     // Select the new prompt and open detail panel
     setActivePrompt(newPrompt.id);
     openDetailPanel();
-    
+
     // Reset form and close modal
     resetForm();
     closeModal('createPrompt');
@@ -51,7 +59,7 @@ export const CreatePromptModal: React.FC = () => {
     setTitle('');
     setDescription('');
     setCategory('text');
-    setModel(DEFAULT_MODEL_BY_CATEGORY['text']);
+    setModel(getDefaultModelId('text'));
     setCollectionId('');
     setSystemPrompt('');
   };
@@ -63,13 +71,14 @@ export const CreatePromptModal: React.FC = () => {
 
   const handleCategoryChange = (newCategory: Category) => {
     setCategory(newCategory);
-    setModel(DEFAULT_MODEL_BY_CATEGORY[newCategory]);
+    setModel(getDefaultModelId(newCategory));
   };
 
   // Prepare model options based on selected category
-  const modelGroups = MODELS_BY_CATEGORY[category].map(group => ({
-    label: group.group,
-    options: group.models.map(m => ({ value: m.id, label: m.name })),
+  const modelOptions = getModelOptions(category);
+  const modelGroups = modelOptions.map(group => ({
+    label: group.providerName,
+    options: group.options.map(m => ({ value: m.value, label: m.label })),
   }));
 
   return (
@@ -77,11 +86,11 @@ export const CreatePromptModal: React.FC = () => {
       isOpen={modals.createPrompt}
       onClose={handleClose}
       title={t.createPrompt.title}
-      size="lg"
+      size="2xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Title & Description Row */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <Input
             label={t.createPrompt.titleLabel}
             value={title}
@@ -99,10 +108,10 @@ export const CreatePromptModal: React.FC = () => {
 
         {/* Category Selection */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
             {t.createPrompt.categoryLabel}
           </label>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {CATEGORIES.map((cat) => {
               const Icon = categoryIcons[cat.id as Category];
               const isSelected = category === cat.id;
@@ -113,15 +122,15 @@ export const CreatePromptModal: React.FC = () => {
                   type="button"
                   onClick={() => handleCategoryChange(cat.id as Category)}
                   className={cn(
-                    'flex flex-col items-center gap-1 py-2 px-3 rounded-lg border transition-all',
+                    'flex flex-col items-center gap-2 py-3 px-4 rounded-xl border-2 transition-all',
                     isSelected
-                      ? 'border-indigo-500 bg-indigo-500/10'
-                      : 'border-slate-700 bg-dark-900 hover:border-slate-600'
+                      ? 'border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20'
+                      : 'border-slate-700 bg-dark-900 hover:border-slate-600 hover:bg-dark-800'
                   )}
                 >
-                  <Icon className={cn('w-4 h-4', cat.color)} />
+                  <Icon className={cn('w-5 h-5', cat.color)} />
                   <span className={cn(
-                    'text-xs font-medium',
+                    'text-sm font-medium',
                     isSelected ? 'text-indigo-400' : 'text-slate-400'
                   )}>
                     {t.categories[cat.id as keyof typeof t.categories]}
@@ -133,7 +142,7 @@ export const CreatePromptModal: React.FC = () => {
         </div>
 
         {/* Model & Collection Row */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <Select
             label={t.editor.model}
             value={model}
@@ -157,19 +166,19 @@ export const CreatePromptModal: React.FC = () => {
 
         {/* System Prompt */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
             {t.editor.systemPrompt}
           </label>
           <Textarea
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
             placeholder={t.editor.systemPromptPlaceholder}
-            className="h-24"
+            className="h-40 resize-none"
           />
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+        <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
           <Button type="button" variant="ghost" onClick={handleClose}>
             {t.common.cancel}
           </Button>

@@ -1,131 +1,22 @@
-import { Category } from '@/types';
+/**
+ * Constants
+ * 纯静态 UI 配置
+ *
+ * 注意：动态数据（如 AI 模型）已移至 services/modelService.ts
+ */
 
-// Text generation models
-export const TEXT_MODELS = [
-  {
-    group: 'OpenAI',
-    models: [
-      { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', maxTokens: 128000 },
-      { id: 'gpt-4', name: 'GPT-4', maxTokens: 8192 },
-      { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', maxTokens: 16385 },
-    ]
-  },
-  {
-    group: 'Anthropic',
-    models: [
-      { id: 'claude-3-opus', name: 'Claude 3 Opus', maxTokens: 200000 },
-      { id: 'claude-3-sonnet', name: 'Claude 3.5 Sonnet', maxTokens: 200000 },
-      { id: 'claude-3-haiku', name: 'Claude 3 Haiku', maxTokens: 200000 },
-    ]
-  },
-  {
-    group: 'Google',
-    models: [
-      { id: 'gemini-pro', name: 'Gemini Pro', maxTokens: 32000 },
-      { id: 'gemini-ultra', name: 'Gemini Ultra', maxTokens: 32000 },
-    ]
-  },
-  {
-    group: 'Meta',
-    models: [
-      { id: 'llama-3-70b', name: 'Llama 3 70B', maxTokens: 8192 },
-      { id: 'llama-3-8b', name: 'Llama 3 8B', maxTokens: 8192 },
-    ]
-  }
-];
+import type { Category } from '@/types';
 
-// Image generation models
-export const IMAGE_MODELS = [
-  {
-    group: 'OpenAI',
-    models: [
-      { id: 'dall-e-3', name: 'DALL-E 3', maxTokens: 4000 },
-      { id: 'dall-e-2', name: 'DALL-E 2', maxTokens: 4000 },
-    ]
-  },
-  {
-    group: 'Stability AI',
-    models: [
-      { id: 'sdxl-1.0', name: 'Stable Diffusion XL', maxTokens: 4000 },
-      { id: 'sd-3', name: 'Stable Diffusion 3', maxTokens: 4000 },
-    ]
-  },
-  {
-    group: 'Midjourney',
-    models: [
-      { id: 'midjourney-v6', name: 'Midjourney V6', maxTokens: 4000 },
-      { id: 'midjourney-v5', name: 'Midjourney V5', maxTokens: 4000 },
-    ]
-  }
-];
-
-// Audio generation models
-export const AUDIO_MODELS = [
-  {
-    group: 'OpenAI',
-    models: [
-      { id: 'whisper-1', name: 'Whisper', maxTokens: 4000 },
-      { id: 'tts-1-hd', name: 'TTS HD', maxTokens: 4000 },
-      { id: 'tts-1', name: 'TTS', maxTokens: 4000 },
-    ]
-  },
-  {
-    group: 'ElevenLabs',
-    models: [
-      { id: 'eleven-multilingual-v2', name: 'Multilingual V2', maxTokens: 4000 },
-      { id: 'eleven-turbo-v2', name: 'Turbo V2', maxTokens: 4000 },
-    ]
-  }
-];
-
-// Video generation models
-export const VIDEO_MODELS = [
-  {
-    group: 'Runway',
-    models: [
-      { id: 'gen-3-alpha', name: 'Gen-3 Alpha', maxTokens: 4000 },
-      { id: 'gen-2', name: 'Gen-2', maxTokens: 4000 },
-    ]
-  },
-  {
-    group: 'Pika',
-    models: [
-      { id: 'pika-1.0', name: 'Pika 1.0', maxTokens: 4000 },
-    ]
-  },
-  {
-    group: 'OpenAI',
-    models: [
-      { id: 'sora', name: 'Sora', maxTokens: 4000 },
-    ]
-  }
-];
-
-// Category to models mapping
-export const MODELS_BY_CATEGORY: Record<Category, typeof TEXT_MODELS> = {
-  text: TEXT_MODELS,
-  image: IMAGE_MODELS,
-  audio: AUDIO_MODELS,
-  video: VIDEO_MODELS,
-};
-
-// Default model for each category
-export const DEFAULT_MODEL_BY_CATEGORY: Record<Category, string> = {
-  text: 'gpt-4-turbo',
-  image: 'dall-e-3',
-  audio: 'whisper-1',
-  video: 'gen-3-alpha',
-};
-
-// Legacy export for backward compatibility
-export const AI_MODELS = TEXT_MODELS;
+// ============ 分类配置 ============
 
 export const CATEGORIES = [
-  { id: 'text', label: 'Text', icon: 'FileText', color: 'text-indigo-400', bgColor: 'bg-indigo-500/20' },
-  { id: 'image', label: 'Image', icon: 'Image', color: 'text-emerald-400', bgColor: 'bg-emerald-500/20' },
-  { id: 'audio', label: 'Audio', icon: 'AudioLines', color: 'text-amber-400', bgColor: 'bg-amber-500/20' },
-  { id: 'video', label: 'Video', icon: 'Video', color: 'text-rose-400', bgColor: 'bg-rose-500/20' },
+  { id: 'text' as Category, label: 'Text', icon: 'FileText', color: 'text-indigo-400', bgColor: 'bg-indigo-500/20' },
+  { id: 'image' as Category, label: 'Image', icon: 'Image', color: 'text-emerald-400', bgColor: 'bg-emerald-500/20' },
+  { id: 'audio' as Category, label: 'Audio', icon: 'AudioLines', color: 'text-amber-400', bgColor: 'bg-amber-500/20' },
+  { id: 'video' as Category, label: 'Video', icon: 'Video', color: 'text-rose-400', bgColor: 'bg-rose-500/20' },
 ] as const;
+
+// ============ 快速过滤 ============
 
 export const QUICK_FILTERS = [
   { id: 'all', label: 'All Prompts', icon: 'Infinity' },
@@ -133,6 +24,8 @@ export const QUICK_FILTERS = [
   { id: 'recent', label: 'Recent', icon: 'Clock' },
   { id: 'trash', label: 'Trash', icon: 'Trash2' },
 ] as const;
+
+// ============ 集合颜色 ============
 
 export const COLLECTION_COLORS = [
   'text-pink-500',
@@ -143,4 +36,89 @@ export const COLLECTION_COLORS = [
   'text-cyan-500',
   'text-red-500',
   'text-lime-500',
-];
+] as const;
+
+// ============ 集合图标 ============
+
+export const COLLECTION_ICONS = [
+  'Folder',
+  'FolderOpen',
+  'Star',
+  'Heart',
+  'Bookmark',
+  'Tag',
+  'Flag',
+  'Zap',
+  'Flame',
+  'Rocket',
+  'Code',
+  'FileText',
+  'Image',
+  'Video',
+  'Music',
+  'Megaphone',
+  'Palette',
+  'Lightbulb',
+  'Target',
+  'Trophy',
+] as const;
+
+// ============ 排序选项 ============
+
+export const SORT_OPTIONS = [
+  { id: 'updatedAt', label: 'Last Modified' },
+  { id: 'createdAt', label: 'Date Created' },
+  { id: 'title', label: 'Title' },
+] as const;
+
+// ============ 视图模式 ============
+
+export const VIEW_MODES = [
+  { id: 'grid', label: 'Grid View', icon: 'LayoutGrid' },
+  { id: 'list', label: 'List View', icon: 'List' },
+] as const;
+
+// ============ 温度预设 ============
+
+export const TEMPERATURE_PRESETS = [
+  { value: 0, label: 'Precise', description: 'Deterministic, focused responses' },
+  { value: 0.3, label: 'Balanced', description: 'Slight variation, reliable' },
+  { value: 0.7, label: 'Creative', description: 'More varied, creative outputs' },
+  { value: 1.0, label: 'Random', description: 'Maximum variation and creativity' },
+] as const;
+
+// ============ Token 预设 ============
+
+export const MAX_TOKENS_PRESETS = [
+  { value: 256, label: 'Short' },
+  { value: 512, label: 'Medium' },
+  { value: 1024, label: 'Long' },
+  { value: 2048, label: 'Very Long' },
+  { value: 4096, label: 'Maximum' },
+] as const;
+
+// ============ 分享过期时间选项 ============
+
+export const SHARE_EXPIRY_OPTIONS = [
+  { value: 0, label: 'Never Expire' },
+  { value: 1, label: '1 Hour' },
+  { value: 24, label: '1 Day' },
+  { value: 168, label: '1 Week' },
+  { value: 720, label: '1 Month' },
+] as const;
+
+// ============ 辅助函数 ============
+
+/**
+ * 根据分类 ID 获取分类配置
+ */
+export function getCategoryConfig(categoryId: Category) {
+  return CATEGORIES.find(c => c.id === categoryId);
+}
+
+/**
+ * 根据过滤器 ID 获取过滤器配置
+ */
+export function getFilterConfig(filterId: string) {
+  return QUICK_FILTERS.find(f => f.id === filterId);
+}

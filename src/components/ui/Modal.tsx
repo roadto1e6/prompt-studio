@@ -3,13 +3,14 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
+import { useThemeStore } from '@/stores';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   showClose?: boolean;
   className?: string;
 }
@@ -23,17 +24,20 @@ export const Modal: React.FC<ModalProps> = ({
   showClose = true,
   className,
 }) => {
+  const { theme } = useThemeStore();
+  const isDark = theme === 'dark';
+
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    
+
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
     }
-    
+
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
@@ -45,6 +49,8 @@ export const Modal: React.FC<ModalProps> = ({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
+    '3xl': 'max-w-3xl',
   };
 
   return createPortal(
@@ -57,7 +63,10 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className={cn(
+              'absolute inset-0 backdrop-blur-sm',
+              isDark ? 'bg-black/60' : 'bg-black/40'
+            )}
             onClick={onClose}
           />
 
@@ -68,22 +77,38 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className={cn(
-              'relative w-full mx-4',
+              'relative w-full mx-4 max-h-[90vh] flex flex-col',
               sizes[size],
               className
             )}
           >
-            <div className="bg-dark-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden">
+            <div className={cn(
+              'rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-full border',
+              isDark
+                ? 'bg-dark-800 border-slate-700'
+                : 'bg-white border-slate-200'
+            )}>
               {/* Header */}
               {(title || showClose) && (
-                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
+                <div className={cn(
+                  'flex items-center justify-between px-6 py-4 border-b flex-shrink-0',
+                  isDark ? 'border-slate-700' : 'border-slate-200'
+                )}>
                   {title && (
-                    <h2 className="text-lg font-semibold text-white">{title}</h2>
+                    <h2 className={cn(
+                      'text-lg font-semibold',
+                      isDark ? 'text-white' : 'text-slate-900'
+                    )}>{title}</h2>
                   )}
                   {showClose && (
                     <button
                       onClick={onClose}
-                      className="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                      className={cn(
+                        'p-1 rounded-lg transition-colors',
+                        isDark
+                          ? 'text-slate-400 hover:text-white hover:bg-white/5'
+                          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                      )}
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -92,7 +117,7 @@ export const Modal: React.FC<ModalProps> = ({
               )}
 
               {/* Content */}
-              <div className="p-6">
+              <div className="p-6 overflow-y-auto">
                 {children}
               </div>
             </div>

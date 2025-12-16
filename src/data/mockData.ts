@@ -4,7 +4,15 @@ export const mockUser: User = {
   id: 'user-1',
   name: 'John Doe',
   email: 'john@example.com',
-  plan: 'pro',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  emailVerified: true,
+  settings: {
+    language: 'en',
+    theme: 'dark',
+    defaultModel: 'gpt-4-turbo',
+    emailNotifications: true,
+  },
 };
 
 export const mockCollections: Collection[] = [

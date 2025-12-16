@@ -34,7 +34,7 @@ function checkPasswordStrength(password: string) {
 
 export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   const { t } = useI18nStore();
-  const { register, isLoading, error, clearError } = useAuthStore();
+  const { register, loginWithOAuth, isLoading, error, clearError } = useAuthStore();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -298,7 +298,8 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => {/* TODO: Google OAuth */}}
+              disabled={isLoading}
+              onClick={() => loginWithOAuth('google')}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -324,7 +325,8 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => {/* TODO: GitHub OAuth */}}
+              disabled={isLoading}
+              onClick={() => loginWithOAuth('github')}
             >
               <Github className="w-5 h-5 mr-2" />
               GitHub

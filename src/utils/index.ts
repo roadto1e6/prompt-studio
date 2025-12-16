@@ -40,15 +40,92 @@ export function generateId(): string {
   return crypto.randomUUID();
 }
 
-// Generate version number
-export function generateVersionNumber(versions: { versionNumber: string }[]): string {
+// Generate version number based on current version
+export function generateVersionNumber(
+  versions: { id: string; versionNumber: string }[],
+  currentVersionId: string,
+  type: 'major' | 'minor' = 'minor'
+): string {
   if (versions.length === 0) return '1.0';
-  
-  const lastVersion = versions[0].versionNumber;
-  const [major, minor] = lastVersion.split('.').map(Number);
-  
-  // Increment minor version
-  return `${major}.${minor + 1}`;
+
+  // Find current version
+  const currentVersion = versions.find(v => v.id === currentVersionId);
+  if (!currentVersion) {
+    // Fallback: use the first version
+    const fallback = versions[0];
+    const [major, minor = '0'] = fallback.versionNumber.split('.');
+    return type === 'major'
+      ? `${Number(major) + 1}.0`
+      : `${major}.${Number(minor) + 1}`;
+  }
+
+  // Parse current version number
+  const [currentMajorStr, currentMinorStr = '0'] = currentVersion.versionNumber.split('.');
+  const currentMajor = Number(currentMajorStr);
+  const currentMinor = Number(currentMinorStr);
+
+  if (Number.isNaN(currentMajor) || Number.isNaN(currentMinor)) {
+    return '1.0';
+  }
+
+  // Parse all existing version numbers for conflict checking
+  const existingVersions = new Set(
+    versions.map(v => v.versionNumber)
+  );
+
+  // Generate new version based on type
+  let newMajor: number;
+  let newMinor: number;
+
+  if (type === 'major') {
+    // Major bump: increment major, reset minor to 0
+    newMajor = currentMajor + 1;
+    newMinor = 0;
+  } else {
+    // Minor bump: keep major, increment minor
+    newMajor = currentMajor;
+    newMinor = currentMinor + 1;
+  }
+
+  // Check for conflicts and increment if necessary
+  let newVersionNumber = `${newMajor}.${newMinor}`;
+  while (existingVersions.has(newVersionNumber)) {
+    if (type === 'major') {
+      newMajor++;
+      newVersionNumber = `${newMajor}.0`;
+    } else {
+      newMinor++;
+      newVersionNumber = `${newMajor}.${newMinor}`;
+    }
+  }
+
+  return newVersionNumber;
+}
+
+// Check if prompt content has changed
+export function hasPromptChanged(
+  current: {
+    systemPrompt: string;
+    userTemplate: string;
+    model: string;
+    temperature: number;
+    maxTokens: number;
+  },
+  version: {
+    systemPrompt: string;
+    userTemplate: string;
+    model: string;
+    temperature: number;
+    maxTokens: number;
+  }
+): boolean {
+  return (
+    current.systemPrompt !== version.systemPrompt ||
+    current.userTemplate !== version.userTemplate ||
+    current.model !== version.model ||
+    current.temperature !== version.temperature ||
+    current.maxTokens !== version.maxTokens
+  );
 }
 
 // Truncate text with ellipsis

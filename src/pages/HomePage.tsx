@@ -3,12 +3,18 @@ import { MainLayout } from '@/components/layout';
 import { PromptGrid, PromptDetailPanel, CreatePromptModal, SharePromptModal, ImportPromptModal } from '@/features/prompts/components';
 import { CreateCollectionModal } from '@/features/collections/components';
 import { ConfirmModal } from '@/components/ui';
-import { useUIStore } from '@/stores';
+import { SettingsModal } from '@/components/settings';
+import { useUIStore, useAuthStore } from '@/stores';
+import { usePromptStore } from '@/stores/promptStore';
+import { useCollectionStore } from '@/stores/collectionStore';
 import { getShareCodeFromUrl, decodeShareData, isShareCode } from '@/utils';
 import { SharedPromptData } from '@/types';
 
 export const HomePage: React.FC = () => {
-  const { openModal, setPendingImportData, modals } = useUIStore();
+  const { openModal, closeModal, setPendingImportData, modals } = useUIStore();
+  const { user } = useAuthStore();
+  const initializePrompts = usePromptStore((state) => state.initialize);
+  const initializeCollections = useCollectionStore((state) => state.initialize);
   const lastClipboardContent = useRef<string>('');
   const isProcessing = useRef<boolean>(false);
 
@@ -40,6 +46,14 @@ export const HomePage: React.FC = () => {
       openModal('importPrompt');
     }
   }, [openModal, setPendingImportData, modals.importPrompt]);
+
+  // Initialize user data on mount
+  useEffect(() => {
+    if (user) {
+      initializePrompts(user.id);
+      initializeCollections(user.id);
+    }
+  }, [user, initializePrompts, initializeCollections]);
 
   // Check for share code in URL on mount
   useEffect(() => {
@@ -117,6 +131,10 @@ export const HomePage: React.FC = () => {
       <SharePromptModal />
       <ImportPromptModal />
       <ConfirmModal />
+      <SettingsModal
+        isOpen={modals.settings}
+        onClose={() => closeModal('settings')}
+      />
     </MainLayout>
   );
 };

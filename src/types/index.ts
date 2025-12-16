@@ -1,89 +1,103 @@
-// Prompt Types
-export type Category = 'text' | 'image' | 'audio' | 'video';
-export type PromptStatus = 'active' | 'archived' | 'trash';
+/**
+ * Types Index
+ * 统一导出所有类型定义
+ */
 
-export interface PromptVersion {
-  id: string;
-  promptId: string;
-  versionNumber: string;
-  systemPrompt: string;
-  userTemplate: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  changeNote: string;
-  createdAt: string;
-  createdBy: string;
-}
+// ============ Common Types ============
+export type {
+  ApiResponse,
+  PaginatedResponse,
+  Pagination,
+  ApiErrorResponse,
+  SortOrder,
+  BaseQueryParams,
+  TimestampedEntity,
+  SoftDeletableEntity,
+  Language,
+  Theme,
+} from './common';
 
-export interface Prompt {
-  id: string;
-  title: string;
-  description: string;
-  category: Category;
-  systemPrompt: string;
-  userTemplate: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  tags: string[];
-  collectionId: string | null;
-  favorite: boolean;
-  createdAt: string;
-  updatedAt: string;
-  currentVersionId: string;
-  versions: PromptVersion[];
-  status: PromptStatus;
-}
+// ============ Auth Types ============
+export type {
+  User,
+  UserSettings,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  RefreshResponse,
+  ResetPasswordRequest,
+  ConfirmResetPasswordRequest,
+  ChangePasswordRequest,
+  UpdateProfileRequest,
+} from './auth';
 
-// Collection Types
-export interface Collection {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-  promptCount: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// ============ Prompt Types ============
+export type {
+  Category,
+  PromptStatus,
+  Prompt,
+  PromptVersion,
+  CreatePromptRequest,
+  UpdatePromptRequest,
+  CreateVersionRequest,
+  PromptSortBy,
+  PromptSortBy as SortBy,  // Alias for backward compatibility
+  PromptQueryParams,
+  QuickFilter,
+  ViewMode,
+  TabType,
+} from './prompt';
 
-// Filter Types
-export type QuickFilter = 'all' | 'favorites' | 'recent' | 'trash';
-export type ViewMode = 'grid' | 'list';
-export type SortBy = 'updatedAt' | 'title' | 'createdAt';
-export type SortOrder = 'asc' | 'desc';
-export type TabType = 'editor' | 'metadata' | 'versions';
+// ============ Collection Types ============
+export type {
+  Collection,
+  CreateCollectionRequest,
+  UpdateCollectionRequest,
+  CollectionSortBy,
+  CollectionQueryParams,
+} from './collection';
 
-// UI Types
-export type ModalType = 'createPrompt' | 'createCollection' | 'settings' | 'deleteConfirm' | 'sharePrompt' | 'importPrompt';
+// ============ Share Types ============
+export type {
+  SharedPromptData,
+  ShareRecord,
+  CreateShareRequest,
+  CreateShareResponse,
+  GetShareResponse,
+  MyShareRecord,
+} from './share';
 
-// Share Types
-export interface SharedPromptData {
-  title: string;
-  description: string;
-  category: Category;
-  systemPrompt: string;
-  userTemplate: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  tags: string[];
-  sharedAt: string;
-  sharedBy: string;
-}
+// ============ Model Types ============
+export type {
+  ModelCapability,
+  ModelStatus,
+  ModelSourceType,
+  UserModelReviewStatus,
+  Provider,
+  Model,
+  UserCustomModel,
+  ModelPricing,
+  ModelFeatures,
+  CreateProviderRequest,
+  UpdateProviderRequest,
+  CreateModelRequest,
+  CreateUserModelRequest,
+  UpdateUserModelRequest,
+  UpdateModelRequest,
+  QueryModelsParams,
+  GetModelsResponse,
+  ModelStatsResponse,
+  ModelOption,
+  GroupedModelOptions,
+  GetModelOptionsParams,
+} from './model';
 
-// User Types
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  plan: 'free' | 'pro' | 'team';
-}
-
-// i18n Types
-export type Language = 'en' | 'zh';
-
-// Theme Types
-export type Theme = 'dark' | 'light';
+// ============ UI Types ============
+export type ModalType =
+  | 'createPrompt'
+  | 'createCollection'
+  | 'settings'
+  | 'deleteConfirm'
+  | 'sharePrompt'
+  | 'importPrompt'
+  | 'modelConfig';  // 新增模型配置弹窗

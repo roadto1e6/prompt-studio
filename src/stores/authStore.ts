@@ -10,9 +10,7 @@ import type {
   LoginRequest,
   RegisterRequest,
   UpdateProfileRequest,
-  Permission,
 } from '@/types/auth';
-import { hasPermission, hasAnyPermission, PLAN_LIMITS, ROLE_PERMISSIONS } from '@/types/auth';
 import { authService } from '@/services/authService';
 
 // Mock 用户数据（开发用）
@@ -21,17 +19,13 @@ const MOCK_USER: User = {
   email: 'demo@promptstudio.com',
   name: 'Demo User',
   avatar: undefined,
-  role: 'admin',
-  plan: 'pro',
-  teamId: undefined,
-  permissions: ROLE_PERMISSIONS.admin,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   lastLoginAt: new Date().toISOString(),
   emailVerified: true,
   settings: {
     language: 'zh',
-    theme: 'system',
+    theme: 'dark',
     defaultModel: 'gpt-4-turbo',
     emailNotifications: true,
   },
@@ -52,6 +46,16 @@ interface AuthState {
   refreshUser: () => Promise<void>;
   initialize: () => Promise<void>;
 
+  // Actions - OAuth
+  loginWithOAuth: (provider: 'google' | 'github') => Promise<void>;
+  handleOAuthCallback: (provider: 'google' | 'github', code: string) => Promise<void>;
+
+  // Actions - 密码
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+
+  // Actions - 邮箱验证
+  sendVerificationEmail: () => Promise<void>;
+
   // Actions - 资料
   updateProfile: (data: UpdateProfileRequest) => Promise<void>;
   updateSettings: (settings: Partial<User['settings']>) => void;
@@ -59,13 +63,6 @@ interface AuthState {
   // Actions - 状态
   setError: (error: string | null) => void;
   clearError: () => void;
-
-  // Computed / Helpers
-  hasPermission: (permission: Permission) => boolean;
-  hasAnyPermission: (permissions: Permission[]) => boolean;
-  canCreatePrompt: () => boolean;
-  canCreateCollection: () => boolean;
-  getPlanLimits: () => typeof PLAN_LIMITS[keyof typeof PLAN_LIMITS] | null;
 }
 
 // 是否使用 Mock 数据
@@ -89,13 +86,13 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           if (USE_MOCK) {
-            // Mock 模式：使用本地存储的用户数据或默认用户
+            // Mock 模式：只使用本地存储的用户数据，不自动登录
             const storedUser = get().user;
-            if (storedUser) {
-              set({ isAuthenticated: true, initialized: true, isLoading: false });
+            if (storedUser && get().isAuthenticated) {
+              set({ initialized: true, isLoading: false });
             } else {
-              // 自动登录为 Mock 用户
-              set({ user: MOCK_USER, isAuthenticated: true, initialized: true, isLoading: false });
+              // 需要手动登录
+              set({ user: null, isAuthenticated: false, initialized: true, isLoading: false });
             }
           } else {
             // 真实模式：验证 token 有效性
@@ -152,8 +149,6 @@ export const useAuthStore = create<AuthState>()(
               id: `user-${Date.now()}`,
               email: data.email,
               name: data.name,
-              plan: 'free',
-              permissions: ROLE_PERMISSIONS.member,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             };
@@ -180,7 +175,14 @@ export const useAuthStore = create<AuthState>()(
             await authService.logout();
           }
         } finally {
+          // 清除用户状态
           set({ user: null, isAuthenticated: false, isLoading: false });
+
+          // 清除 localStorage 中的用户数据（在真实模式下）
+          if (!USE_MOCK) {
+            localStorage.removeItem('prompt-studio-storage');
+            localStorage.removeItem('prompt-studio-collections');
+          }
         }
       },
 
@@ -247,42 +249,112 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
+      // OAuth 登录
+      loginWithOAuth: async (provider: 'google' | 'github') => {
+        set({ isLoading: true, error: null });
+
+        try {
+          if (USE_MOCK) {
+            // Mock OAuth - 模拟跳转后返回
+            await new Promise(resolve => setTimeout(resolve, 500));
+            // 在真实场景中，这里会打开一个新窗口跳转到 OAuth 提供商
+            // 模拟成功登录
+            const mockOAuthUser: User = {
+              ...MOCK_USER,
+              id: `user-${provider}-${Date.now()}`,
+              email: `demo-${provider}@promptstudio.com`,
+              name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+            };
+            set({ user: mockOAuthUser, isAuthenticated: true, isLoading: false });
+          } else {
+            // 真实 OAuth 流程：获取授权 URL 并跳转
+            // 注意：跳转后页面会刷新，不需要设置 isLoading = false
+            const { url } = await authService.getOAuthUrl(provider);
+            window.location.href = url;
+            // 不会执行到这里，因为页面会跳转
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : `${provider} login failed`;
+          set({ error: message, isLoading: false });
+          throw err;
+        }
+      },
+
+      // OAuth 回调处理
+      handleOAuthCallback: async (provider: 'google' | 'github', code: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+          if (USE_MOCK) {
+            // Mock OAuth 回调
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const mockOAuthUser: User = {
+              ...MOCK_USER,
+              id: `user-${provider}-${Date.now()}`,
+              email: `demo-${provider}@promptstudio.com`,
+              name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+            };
+            set({ user: mockOAuthUser, isAuthenticated: true });
+          } else {
+            const response = await authService.handleOAuthCallback(provider, code);
+            set({ user: response.user, isAuthenticated: true });
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'OAuth callback failed';
+          set({ error: message });
+          throw err;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      // 修改密码
+      changePassword: async (currentPassword: string, newPassword: string) => {
+        set({ isLoading: true, error: null });
+
+        try {
+          if (USE_MOCK) {
+            // Mock 密码修改
+            await new Promise(resolve => setTimeout(resolve, 500));
+            // 模拟验证当前密码
+            if (currentPassword !== 'demo123') {
+              throw new Error('Current password is incorrect');
+            }
+          } else {
+            await authService.changePassword({ currentPassword, newPassword });
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Password change failed';
+          set({ error: message });
+          throw err;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      // 发送邮箱验证
+      sendVerificationEmail: async () => {
+        set({ isLoading: true, error: null });
+
+        try {
+          if (USE_MOCK) {
+            // Mock 发送验证邮件
+            await new Promise(resolve => setTimeout(resolve, 500));
+          } else {
+            await authService.sendVerificationEmail();
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to send verification email';
+          set({ error: message });
+          throw err;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       // 设置错误
       setError: (error) => set({ error }),
       clearError: () => set({ error: null }),
-
-      // 检查权限
-      hasPermission: (permission: Permission) => {
-        return hasPermission(get().user, permission);
-      },
-
-      hasAnyPermission: (permissions: Permission[]) => {
-        return hasAnyPermission(get().user, permissions);
-      },
-
-      // 检查是否可以创建 Prompt
-      canCreatePrompt: () => {
-        const { user } = get();
-        if (!user) return false;
-        if (!hasPermission(user, 'prompt:create')) return false;
-        // 这里需要从 promptStore 获取当前数量，暂时返回 true
-        return true;
-      },
-
-      // 检查是否可以创建 Collection
-      canCreateCollection: () => {
-        const { user } = get();
-        if (!user) return false;
-        if (!hasPermission(user, 'collection:create')) return false;
-        return true;
-      },
-
-      // 获取计划限制
-      getPlanLimits: () => {
-        const { user } = get();
-        if (!user) return null;
-        return PLAN_LIMITS[user.plan];
-      },
     }),
     {
       name: 'prompt-studio-auth',

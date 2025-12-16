@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { usePromptStore, useCollectionStore } from '@/stores';
+import { usePromptStore, useCollectionStore, useModelStore, useI18nStore } from '@/stores';
 import { Select, Slider, Input, Badge } from '@/components/ui';
-import { MODELS_BY_CATEGORY } from '@/constants';
 
 export const PromptMetadata: React.FC = () => {
   const { getActivePrompt, updatePrompt } = usePromptStore();
   const { collections } = useCollectionStore();
+  const { getModelOptions, initialized, initialize } = useModelStore();
+  const { t } = useI18nStore();
   const prompt = getActivePrompt();
+
+  // 初始化模型数据
+  useEffect(() => {
+    if (!initialized) {
+      initialize();
+    }
+  }, [initialized, initialize]);
 
   const [model, setModel] = useState('');
   const [temperature, setTemperature] = useState(0.7);
@@ -84,15 +92,16 @@ export const PromptMetadata: React.FC = () => {
   if (!prompt) {
     return (
       <div className="h-full flex items-center justify-center text-slate-500">
-        <p>Select a prompt to view metadata</p>
+        <p>{t.metadata.selectPrompt}</p>
       </div>
     );
   }
 
   // Prepare model options for Select based on prompt category
-  const modelGroups = MODELS_BY_CATEGORY[prompt.category].map(group => ({
-    label: group.group,
-    options: group.models.map(m => ({ value: m.id, label: m.name })),
+  const modelOptions = getModelOptions(prompt.category);
+  const modelGroups = modelOptions.map(group => ({
+    label: group.providerName,
+    options: group.options.map(m => ({ value: m.value, label: m.label })),
   }));
 
   return (
@@ -100,32 +109,32 @@ export const PromptMetadata: React.FC = () => {
       <div className="space-y-6">
         {/* Model Selection */}
         <Select
-          label="AI Model"
+          label={t.metadata.aiModel}
           value={model}
           onChange={handleModelChange}
           groups={modelGroups}
           searchable
-          searchPlaceholder="Search models..."
-          placeholder="Select a model..."
+          searchPlaceholder={t.metadata.searchModels}
+          placeholder={t.metadata.selectModel}
         />
 
         {/* Temperature Slider */}
         <Slider
-          label="Temperature"
+          label={t.metadata.temperature}
           value={temperature}
           onChange={handleTemperatureChange}
           min={0}
           max={2}
           step={0.1}
-          minLabel="Precise"
-          maxLabel="Creative"
+          minLabel={t.metadata.precise}
+          maxLabel={t.metadata.creative}
         />
 
         {/* Max Tokens */}
         <div>
           <div className="flex justify-between mb-2">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Max Tokens
+              {t.metadata.maxTokens}
             </label>
             <span className="text-xs text-indigo-400 font-mono">{maxTokens}</span>
           </div>
@@ -140,20 +149,20 @@ export const PromptMetadata: React.FC = () => {
 
         {/* Collection */}
         <Select
-          label="Collection"
+          label={t.metadata.collection}
           value={collectionId || ''}
           onChange={handleCollectionChange}
           options={[
-            { value: '', label: 'No Collection' },
+            { value: '', label: t.metadata.noCollection },
             ...collections.map(c => ({ value: c.id, label: c.name })),
           ]}
-          placeholder="No Collection"
+          placeholder={t.metadata.noCollection}
         />
 
         {/* Tags */}
         <div>
           <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-            Tags
+            {t.metadata.tags}
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
             {tags.map(tag => (
@@ -173,7 +182,7 @@ export const PromptMetadata: React.FC = () => {
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
             onKeyDown={handleAddTag}
-            placeholder="Add a tag..."
+            placeholder={t.metadata.addTag}
           />
         </div>
 
@@ -184,19 +193,18 @@ export const PromptMetadata: React.FC = () => {
             className="flex items-center justify-between w-full text-left text-slate-400 hover:text-white transition-colors"
           >
             <span className="text-xs font-bold uppercase tracking-wider">
-              Advanced Settings
+              {t.metadata.advancedSettings}
             </span>
             <ChevronRight
               className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-90' : ''}`}
             />
           </button>
-          
+
           {showAdvanced && (
             <div className="mt-4 space-y-4">
               <div className="p-4 bg-dark-900 rounded-lg border border-slate-800">
                 <p className="text-xs text-slate-500">
-                  Advanced settings like top_p, frequency_penalty, and presence_penalty
-                  will be available in a future update.
+                  {t.metadata.advancedSettingsHint}
                 </p>
               </div>
             </div>

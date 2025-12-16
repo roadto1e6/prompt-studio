@@ -50,9 +50,12 @@ async function mockCreateShare(request: CreateShareRequest): Promise<CreateShare
     ? new Date(Date.now() + request.expiresIn * 60 * 60 * 1000).toISOString()
     : undefined;
 
+  const id = `share_${Date.now()}`;
   const record: ShareRecord = {
+    id,
     code,
-    prompt: request.prompt,
+    promptId: request.promptId || '',
+    prompt: request.prompt!,
     createdAt: now,
     expiresAt,
     viewCount: 0,
@@ -63,6 +66,7 @@ async function mockCreateShare(request: CreateShareRequest): Promise<CreateShare
   saveMockShares(shares);
 
   return {
+    id,
     code,
     shareUrl: `${window.location.origin}${window.location.pathname}?s=${code}`,
     expiresAt,
@@ -93,8 +97,12 @@ async function mockGetShare(code: string): Promise<GetShareResponse> {
 
   return {
     prompt: record.prompt,
+    sharedBy: {
+      name: record.prompt.sharedBy,
+    },
     viewCount: record.viewCount,
     createdAt: record.createdAt,
+    expiresAt: record.expiresAt,
   };
 }
 

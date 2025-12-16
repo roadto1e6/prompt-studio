@@ -61,6 +61,7 @@ export const useUIStore = create<UIState>((set) => ({
     deleteConfirm: false,
     sharePrompt: false,
     importPrompt: false,
+    modelConfig: false,
   },
   openModal: (modal) => set((state) => ({
     modals: { ...state.modals, [modal]: true }
@@ -76,6 +77,7 @@ export const useUIStore = create<UIState>((set) => ({
       deleteConfirm: false,
       sharePrompt: false,
       importPrompt: false,
+      modelConfig: false,
     }
   }),
 

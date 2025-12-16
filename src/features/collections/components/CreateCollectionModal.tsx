@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Folder } from 'lucide-react';
-import { useCollectionStore, useUIStore } from '@/stores';
+import { useCollectionStore, useUIStore, useI18nStore } from '@/stores';
 import { Modal, Input, Button } from '@/components/ui';
 import { COLLECTION_COLORS } from '@/constants';
 import { cn } from '@/utils';
@@ -8,16 +8,17 @@ import { cn } from '@/utils';
 export const CreateCollectionModal: React.FC = () => {
   const { createCollection } = useCollectionStore();
   const { modals, closeModal } = useUIStore();
+  const { t } = useI18nStore();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState(COLLECTION_COLORS[0]);
+  const [color, setColor] = useState<typeof COLLECTION_COLORS[number]>(COLLECTION_COLORS[0]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     createCollection({
-      name: name.trim() || 'New Collection',
+      name: name.trim() || t.createCollection?.nameLabel || 'New Collection',
       description,
       color,
     });
@@ -41,7 +42,7 @@ export const CreateCollectionModal: React.FC = () => {
     <Modal
       isOpen={modals.createCollection}
       onClose={handleClose}
-      title="Create Collection"
+      title={t.createCollection?.title || 'Create Collection'}
       size="md"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -50,33 +51,35 @@ export const CreateCollectionModal: React.FC = () => {
           <Folder className={cn('w-8 h-8', color)} />
           <div>
             <p className="font-medium text-white">
-              {name || 'Collection Name'}
+              {name || t.createCollection?.nameLabel || 'Collection Name'}
             </p>
-            <p className="text-xs text-slate-500">0 prompts</p>
+            <p className="text-xs text-slate-500">
+              0 {t.createCollection?.promptsCount?.replace('{count}', '0') || 'prompts'}
+            </p>
           </div>
         </div>
 
         {/* Name */}
         <Input
-          label="Name"
+          label={t.createCollection?.nameLabel || 'Name'}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter collection name..."
+          placeholder={t.createCollection?.namePlaceholder || 'Enter collection name...'}
           autoFocus
         />
 
         {/* Description */}
         <Input
-          label="Description (Optional)"
+          label={t.createCollection?.descriptionLabel || 'Description (Optional)'}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brief description..."
+          placeholder={t.createCollection?.descriptionPlaceholder || 'Brief description...'}
         />
 
         {/* Color Selection */}
         <div>
           <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-            Color
+            {t.createCollection?.colorLabel || 'Color'}
           </label>
           <div className="flex gap-2 flex-wrap">
             {COLLECTION_COLORS.map((c) => {
@@ -108,10 +111,10 @@ export const CreateCollectionModal: React.FC = () => {
         {/* Actions */}
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
           <Button type="button" variant="ghost" onClick={handleClose}>
-            Cancel
+            {t.common?.cancel || 'Cancel'}
           </Button>
           <Button type="submit" variant="primary">
-            Create Collection
+            {t.createCollection?.createButton || 'Create Collection'}
           </Button>
         </div>
       </form>

@@ -53,6 +53,7 @@ export interface UpdatePromptRequest {
 // 创建版本请求
 export interface CreateVersionRequest {
   changeNote: string;
+  versionType?: 'major' | 'minor';
 }
 
 export const promptService = {
@@ -168,10 +169,24 @@ export const promptService = {
   },
 
   /**
-   * 删除版本
+   * 删除版本（软删除）
    */
   deleteVersion: async (promptId: string, versionId: string): Promise<void> => {
     return api.delete<void>(`/prompts/${promptId}/versions/${versionId}`);
+  },
+
+  /**
+   * 恢复已删除的版本
+   */
+  restoreDeletedVersion: async (promptId: string, versionId: string): Promise<PromptVersion> => {
+    return api.post<PromptVersion>(`/prompts/${promptId}/versions/${versionId}/restore-deleted`);
+  },
+
+  /**
+   * 永久删除版本
+   */
+  permanentDeleteVersion: async (promptId: string, versionId: string): Promise<void> => {
+    return api.delete<void>(`/prompts/${promptId}/versions/${versionId}/permanent`);
   },
 
   // ============ 分享相关 ============

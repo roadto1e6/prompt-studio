@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search, X } from 'lucide-react';
 import { cn } from '@/utils';
 
@@ -52,7 +53,9 @@ export const Select: React.FC<SelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -117,19 +120,51 @@ export const Select: React.FC<SelectProps> = ({
     setHighlightedIndex(-1);
   }, [onChange, onValueChange]);
 
+  // Update dropdown position when opened
+  const updatePosition = useCallback(() => {
+    if (buttonRef.current && isOpen) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      updatePosition();
+      window.addEventListener('scroll', updatePosition, true);
+      window.addEventListener('resize', updatePosition);
+      return () => {
+        window.removeEventListener('scroll', updatePosition, true);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [isOpen, updatePosition]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(target) &&
+        // Check if click is not on the portal dropdown
+        !(event.target as Element).closest('[data-select-dropdown]')
+      ) {
         setIsOpen(false);
         setSearchQuery('');
         setHighlightedIndex(-1);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
 
   // Focus search input when dropdown opens
   useEffect(() => {
@@ -219,6 +254,7 @@ export const Select: React.FC<SelectProps> = ({
       <div className="relative">
         {/* Trigger Button */}
         <button
+          ref={buttonRef}
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
@@ -251,63 +287,74 @@ export const Select: React.FC<SelectProps> = ({
           />
         </button>
 
-        {/* Dropdown */}
-        {isOpen && (
-          <div
-            className={cn(
-              'absolute z-50 w-full mt-1',
-              'bg-dark-800',
-              'border border-slate-700',
-              'rounded-xl shadow-xl',
-              'overflow-hidden'
-            )}
-          >
-            {/* Search Input */}
-            {searchable && (
-              <div className="p-3 border-b border-slate-700/80">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setHighlightedIndex(0);
-                    }}
-                    onKeyDown={handleKeyDown}
-                    placeholder={searchPlaceholder}
-                    className={cn(
-                      'w-full pl-9 pr-9 py-2 text-sm',
-                      'bg-dark-900 border border-slate-700',
-                      'rounded-lg',
-                      'text-slate-300',
-                      'placeholder:text-slate-500',
-                      'focus:outline-none focus:border-indigo-500 transition-colors'
-                    )}
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery('');
-                        inputRef.current?.focus();
-                      }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
+      </div>
+      {error && (
+        <p className="mt-1 text-xs text-red-400">{error}</p>
+      )}
 
-            {/* Options List */}
-            <div
-              ref={listRef}
-              className="overflow-y-auto overscroll-contain px-2 py-2"
-              style={{ maxHeight }}
-            >
+      {/* Dropdown Portal */}
+      {isOpen && createPortal(
+        <div
+          data-select-dropdown
+          className={cn(
+            'fixed z-[9999]',
+            'bg-dark-800',
+            'border border-slate-700',
+            'rounded-xl shadow-2xl',
+            'overflow-hidden'
+          )}
+          style={{
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+            width: `${dropdownPosition.width}px`,
+          }}
+        >
+          {/* Search Input */}
+          {searchable && (
+            <div className="p-3 border-b border-slate-700/80">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setHighlightedIndex(0);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  placeholder={searchPlaceholder}
+                  className={cn(
+                    'w-full pl-9 pr-9 py-2 text-sm',
+                    'bg-dark-900 border border-slate-700',
+                    'rounded-lg',
+                    'text-slate-300',
+                    'placeholder:text-slate-500',
+                    'focus:outline-none focus:border-indigo-500 transition-colors'
+                  )}
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      inputRef.current?.focus();
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Options List */}
+          <div
+            ref={listRef}
+            className="overflow-y-auto overscroll-contain px-2 py-2"
+            style={{ maxHeight }}
+          >
               {isEmpty ? (
                 <div className="px-3 py-8 text-center text-sm text-slate-500">
                   {emptyMessage}
@@ -427,11 +474,8 @@ export const Select: React.FC<SelectProps> = ({
                 </div>
               )}
             </div>
-          </div>
-        )}
-      </div>
-      {error && (
-        <p className="mt-1 text-xs text-red-400">{error}</p>
+          </div>,
+        document.body
       )}
     </div>
   );

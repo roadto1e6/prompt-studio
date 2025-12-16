@@ -4,7 +4,7 @@ import { Star, FileText, Image, AudioLines, Video, Trash2, RotateCcw } from 'luc
 import { Prompt, Category, ViewMode } from '@/types';
 import { formatRelativeTime, cn } from '@/utils';
 import { Badge } from '@/components/ui';
-import { useI18nStore } from '@/stores';
+import { useI18nStore, useThemeStore } from '@/stores';
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -28,6 +28,8 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
   const config = categoryConfig[prompt.category];
   const Icon = config.icon;
   const { t } = useI18nStore();
+  const { theme } = useThemeStore();
+  const isDark = theme === 'dark';
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -55,12 +57,16 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
         transition={{ duration: 0.2 }}
         onClick={onClick}
         className={cn(
-          'group cursor-pointer bg-dark-800 border rounded-lg p-4 transition-all',
-          'hover:shadow-md hover:shadow-black/20',
+          'group cursor-pointer border rounded-lg p-4 transition-all',
           'grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-4',
+          isDark
+            ? 'bg-dark-800 hover:shadow-md hover:shadow-black/20'
+            : 'bg-white hover:shadow-md hover:shadow-slate-200/50',
           isSelected
             ? 'border-indigo-500 bg-indigo-500/5'
-            : 'border-slate-800 hover:border-slate-700'
+            : isDark
+              ? 'border-slate-800 hover:border-slate-700'
+              : 'border-slate-200 hover:border-slate-300'
         )}
       >
         {/* Icon */}
@@ -71,11 +77,17 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
         {/* Content */}
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="text-white font-semibold text-sm truncate">
+            <h3 className={cn(
+              'font-semibold text-sm truncate',
+              isDark ? 'text-white' : 'text-slate-900'
+            )}>
               {prompt.title}
             </h3>
           </div>
-          <p className="text-slate-400 text-xs truncate mt-0.5">
+          <p className={cn(
+            'text-xs truncate mt-0.5',
+            isDark ? 'text-slate-400' : 'text-slate-500'
+          )}>
             {prompt.description || t.promptCard.noDescription}
           </p>
         </div>
@@ -90,7 +102,10 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
         </div>
 
         {/* Meta */}
-        <div className="flex items-center gap-3 text-[10px] text-slate-500 w-32 justify-end">
+        <div className={cn(
+          'flex items-center gap-3 text-[10px] w-32 justify-end',
+          isDark ? 'text-slate-500' : 'text-slate-400'
+        )}>
           <span className="hidden sm:inline truncate max-w-[80px]">{prompt.model}</span>
           <span className="whitespace-nowrap">{formatRelativeTime(prompt.updatedAt)}</span>
         </div>
@@ -101,14 +116,20 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
             <>
               <button
                 onClick={handleRestoreClick}
-                className="p-1.5 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-emerald-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:text-emerald-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.restore}
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="p-1.5 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.deletePermanently}
               >
                 <Trash2 className="w-4 h-4" />
@@ -122,14 +143,19 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
                   'p-1.5 rounded-md transition-all',
                   prompt.favorite
                     ? 'text-yellow-500 opacity-100'
-                    : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-700'
+                    : isDark
+                      ? 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-700'
+                      : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-100'
                 )}
               >
                 <Star className={cn('w-4 h-4', prompt.favorite && 'fill-yellow-500')} />
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="p-1.5 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.moveToTrash}
               >
                 <Trash2 className="w-4 h-4" />
@@ -152,11 +178,15 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
       transition={{ duration: 0.2 }}
       onClick={onClick}
       className={cn(
-        'group cursor-pointer bg-dark-800 border rounded-xl p-5 flex flex-col min-h-[14rem] relative transition-all',
-        'hover:shadow-lg hover:shadow-black/20',
+        'group cursor-pointer border rounded-xl p-5 flex flex-col min-h-[14rem] relative transition-all',
+        isDark
+          ? 'bg-dark-800 hover:shadow-lg hover:shadow-black/20'
+          : 'bg-white hover:shadow-lg hover:shadow-slate-200/50',
         isSelected
           ? 'border-indigo-500 bg-indigo-500/5 shadow-lg shadow-indigo-500/10'
-          : 'border-slate-800 hover:border-slate-700'
+          : isDark
+            ? 'border-slate-800 hover:border-slate-700'
+            : 'border-slate-200 hover:border-slate-300'
       )}
     >
       {/* Header with Icon & Actions */}
@@ -169,14 +199,20 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
             <>
               <button
                 onClick={handleRestoreClick}
-                className="p-1 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-emerald-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1 rounded-md opacity-0 group-hover:opacity-100 hover:text-emerald-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.restore}
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="p-1 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1 rounded-md opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.deletePermanently}
               >
                 <Trash2 className="w-4 h-4" />
@@ -190,14 +226,19 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
                   'p-1 rounded-md transition-all',
                   prompt.favorite
                     ? 'text-yellow-500 opacity-100'
-                    : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-700'
+                    : isDark
+                      ? 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-700'
+                      : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-yellow-500 hover:bg-slate-100'
                 )}
               >
                 <Star className={cn('w-4 h-4', prompt.favorite && 'fill-yellow-500')} />
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="p-1 rounded-md text-slate-500 opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-slate-700 transition-all"
+                className={cn(
+                  'p-1 rounded-md opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all',
+                  isDark ? 'text-slate-500 hover:bg-slate-700' : 'text-slate-400 hover:bg-slate-100'
+                )}
                 title={t.promptCard.moveToTrash}
               >
                 <Trash2 className="w-4 h-4" />
@@ -208,12 +249,18 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
       </div>
 
       {/* Title */}
-      <h3 className="text-white font-semibold text-base mb-2 line-clamp-1 flex-shrink-0">
+      <h3 className={cn(
+        'font-semibold text-base mb-2 line-clamp-1 flex-shrink-0',
+        isDark ? 'text-white' : 'text-slate-900'
+      )}>
         {prompt.title}
       </h3>
 
       {/* Description - fixed height for 2 lines */}
-      <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed h-[2.25rem] flex-shrink-0">
+      <p className={cn(
+        'text-xs line-clamp-2 leading-relaxed h-[2.25rem] flex-shrink-0',
+        isDark ? 'text-slate-400' : 'text-slate-500'
+      )}>
         {prompt.description || t.promptCard.noDescription}
       </p>
 
@@ -232,9 +279,17 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
           )}
         </div>
 
-        <div className="flex justify-between items-center text-[10px] text-slate-500 pt-3 border-t border-slate-800/50">
+        <div className={cn(
+          'flex justify-between items-center text-[10px] pt-3 border-t',
+          isDark
+            ? 'text-slate-500 border-slate-800/50'
+            : 'text-slate-400 border-slate-200'
+        )}>
           <div className="flex items-center gap-1.5 truncate max-w-[60%]">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-600 flex-shrink-0" />
+            <span className={cn(
+              'w-1.5 h-1.5 rounded-full flex-shrink-0',
+              isDark ? 'bg-slate-600' : 'bg-slate-300'
+            )} />
             <span className="truncate">{prompt.model}</span>
           </div>
           <span className="flex-shrink-0">{formatRelativeTime(prompt.updatedAt)} ago</span>

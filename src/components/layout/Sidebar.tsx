@@ -9,13 +9,11 @@ import {
   AudioLines,
   Video,
   Folder,
-  Plus,
   Search,
   Settings,
 } from 'lucide-react';
-import { usePromptStore, useCollectionStore, useUIStore, useI18nStore } from '@/stores';
+import { usePromptStore, useCollectionStore, useUIStore, useI18nStore, useAuthStore, useThemeStore } from '@/stores';
 import { CATEGORIES, QUICK_FILTERS } from '@/constants';
-import { mockUser } from '@/data/mockData';
 import { cn, debounce } from '@/utils';
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
@@ -39,6 +37,17 @@ export const Sidebar: React.FC = () => {
   const { collections, deleteCollection } = useCollectionStore();
   const { openModal, closeDetailPanel, showConfirm } = useUIStore();
   const { t } = useI18nStore();
+  const { user } = useAuthStore();
+  const { theme } = useThemeStore();
+  const isDark = theme === 'dark';
+  const rightColumnBase = 'inline-flex items-center min-w-[1.75rem]';
+  const countColumnClass = cn(
+    'text-xs tabular-nums font-mono justify-end',
+    rightColumnBase,
+    isDark
+      ? 'text-slate-600 group-hover:text-slate-400'
+      : 'text-slate-400 group-hover:text-slate-600'
+  );
 
   // Close context menu when clicking outside
   useEffect(() => {
@@ -66,7 +75,12 @@ export const Sidebar: React.FC = () => {
 
   const handleCollectionContextMenu = (e: React.MouseEvent, collectionId: string) => {
     e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY, collectionId });
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setContextMenu({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      collectionId,
+    });
   };
 
   const handleDeleteCollection = (collectionId: string) => {
@@ -109,11 +123,22 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-[260px] flex-shrink-0 border-r border-slate-800 flex flex-col bg-dark-900">
+    <aside className={cn(
+      'w-[260px] flex-shrink-0 border-r flex flex-col',
+      isDark
+        ? 'bg-dark-900 border-slate-800'
+        : 'bg-white border-slate-200'
+    )}>
       {/* Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-slate-800">
+      <div className={cn(
+        'h-16 flex items-center px-6 border-b',
+        isDark ? 'border-slate-800' : 'border-slate-200'
+      )}>
         <Infinity className="w-8 h-8 text-indigo-500 mr-2" />
-        <span className="font-display text-xl tracking-tight text-white font-bold">
+        <span className={cn(
+          'font-display text-xl tracking-tight font-bold',
+          isDark ? 'text-white' : 'text-slate-900'
+        )}>
           Prompt Studio
         </span>
       </div>
@@ -121,12 +146,20 @@ export const Sidebar: React.FC = () => {
       {/* Global Search */}
       <div className="p-4">
         <div className="relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className={cn(
+            'absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4',
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          )} />
           <input
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-full bg-dark-800 border border-slate-700 text-slate-300 rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-indigo-500 transition-colors text-xs font-medium placeholder-slate-500"
+            className={cn(
+              'w-full rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-indigo-500 transition-colors text-xs font-medium border',
+              isDark
+                ? 'bg-dark-800 border-slate-700 text-slate-300 placeholder-slate-500'
+                : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+            )}
             placeholder={t.sidebar.searchPlaceholder}
           />
         </div>
@@ -136,7 +169,10 @@ export const Sidebar: React.FC = () => {
       <div className="flex-1 overflow-y-auto px-3 space-y-6">
         {/* Quick Access */}
         <div>
-          <h3 className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          <h3 className={cn(
+            'px-3 text-xs font-semibold uppercase tracking-wider mb-2',
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          )}>
             {t.sidebar.quickAccess}
           </h3>
           <nav className="space-y-0.5">
@@ -163,8 +199,10 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-400'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-indigo-500/10 text-indigo-500'
+                      : isDark
+                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   )}
                 >
                   <div className="flex items-center">
@@ -172,15 +210,15 @@ export const Sidebar: React.FC = () => {
                       className={cn(
                         'mr-3 w-5 h-5 transition-colors',
                         isActive
-                          ? 'text-indigo-400'
-                          : 'text-slate-500 group-hover:text-white'
+                          ? 'text-indigo-500'
+                          : isDark
+                            ? 'text-slate-500 group-hover:text-white'
+                            : 'text-slate-400 group-hover:text-slate-900'
                       )}
                     />
                     {t.filters[item.id as keyof typeof t.filters]}
                   </div>
-                  <span className="text-xs text-slate-600 group-hover:text-slate-400">
-                    {count}
-                  </span>
+                  <span className={countColumnClass}>{count}</span>
                 </button>
               );
             })}
@@ -189,7 +227,10 @@ export const Sidebar: React.FC = () => {
 
         {/* Categories */}
         <div>
-          <h3 className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          <h3 className={cn(
+            'px-3 text-xs font-semibold uppercase tracking-wider mb-2',
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          )}>
             {t.sidebar.categories}
           </h3>
           <nav className="space-y-0.5">
@@ -205,17 +246,17 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-400'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-indigo-500/10 text-indigo-500'
+                      : isDark
+                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   )}
                 >
                   <div className="flex items-center">
                     <Icon className={cn('mr-3 w-5 h-5', cat.color)} />
                     {t.categories[cat.id as keyof typeof t.categories]}
                   </div>
-                  <span className="text-xs text-slate-600 group-hover:text-slate-400">
-                    {count}
-                  </span>
+                  <span className={countColumnClass}>{count}</span>
                 </button>
               );
             })}
@@ -224,15 +265,25 @@ export const Sidebar: React.FC = () => {
 
         {/* Collections */}
         <div>
-          <div className="flex justify-between items-center px-3 mb-2">
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <div className="flex items-center px-3 mb-2 gap-2">
+            <h3 className={cn(
+              'flex-1 text-xs font-semibold uppercase tracking-wider',
+              isDark ? 'text-slate-500' : 'text-slate-400'
+            )}>
               {t.sidebar.collections}
             </h3>
             <button
               onClick={() => openModal('createCollection')}
-              className="text-slate-600 hover:text-white transition-colors"
+              className={cn(
+                rightColumnBase,
+                'justify-end w-[1.75rem] h-[1.75rem] rounded-md transition-colors ml-auto focus:outline-none',
+                isDark
+                  ? 'text-slate-500 hover:text-white'
+                  : 'text-slate-500 hover:text-slate-900'
+              )}
+              aria-label={t.createCollection.title}
             >
-              <Plus className="w-4 h-4" />
+              <span className="font-mono text-sm leading-none font-semibold">+</span>
             </button>
           </div>
           <nav className="space-y-0.5">
@@ -242,17 +293,17 @@ export const Sidebar: React.FC = () => {
               className={cn(
                 'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                 collectionFilter === 'uncategorized'
-                  ? 'bg-indigo-500/10 text-indigo-400'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-indigo-500/10 text-indigo-500'
+                  : isDark
+                    ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               )}
             >
               <div className="flex items-center">
-                <Folder className="mr-3 w-5 h-5 text-slate-500" />
+                <Folder className={cn('mr-3 w-5 h-5', isDark ? 'text-slate-500' : 'text-slate-400')} />
                 {t.sidebar.noCollection}
               </div>
-              <span className="text-xs text-slate-600 group-hover:text-slate-400">
-                {prompts.filter(p => !p.collectionId && p.status !== 'trash').length}
-              </span>
+              <span className={countColumnClass}>{prompts.filter(p => !p.collectionId && p.status !== 'trash').length}</span>
             </button>
             {collections.map((col) => {
               const isActive = collectionFilter === col.id;
@@ -266,17 +317,17 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-400'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-indigo-500/10 text-indigo-500'
+                      : isDark
+                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   )}
                 >
                   <div className="flex items-center">
                     <Folder className={cn('mr-3 w-5 h-5', col.color)} />
                     {col.name}
                   </div>
-                  <span className="text-xs text-slate-600 group-hover:text-slate-400">
-                    {promptCount}
-                  </span>
+                  <span className={countColumnClass}>{promptCount}</span>
                 </button>
               );
             })}
@@ -288,12 +339,20 @@ export const Sidebar: React.FC = () => {
       {contextMenu && (
         <div
           ref={contextMenuRef}
-          className="fixed z-50 bg-dark-800 border border-slate-700 rounded-lg shadow-xl py-1 min-w-[140px]"
-          style={{ left: contextMenu.x, top: contextMenu.y }}
+          className={cn(
+            'fixed z-50 rounded-lg shadow-xl py-1 min-w-[140px] border',
+            isDark
+              ? 'bg-dark-800 border-slate-700'
+              : 'bg-white border-slate-200'
+          )}
+          style={{ left: contextMenu.x, top: contextMenu.y, transform: 'translate(-50%, -50%)' }}
         >
           <button
             onClick={() => handleDeleteCollection(contextMenu.collectionId)}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-slate-700/50 transition-colors"
+            className={cn(
+              'flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 transition-colors',
+              isDark ? 'hover:bg-slate-700/50' : 'hover:bg-red-50'
+            )}
           >
             <Trash2 className="w-4 h-4" />
             {t.common.delete}
@@ -302,20 +361,36 @@ export const Sidebar: React.FC = () => {
       )}
 
       {/* User/Settings */}
-      <div className="p-4 border-t border-slate-800">
+      <div className={cn(
+        'p-4 border-t',
+        isDark ? 'border-slate-800' : 'border-slate-200'
+      )}>
         {/* User Profile */}
         <button
           onClick={() => openModal('settings')}
-          className="flex items-center gap-3 w-full hover:bg-slate-800/50 p-2 rounded-lg transition-colors"
+          className={cn(
+            'flex items-center gap-3 w-full p-2 rounded-lg transition-colors',
+            isDark ? 'hover:bg-slate-800/50' : 'hover:bg-slate-100'
+          )}
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-            {mockUser.name.split(' ').map(n => n[0]).join('')}
-          </div>
+          {user?.avatar ? (
+            <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
+              {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+            </div>
+          )}
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-sm font-medium text-white truncate">{mockUser.name}</p>
-            <p className="text-xs text-slate-500 truncate">{t.user.plan[mockUser.plan as keyof typeof t.user.plan]}</p>
+            <p className={cn(
+              'text-sm font-medium truncate',
+              isDark ? 'text-white' : 'text-slate-900'
+            )}>{user?.name || 'User'}</p>
+            <p className={cn(
+              'text-xs truncate',
+              isDark ? 'text-slate-500' : 'text-slate-500'
+            )}>{user?.email || ''}</p>
           </div>
-          <Settings className="w-4 h-4 text-slate-500" />
+          <Settings className={cn('w-4 h-4', isDark ? 'text-slate-500' : 'text-slate-400')} />
         </button>
       </div>
     </aside>
