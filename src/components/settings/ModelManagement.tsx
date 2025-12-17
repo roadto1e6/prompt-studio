@@ -24,7 +24,6 @@ import { Button, Input } from '@/components/ui';
 import { SettingsSection } from './shared';
 import { useModelStore } from '@/stores/modelStore';
 import { useI18nStore } from '@/stores/i18nStore';
-import { useThemeStore } from '@/stores/themeStore';
 import { cn } from '@/utils';
 import type { UserCustomModel, ModelCapability } from '@/types';
 
@@ -54,8 +53,6 @@ const defaultFormData: ModelFormData = {
 
 export function ModelManagement() {
   const { t } = useI18nStore();
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
   const {
     providers,
     userModels,
@@ -228,18 +225,13 @@ export function ModelManagement() {
     return (
       <div
         key={model.id}
-        className={cn(
-          'group relative p-4 rounded-lg border transition-all duration-200',
-          isDark
-            ? 'bg-slate-800/50 border-slate-700/50 hover:border-theme-accent/30 hover:bg-slate-800/70'
-            : 'bg-white border-slate-200 hover:border-theme-accent/30 hover:shadow-sm'
-        )}
+        className="group relative p-4 rounded-lg border transition-all duration-200 bg-theme-card-bg border-theme-card-border hover:border-theme-accent/30 hover:bg-theme-bg-hover"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0 space-y-2">
             {/* Header */}
             <div className="flex items-center gap-2">
-              <h4 className={cn('text-sm font-semibold truncate', isDark ? 'text-white' : 'text-slate-900')}>
+              <h4 className="text-sm font-semibold truncate text-theme-text-primary">
                 {model.name}
               </h4>
               <span
@@ -253,21 +245,21 @@ export function ModelManagement() {
             </div>
 
             {/* ID */}
-            <p className={cn('text-xs font-mono truncate', isDark ? 'text-slate-500' : 'text-slate-600')}>
+            <p className="text-xs font-mono truncate text-theme-text-secondary">
               {model.id}
             </p>
 
             {/* Info */}
-            <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 text-xs', isDark ? 'text-slate-400' : 'text-slate-600')}>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-theme-text-secondary">
               <span className="flex items-center gap-1.5">
-                <Server className={cn('w-3 h-3', isDark ? 'text-slate-500' : 'text-slate-400')} />
+                <Server className="w-3 h-3 text-theme-text-muted" />
                 {getProviderName(model.providerId)}
               </span>
-              <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>•</span>
+              <span className="text-theme-text-muted">•</span>
               <span>{model.maxTokens.toLocaleString()} tokens</span>
               {model.contextWindow && (
                 <>
-                  <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>•</span>
+                  <span className="text-theme-text-muted">•</span>
                   <span>{(model.contextWindow / 1000).toFixed(0)}K context</span>
                 </>
               )}
@@ -287,7 +279,7 @@ export function ModelManagement() {
 
             {/* Description */}
             {model.description && (
-              <p className={cn('text-xs line-clamp-2', isDark ? 'text-slate-500' : 'text-slate-600')}>
+              <p className="text-xs line-clamp-2 text-theme-text-secondary">
                 {model.description}
               </p>
             )}
@@ -309,7 +301,7 @@ export function ModelManagement() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setDeleteConfirm(null)}
-                  className={cn('h-8 w-8 p-0', isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900')}
+                  className="h-8 w-8 p-0 text-theme-text-secondary hover:text-theme-text-primary"
                 >
                   <X className="w-4 h-4" />
                 </Button>
@@ -320,12 +312,7 @@ export function ModelManagement() {
                   variant="ghost"
                   size="sm"
                   onClick={() => handleEditModel(model)}
-                  className={cn(
-                    'h-8 w-8 p-0',
-                    isDark
-                      ? 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                  )}
+                  className="h-8 w-8 p-0 text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-bg-hover"
                 >
                   <Pencil className="w-3.5 h-3.5" />
                 </Button>
@@ -369,12 +356,7 @@ export function ModelManagement() {
           {/* Model ID & Name */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.modelId || 'Model ID'} *
               </label>
               <Input
@@ -386,12 +368,7 @@ export function ModelManagement() {
               />
             </div>
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.modelName || 'Model Name'} *
               </label>
               <Input
@@ -404,12 +381,7 @@ export function ModelManagement() {
 
           {/* Provider */}
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.provider || 'Provider'} *
             </label>
             <select
@@ -417,8 +389,7 @@ export function ModelManagement() {
               onChange={(e) => setFormData((prev) => ({ ...prev, providerId: e.target.value }))}
               disabled={!!editingModel}
               className={cn(
-                'w-full px-3.5 py-2.5 border rounded-lg text-sm',
-                isDark ? 'bg-dark-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900',
+                'w-full px-3.5 py-2.5 border rounded-lg text-sm bg-theme-input-bg border-theme-input-border text-theme-input-text',
                 'focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent',
                 editingModel ? 'opacity-50 cursor-not-allowed' : ''
               )}
@@ -434,12 +405,7 @@ export function ModelManagement() {
 
           {/* Capabilities */}
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.capabilities || 'Capabilities'} *
             </label>
             <div className="flex flex-wrap gap-2">
@@ -452,9 +418,7 @@ export function ModelManagement() {
                     'px-3.5 py-2 text-sm rounded-lg border-2 transition-all duration-200 font-medium',
                     formData.capabilities.includes(cap.value)
                       ? 'bg-theme-accent/10 border-theme-accent/50 text-theme-accent'
-                      : isDark
-                        ? 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
-                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
+                      : 'bg-theme-bg-secondary border-theme-border text-theme-text-secondary hover:border-theme-card-hover-border hover:text-theme-text-primary'
                   )}
                 >
                   {cap.label}
@@ -466,12 +430,7 @@ export function ModelManagement() {
           {/* Max Tokens & Context Window */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.maxTokens || 'Max Tokens'} *
               </label>
               <Input
@@ -482,12 +441,7 @@ export function ModelManagement() {
               />
             </div>
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.contextWindow || 'Context Window'}
               </label>
               <Input
@@ -501,12 +455,7 @@ export function ModelManagement() {
 
           {/* Description */}
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.description || 'Description'}
             </label>
             <textarea
@@ -514,13 +463,7 @@ export function ModelManagement() {
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               placeholder={t.settings?.descriptionPlaceholder || 'Describe what this model is for...'}
               rows={3}
-              className={cn(
-                'w-full px-3.5 py-2.5 border rounded-lg text-sm resize-none',
-                isDark
-                  ? 'bg-dark-900 border-slate-700 text-white placeholder:text-slate-500'
-                  : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400',
-                'focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent'
-              )}
+              className="w-full px-3.5 py-2.5 border rounded-lg text-sm resize-none bg-theme-input-bg border-theme-input-border text-theme-input-text placeholder:text-theme-input-placeholder focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent"
             />
           </div>
 
@@ -572,10 +515,7 @@ export function ModelManagement() {
                 <select
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
-                  className={cn(
-                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50',
-                    isDark ? 'bg-dark-900 border-slate-700 text-slate-300' : 'bg-white border-slate-300 text-slate-900'
-                  )}
+                  className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50 bg-theme-input-bg border-theme-input-border text-theme-input-text"
                 >
                   <option value="">{t.settings?.allProviders || 'All Providers'}</option>
                   {providers.map((provider) => (
@@ -587,10 +527,7 @@ export function ModelManagement() {
                 <select
                   value={selectedCapability}
                   onChange={(e) => setSelectedCapability(e.target.value as ModelCapability | '')}
-                  className={cn(
-                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50',
-                    isDark ? 'bg-dark-900 border-slate-700 text-slate-300' : 'bg-white border-slate-300 text-slate-900'
-                  )}
+                  className="flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50 bg-theme-input-bg border-theme-input-border text-theme-input-text"
                 >
                   <option value="">{t.settings?.allCapabilities || 'All Types'}</option>
                   {capabilityOptions.map((cap) => (
@@ -602,7 +539,7 @@ export function ModelManagement() {
               </div>
 
               {/* Stats */}
-              <div className={cn('text-sm', isDark ? 'text-slate-400' : 'text-slate-600')}>
+              <div className="text-sm text-theme-text-secondary">
                 {filteredUserModels.length === userModels.length ? (
                   <span>
                     {t.settings?.modelsCount?.replace('{count}', String(userModels.length)) || `${userModels.length} models`}
@@ -621,18 +558,13 @@ export function ModelManagement() {
           <SettingsSection>
             {filteredUserModels.length === 0 ? (
               <div className="text-center py-12">
-                <div
-                  className={cn(
-                    'w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4',
-                    isDark ? 'bg-slate-800/50' : 'bg-slate-100'
-                  )}
-                >
-                  <Settings2 className={cn('w-7 h-7', isDark ? 'text-slate-600' : 'text-slate-400')} />
+                <div className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 bg-theme-bg-secondary">
+                  <Settings2 className="w-7 h-7 text-theme-text-muted" />
                 </div>
-                <p className={cn('text-sm font-medium', isDark ? 'text-slate-400' : 'text-slate-600')}>
+                <p className="text-sm font-medium text-theme-text-secondary">
                   {t.settings?.noCustomModels || 'No custom models yet'}
                 </p>
-                <p className={cn('text-xs mt-1 mb-5', isDark ? 'text-slate-500' : 'text-slate-500')}>
+                <p className="text-xs mt-1 mb-5 text-theme-text-muted">
                   {t.settings?.noCustomModelsDescription || 'Add your first custom model to get started'}
                 </p>
                 <Button variant="outline" size="sm" onClick={() => setShowForm(true)}>

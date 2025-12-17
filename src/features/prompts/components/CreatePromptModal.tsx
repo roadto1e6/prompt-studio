@@ -108,7 +108,7 @@ export const CreatePromptModal: React.FC = () => {
 
         {/* Category Selection */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
+          <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2.5">
             {t.createPrompt.categoryLabel}
           </label>
           <div className="grid grid-cols-4 gap-3">
@@ -125,13 +125,13 @@ export const CreatePromptModal: React.FC = () => {
                     'flex flex-col items-center gap-2 py-3 px-4 rounded-xl border-2 transition-all',
                     isSelected
                       ? 'border-theme-accent bg-theme-accent/10 shadow-lg shadow-theme-accent/20'
-                      : 'border-slate-700 bg-dark-900 hover:border-slate-600 hover:bg-dark-800'
+                      : 'border-theme-border bg-theme-card-bg hover:border-theme-card-hover-border hover:bg-theme-bg-hover'
                   )}
                 >
                   <Icon className={cn('w-5 h-5', cat.color)} />
                   <span className={cn(
                     'text-sm font-medium',
-                    isSelected ? 'text-theme-accent' : 'text-slate-400'
+                    isSelected ? 'text-theme-accent' : 'text-theme-text-secondary'
                   )}>
                     {t.categories[cat.id as keyof typeof t.categories]}
                   </span>
@@ -166,7 +166,7 @@ export const CreatePromptModal: React.FC = () => {
 
         {/* System Prompt */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
+          <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2.5">
             {t.editor.systemPrompt}
           </label>
           <Textarea
@@ -178,7 +178,7 @@ export const CreatePromptModal: React.FC = () => {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+        <div className="flex justify-end gap-3 pt-4 border-t border-theme-border">
           <Button type="button" variant="ghost" onClick={handleClose}>
             {t.common.cancel}
           </Button>
