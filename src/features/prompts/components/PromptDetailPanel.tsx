@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, X, RotateCcw, Share2 } from 'lucide-react';
 import { usePromptStore, useCollectionStore, useUIStore, useI18nStore } from '@/stores';
@@ -24,11 +24,52 @@ export const PromptDetailPanel: React.FC = () => {
   const collection = prompt?.collectionId ? getCollectionById(prompt.collectionId) : null;
   const isInTrash = prompt?.status === 'trash';
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Local state for title input with debounced save
+  const [localTitle, setLocalTitle] = useState('');
+  const titleDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Sync local title with prompt title only when switching prompts
+  useEffect(() => {
     if (prompt) {
-      updatePrompt(prompt.id, { title: e.target.value });
+      setLocalTitle(prompt.title);
+    }
+  }, [prompt?.id]);  // 只在切换 prompt 时同步，不在 title 更新时同步
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setLocalTitle(newTitle);
+
+    // Clear existing timeout
+    if (titleDebounceRef.current) {
+      clearTimeout(titleDebounceRef.current);
+    }
+
+    // Set new timeout to save after 500ms of no typing
+    titleDebounceRef.current = setTimeout(() => {
+      if (prompt && newTitle !== prompt.title) {
+        updatePrompt(prompt.id, { title: newTitle });
+      }
+    }, 500);
+  };
+
+  // Save on blur as well
+  const handleTitleBlur = () => {
+    if (titleDebounceRef.current) {
+      clearTimeout(titleDebounceRef.current);
+    }
+    if (prompt && localTitle !== prompt.title) {
+      updatePrompt(prompt.id, { title: localTitle });
     }
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (titleDebounceRef.current) {
+        clearTimeout(titleDebounceRef.current);
+      }
+    };
+  }, []);
 
   const handleRestore = () => {
     if (prompt) {
@@ -74,26 +115,33 @@ export const PromptDetailPanel: React.FC = () => {
           {prompt ? (
             <>
               {/* Detail Header */}
-              <div className="h-16 px-6 border-b border-theme-border flex items-center justify-between flex-shrink-0">
-                <div className="flex-1 min-w-0 mr-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={cn(
-                      'w-2 h-2 rounded-full',
-                      categoryColors[prompt.category] || 'bg-slate-500'
-                    )} />
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-theme-text-muted">
-                      {collection?.name || t.detailPanel.uncategorized}
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    value={prompt.title}
-                    onChange={handleTitleChange}
-                    className="bg-transparent font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-theme-accent truncate transition-all text-theme-text-primary"
-                  />
+              <div className="px-6 pt-4 pb-3 border-b border-theme-border flex-shrink-0">
+                {/* Collection name row */}
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={cn(
+                    'w-2 h-2 rounded-full',
+                    categoryColors[prompt.category] || 'bg-slate-500'
+                  )} />
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-theme-text-muted">
+                    {collection?.name || t.detailPanel.uncategorized}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-1">
+                {/* Title and buttons row - aligned horizontally */}
+                <div className="flex items-center justify-between gap-4">
+                  {/* Title input */}
+                  <div className="flex-1 min-w-0">
+                    <input
+                      type="text"
+                      value={localTitle}
+                      onChange={handleTitleChange}
+                      onBlur={handleTitleBlur}
+                      className="bg-transparent font-semibold text-base w-full focus:outline-none focus:ring-0 border-b border-transparent focus:border-theme-accent truncate transition-all text-theme-text-primary"
+                    />
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                   {isInTrash ? (
                     <>
                       <button
@@ -126,6 +174,7 @@ export const PromptDetailPanel: React.FC = () => {
                   >
                     <X className="w-5 h-5" />
                   </button>
+                  </div>
                 </div>
               </div>
 

@@ -47,13 +47,13 @@ export const CreateCollectionModal: React.FC = () => {
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Preview */}
-        <div className="flex items-center gap-3 p-4 bg-dark-900 rounded-lg border border-slate-800">
+        <div className="flex items-center gap-3 p-4 bg-theme-bg-primary rounded-lg border border-theme-border">
           <Folder className={cn('w-8 h-8', color)} />
           <div>
-            <p className="font-medium text-white">
+            <p className="font-medium text-theme-text-primary">
               {name || t.createCollection?.nameLabel || 'Collection Name'}
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-theme-text-muted">
               0 {t.createCollection?.promptsCount?.replace('{count}', '0') || 'prompts'}
             </p>
           </div>
@@ -78,7 +78,7 @@ export const CreateCollectionModal: React.FC = () => {
 
         {/* Color Selection */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2">
             {t.createCollection?.colorLabel || 'Color'}
           </label>
           <div className="flex gap-2 flex-wrap">
@@ -86,7 +86,7 @@ export const CreateCollectionModal: React.FC = () => {
               const isSelected = color === c;
               // Extract the color name from the class
               const colorValue = c.replace('text-', '').replace('-500', '');
-              
+
               return (
                 <button
                   key={c}
@@ -96,7 +96,7 @@ export const CreateCollectionModal: React.FC = () => {
                     'w-8 h-8 rounded-full transition-all',
                     `bg-${colorValue}-500`,
                     isSelected
-                      ? 'ring-2 ring-offset-2 ring-offset-dark-800 ring-white scale-110'
+                      ? 'ring-2 ring-offset-2 ring-offset-theme-bg-secondary ring-theme-text-primary scale-110'
                       : 'hover:scale-105'
                   )}
                   style={{
@@ -109,7 +109,7 @@ export const CreateCollectionModal: React.FC = () => {
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+        <div className="flex justify-end gap-3 pt-4 border-t border-theme-border">
           <Button type="button" variant="ghost" onClick={handleClose}>
             {t.common?.cancel || 'Cancel'}
           </Button>

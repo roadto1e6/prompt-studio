@@ -44,8 +44,8 @@ export default {
           },
           // Component-specific tokens
           input: {
-            bg: 'var(--input-bg)',
-            border: 'var(--input-border)',
+            bg: 'var(--color-input-bg)',
+            border: 'var(--color-input-border)',
             text: 'var(--input-text)',
             placeholder: 'var(--input-placeholder)',
             'border-focus': 'var(--input-border-focus)',
