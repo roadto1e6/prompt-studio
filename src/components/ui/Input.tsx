@@ -32,7 +32,7 @@ export const Input: React.FC<InputProps> = ({
             'w-full rounded-lg px-3 py-2 text-sm transition-colors',
             'bg-theme-input-bg border border-theme-input-border text-theme-input-text',
             'placeholder:text-theme-text-muted',
-            'focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-theme-accent',
+            'focus:outline-none focus:ring-2 focus:ring-theme-accent/20 focus:border-theme-accent',
             icon ? 'pl-10' : '',
             error ? 'border-red-500' : '',
             className

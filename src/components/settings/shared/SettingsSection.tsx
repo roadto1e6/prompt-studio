@@ -3,7 +3,6 @@
  * 设置区块卡片组件
  */
 
-import { useThemeStore } from '@/stores/themeStore';
 import { cn } from '@/utils';
 
 interface SettingsSectionProps {
@@ -23,32 +22,24 @@ export function SettingsSection({
   action,
   noPadding = false,
 }: SettingsSectionProps) {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
 
   return (
     <div
       className={cn(
-        'rounded-xl border overflow-hidden',
-        isDark ? 'bg-slate-900/50 border-slate-800/50' : 'bg-white border-slate-200',
+        'rounded-xl border overflow-hidden bg-theme-card-bg border-theme-card-border',
         className
       )}
     >
       {(title || description || action) && (
-        <div
-          className={cn(
-            'flex items-center justify-between px-5 py-4 border-b',
-            isDark ? 'border-slate-800/50' : 'border-slate-200'
-          )}
-        >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-theme-border">
           <div className="flex-1 min-w-0">
             {title && (
-              <h3 className={cn('text-sm font-semibold', isDark ? 'text-white' : 'text-slate-900')}>
+              <h3 className="text-sm font-semibold text-theme-text-primary">
                 {title}
               </h3>
             )}
             {description && (
-              <p className={cn('text-xs mt-1', isDark ? 'text-slate-500' : 'text-slate-600')}>
+              <p className="text-xs mt-1 text-theme-text-secondary">
                 {description}
               </p>
             )}

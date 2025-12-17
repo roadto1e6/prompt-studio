@@ -9,19 +9,14 @@ import { Button, Input } from '@/components/ui';
 import { SettingsSection } from './shared';
 import { useAuthStore } from '@/stores/authStore';
 import { useI18nStore } from '@/stores/i18nStore';
-import { useThemeStore } from '@/stores/themeStore';
-import { cn } from '@/utils';
 
 export function ProfileSettings() {
   const { t } = useI18nStore();
-  const { theme } = useThemeStore();
   const { user, updateProfile, isLoading } = useAuthStore();
 
   const [name, setName] = useState(user?.name || '');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [avatarUploading, setAvatarUploading] = useState(false);
-
-  const isDark = theme === 'dark';
 
   useEffect(() => {
     setName(user?.name || '');
@@ -82,17 +77,12 @@ export function ProfileSettings() {
           {/* Avatar */}
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-0.5">
-                <div
-                  className={cn(
-                    'w-full h-full rounded-2xl flex items-center justify-center overflow-hidden',
-                    isDark ? 'bg-dark-800' : 'bg-white'
-                  )}
-                >
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-theme-accent via-purple-500 to-pink-500 p-0.5">
+                <div className="w-full h-full rounded-2xl flex items-center justify-center overflow-hidden bg-theme-card-bg">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className={cn('text-2xl font-bold', isDark ? 'text-white' : 'text-indigo-600')}>
+                    <span className="text-2xl font-bold text-theme-accent">
                       {user?.name?.split(' ').map((n) => n[0]).join('').toUpperCase() || 'U'}
                     </span>
                   )}
@@ -115,31 +105,21 @@ export function ProfileSettings() {
               </label>
             </div>
             <div>
-              <p className={cn('text-sm font-medium', isDark ? 'text-slate-200' : 'text-slate-700')}>
+              <p className="text-sm font-medium text-theme-text-primary">
                 {t.settings?.profilePicture || 'Profile Picture'}
               </p>
-              <p className={cn('text-xs mt-1', isDark ? 'text-slate-500' : 'text-slate-600')}>
+              <p className="text-xs mt-1 text-theme-text-secondary">
                 {t.settings?.profilePictureHint || 'Click to upload a new avatar (max 2MB)'}
               </p>
             </div>
           </div>
 
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.displayName || 'Display Name'}
             </label>
             <div className="relative">
-              <User
-                className={cn(
-                  'absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4',
-                  isDark ? 'text-slate-500' : 'text-slate-400'
-                )}
-              />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -150,24 +130,14 @@ export function ProfileSettings() {
           </div>
 
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.email || 'Email'}
             </label>
             <div className="relative">
-              <Mail
-                className={cn(
-                  'absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4',
-                  isDark ? 'text-slate-500' : 'text-slate-400'
-                )}
-              />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
               <Input value={user?.email || ''} disabled className="pl-11 opacity-60 cursor-not-allowed" />
             </div>
-            <p className={cn('mt-1.5 text-xs', isDark ? 'text-slate-500' : 'text-slate-600')}>
+            <p className="mt-1.5 text-xs text-theme-text-secondary">
               {t.settings?.emailCannotChange || 'Email cannot be changed'}
             </p>
           </div>

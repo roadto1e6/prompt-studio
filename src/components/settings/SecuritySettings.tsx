@@ -9,8 +9,6 @@ import { Button, Input } from '@/components/ui';
 import { SettingsSection, SettingsRow } from './shared';
 import { useAuthStore } from '@/stores/authStore';
 import { useI18nStore } from '@/stores/i18nStore';
-import { useThemeStore } from '@/stores/themeStore';
-import { cn } from '@/utils';
 
 interface SecuritySettingsProps {
   onClose?: () => void;
@@ -18,7 +16,6 @@ interface SecuritySettingsProps {
 
 export function SecuritySettings({ onClose }: SecuritySettingsProps) {
   const { t } = useI18nStore();
-  const { theme } = useThemeStore();
   const { user, changePassword, logout, sendVerificationEmail, isLoading } = useAuthStore();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -29,8 +26,6 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
 
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-
-  const isDark = theme === 'dark';
 
   useEffect(() => {
     // Reset form
@@ -109,21 +104,11 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
 
         <div className="space-y-4">
           <div>
-            <label
-              className={cn(
-                'block text-xs font-semibold uppercase tracking-wider mb-2',
-                isDark ? 'text-slate-400' : 'text-slate-600'
-              )}
-            >
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
               {t.settings?.currentPassword || 'Current Password'}
             </label>
             <div className="relative">
-              <Lock
-                className={cn(
-                  'absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4',
-                  isDark ? 'text-slate-500' : 'text-slate-400'
-                )}
-              />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
               <Input
                 type={showCurrentPassword ? 'text' : 'password'}
                 value={currentPassword}
@@ -134,10 +119,7 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
               <button
                 type="button"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                className={cn(
-                  'absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors',
-                  isDark ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'
-                )}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors text-theme-text-muted hover:text-theme-text-secondary"
               >
                 {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -146,21 +128,11 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.newPassword || 'New Password'}
               </label>
               <div className="relative">
-                <Lock
-                  className={cn(
-                    'absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4',
-                    isDark ? 'text-slate-500' : 'text-slate-400'
-                  )}
-                />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
                 <Input
                   type={showNewPassword ? 'text' : 'password'}
                   value={newPassword}
@@ -171,10 +143,7 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className={cn(
-                    'absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors',
-                    isDark ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'
-                  )}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors text-theme-text-muted hover:text-theme-text-secondary"
                 >
                   {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -182,21 +151,11 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
             </div>
 
             <div>
-              <label
-                className={cn(
-                  'block text-xs font-semibold uppercase tracking-wider mb-2',
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                )}
-              >
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-label">
                 {t.settings?.confirmNewPassword || 'Confirm Password'}
               </label>
               <div className="relative">
-                <Lock
-                  className={cn(
-                    'absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4',
-                    isDark ? 'text-slate-500' : 'text-slate-400'
-                  )}
-                />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
                 <Input
                   type="password"
                   value={confirmPassword}
@@ -233,7 +192,7 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
         title={t.settings?.accountInfo || 'Account Information'}
         description={t.settings?.accountInfoDescription || 'View your account status'}
       >
-        <div className={cn('divide-y', isDark ? 'divide-slate-800/50' : 'divide-slate-200')}>
+        <div className="divide-y divide-theme-border">
           <SettingsRow
             label={t.settings?.emailVerified || 'Email Verified'}
             description={user?.emailVerified ? 'Your email has been verified' : 'Please verify your email address'}
@@ -267,7 +226,7 @@ export function SecuritySettings({ onClose }: SecuritySettingsProps) {
       >
         <div className="flex items-center justify-between">
           <div>
-            <p className={cn('text-sm', isDark ? 'text-slate-300' : 'text-slate-700')}>
+            <p className="text-sm text-theme-text-primary">
               {t.settings?.logoutDescription || 'Sign out of your account on this device'}
             </p>
           </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, X, RotateCcw, Share2 } from 'lucide-react';
-import { usePromptStore, useCollectionStore, useUIStore, useI18nStore, useThemeStore } from '@/stores';
+import { usePromptStore, useCollectionStore, useUIStore, useI18nStore } from '@/stores';
 import { Tabs, TabPanel } from '@/components/ui';
 import { PromptEditor } from './PromptEditor';
 import { PromptMetadata } from './PromptMetadata';
@@ -13,8 +13,6 @@ export const PromptDetailPanel: React.FC = () => {
   const { getCollectionById } = useCollectionStore();
   const { detailPanelOpen, activeTab, setActiveTab, closeDetailPanel, showConfirm, openModal } = useUIStore();
   const { t } = useI18nStore();
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
 
   const TABS = [
     { id: 'editor', label: t.detailPanel.tabs.editor },
@@ -57,7 +55,7 @@ export const PromptDetailPanel: React.FC = () => {
 
   // Category color mapping
   const categoryColors: Record<string, string> = {
-    text: 'bg-indigo-500',
+    text: 'bg-theme-accent',
     image: 'bg-emerald-500',
     audio: 'bg-amber-500',
     video: 'bg-rose-500',
@@ -71,30 +69,19 @@ export const PromptDetailPanel: React.FC = () => {
           animate={{ width: 500, opacity: 1 }}
           exit={{ width: 0, opacity: 0 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
-          className={cn(
-            'border-l flex flex-col flex-shrink-0 overflow-hidden',
-            isDark
-              ? 'bg-dark-800 border-slate-800'
-              : 'bg-white border-slate-200'
-          )}
+          className="border-l border-theme-border bg-theme-card-bg flex flex-col flex-shrink-0 overflow-hidden"
         >
           {prompt ? (
             <>
               {/* Detail Header */}
-              <div className={cn(
-                'h-16 px-6 border-b flex items-center justify-between flex-shrink-0',
-                isDark ? 'border-slate-800' : 'border-slate-200'
-              )}>
+              <div className="h-16 px-6 border-b border-theme-border flex items-center justify-between flex-shrink-0">
                 <div className="flex-1 min-w-0 mr-4">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={cn(
                       'w-2 h-2 rounded-full',
                       categoryColors[prompt.category] || 'bg-slate-500'
                     )} />
-                    <span className={cn(
-                      'text-[10px] uppercase font-bold tracking-wider',
-                      isDark ? 'text-slate-500' : 'text-slate-400'
-                    )}>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-theme-text-muted">
                       {collection?.name || t.detailPanel.uncategorized}
                     </span>
                   </div>
@@ -102,10 +89,7 @@ export const PromptDetailPanel: React.FC = () => {
                     type="text"
                     value={prompt.title}
                     onChange={handleTitleChange}
-                    className={cn(
-                      'bg-transparent font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-theme-accent truncate transition-all',
-                      isDark ? 'text-white' : 'text-slate-900'
-                    )}
+                    className="bg-transparent font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-theme-accent truncate transition-all text-theme-text-primary"
                   />
                 </div>
 
@@ -114,24 +98,14 @@ export const PromptDetailPanel: React.FC = () => {
                     <>
                       <button
                         onClick={handleRestore}
-                        className={cn(
-                          'p-2 rounded-lg transition-colors hover:text-emerald-500',
-                          isDark
-                            ? 'text-slate-400 hover:bg-white/5'
-                            : 'text-slate-500 hover:bg-slate-100'
-                        )}
+                        className="p-2 rounded-lg transition-colors text-theme-text-secondary hover:text-emerald-500 hover:bg-theme-overlay"
                         title={t.detailPanel.restore}
                       >
                         <RotateCcw className="w-5 h-5" />
                       </button>
                       <button
                         onClick={handlePermanentDelete}
-                        className={cn(
-                          'p-2 rounded-lg transition-colors hover:text-red-500',
-                          isDark
-                            ? 'text-slate-400 hover:bg-white/5'
-                            : 'text-slate-500 hover:bg-slate-100'
-                        )}
+                        className="p-2 rounded-lg transition-colors text-theme-text-secondary hover:text-red-500 hover:bg-theme-overlay"
                         title={t.detailPanel.deletePermanently}
                       >
                         <Trash2 className="w-5 h-5" />
@@ -140,12 +114,7 @@ export const PromptDetailPanel: React.FC = () => {
                   ) : (
                     <button
                       onClick={() => openModal('sharePrompt')}
-                      className={cn(
-                        'p-2 rounded-lg transition-colors hover:text-theme-accent',
-                        isDark
-                          ? 'text-slate-400 hover:bg-white/5'
-                          : 'text-slate-500 hover:bg-slate-100'
-                      )}
+                      className="p-2 rounded-lg transition-colors text-theme-text-secondary hover:text-theme-accent hover:bg-theme-overlay"
                       title={t.detailPanel.share}
                     >
                       <Share2 className="w-5 h-5" />
@@ -153,12 +122,7 @@ export const PromptDetailPanel: React.FC = () => {
                   )}
                   <button
                     onClick={closeDetailPanel}
-                    className={cn(
-                      'p-2 rounded-lg transition-colors',
-                      isDark
-                        ? 'text-slate-400 hover:text-white hover:bg-white/5'
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-                    )}
+                    className="p-2 rounded-lg transition-colors text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-overlay"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -174,10 +138,7 @@ export const PromptDetailPanel: React.FC = () => {
               />
 
               {/* Tab Content */}
-              <div className={cn(
-                'flex-1 overflow-hidden',
-                isDark ? 'bg-dark-900' : 'bg-slate-50'
-              )}>
+              <div className="flex-1 overflow-hidden bg-theme-bg-primary">
                 <TabPanel id="editor" activeTab={activeTab} className="h-full overflow-y-auto">
                   <PromptEditor />
                 </TabPanel>
@@ -190,10 +151,7 @@ export const PromptDetailPanel: React.FC = () => {
               </div>
             </>
           ) : (
-            <div className={cn(
-              'h-full flex items-center justify-center',
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            )}>
+            <div className="h-full flex items-center justify-center text-theme-text-muted">
               <div className="text-center">
                 <p className="text-lg font-medium">{t.detailPanel.noPromptSelected}</p>
                 <p className="text-sm mt-1">{t.detailPanel.selectPrompt}</p>
