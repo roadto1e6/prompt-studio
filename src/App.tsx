@@ -72,7 +72,18 @@ function App() {
 
   // 应用主题
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    const root = document.documentElement;
+    root.setAttribute('data-theme', theme);
+    root.classList.add('theme-transition');
+
+    const transitionTimeout = window.setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 250);
+
+    return () => {
+      window.clearTimeout(transitionTimeout);
+      root.classList.remove('theme-transition');
+    };
   }, [theme]);
 
   // 渲染认证页面

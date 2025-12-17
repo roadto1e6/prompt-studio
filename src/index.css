@@ -118,6 +118,21 @@
   --color-caption: #64748b;         /* slate-500 */
 }
 
+/* Smooth theme toggle animation */
+.theme-transition,
+.theme-transition * {
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition * {
+    transition-duration: 0ms !important;
+  }
+}
+
 /* Light Theme Overrides */
 [data-theme="light"] .bg-dark-900 {
   background-color: #f8fafc;
@@ -159,8 +174,10 @@
 [data-theme="light"] .bg-red-600 .text-white,
 [data-theme="light"] .bg-red-600.text-white,
 [data-theme="light"] button.bg-indigo-600,
-[data-theme="light"] button.bg-red-600 {
-  color: #ffffff;
+[data-theme="light"] button.bg-red-600,
+[data-theme="light"] .bg-theme-accent.text-white,
+[data-theme="light"] button.bg-theme-accent {
+  color: #ffffff !important;
 }
 
 [data-theme="light"] .text-slate-300 {
@@ -290,6 +307,97 @@
 [data-theme="light"] .version-diff-del {
   background-color: rgba(239, 68, 68, 0.15);
   color: #dc2626;
+}
+
+/* Dark theme form inputs - ensure proper styling in dark mode */
+input:not([type="range"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]):not(.bg-transparent),
+select:not(.bg-transparent),
+textarea:not(.bg-transparent) {
+  background-color: var(--color-input-bg) !important;
+  border-color: var(--color-input-border) !important;
+  color: var(--input-text) !important;
+}
+
+input:focus:not([type="range"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]):not(.bg-transparent),
+select:focus:not(.bg-transparent),
+textarea:focus:not(.bg-transparent) {
+  border-color: var(--color-accent) !important;
+}
+
+/* Ensure border-theme-input-border class works correctly in dark mode */
+.border-theme-input-border {
+  border-color: var(--color-input-border) !important;
+}
+
+/* Ensure bg-theme-input-bg class works correctly in dark mode */
+.bg-theme-input-bg {
+  background-color: var(--color-input-bg) !important;
+}
+
+/* Ensure select border classes work correctly */
+.border-theme-select-border {
+  border-color: var(--select-border) !important;
+}
+
+.bg-theme-select-bg {
+  background-color: var(--select-bg) !important;
+}
+
+/* Ensure border classes with opacity work correctly */
+.border-theme-border\/80 {
+  border-color: rgb(30 41 59 / 0.8) !important;  /* slate-800 with 80% opacity in dark mode */
+}
+
+/* Ensure theme-accent with opacity works correctly */
+.border-theme-accent\/30 {
+  border-color: rgb(99 102 241 / 0.3) !important;
+}
+
+.bg-theme-accent\/20 {
+  background-color: rgb(99 102 241 / 0.2) !important;
+}
+
+.text-theme-accent {
+  color: var(--color-accent) !important;
+}
+
+/* Light theme overrides for input-related classes */
+[data-theme="light"] .border-theme-input-border {
+  border-color: var(--color-input-border) !important;
+}
+
+[data-theme="light"] .bg-theme-input-bg {
+  background-color: var(--color-input-bg) !important;
+}
+
+[data-theme="light"] .text-theme-input-text {
+  color: var(--input-text) !important;
+}
+
+/* Light theme select classes */
+[data-theme="light"] .border-theme-select-border {
+  border-color: var(--select-border) !important;
+}
+
+[data-theme="light"] .bg-theme-select-bg {
+  background-color: var(--select-bg) !important;
+}
+
+[data-theme="light"] .border-theme-border\/80 {
+  border-color: rgb(226 232 240 / 0.8) !important;  /* slate-200 with 80% opacity in light mode */
+}
+
+/* Light theme accent colors with opacity */
+[data-theme="light"] .border-theme-accent\/30 {
+  border-color: rgb(79 70 229 / 0.3) !important;  /* indigo-600 with 30% opacity */
+}
+
+[data-theme="light"] .bg-theme-accent\/20 {
+  background-color: rgb(79 70 229 / 0.2) !important;  /* indigo-600 with 20% opacity */
+}
+
+[data-theme="light"] .text-theme-accent {
+  color: var(--color-accent) !important;
 }
 
 /* Light theme form inputs */
@@ -506,13 +614,15 @@
 
 /* Light theme sidebar input specific styling */
 [data-theme="light"] aside input {
-  background-color: #f1f5f9;
-  border-color: #e2e8f0;
+  background-color: var(--card-bg);
+  border-color: transparent;
+  color: var(--color-text-primary);
 }
 
 [data-theme="light"] aside input:focus {
-  border-color: #6366f1;
-  background-color: #ffffff;
+  border-color: var(--color-accent);
+  background-color: var(--card-bg);
+  color: var(--color-text-primary);
 }
 
 /* Light theme modal backgrounds */
@@ -613,6 +723,11 @@
 :focus-visible {
   outline: 2px solid #6366f1;
   outline-offset: 2px;
+}
+
+/* Override focus-visible for specific inputs that have custom focus styles */
+input.bg-transparent:focus-visible {
+  outline: none;
 }
 
 /* Base styles */
