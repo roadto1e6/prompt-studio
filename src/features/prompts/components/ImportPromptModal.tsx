@@ -8,7 +8,7 @@ import { shareService } from '@/services';
 import { SharedPromptData, Category } from '@/types';
 
 const categoryConfig: Record<Category, { icon: React.FC<{ className?: string }>; color: string; bg: string }> = {
-  text: { icon: FileText, color: 'text-indigo-400', bg: 'bg-indigo-500/20' },
+  text: { icon: FileText, color: 'text-theme-accent', bg: 'bg-theme-accent/20' },
   image: { icon: Image, color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
   audio: { icon: AudioLines, color: 'text-amber-400', bg: 'bg-amber-500/20' },
   video: { icon: Video, color: 'text-rose-400', bg: 'bg-rose-500/20' },
@@ -136,16 +136,16 @@ export const ImportPromptModal: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-dark-800 border border-slate-700 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden m-4"
+          className="bg-theme-card-bg border border-theme-border rounded-xl shadow-2xl w-full max-w-sm overflow-hidden m-4"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-slate-700">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-theme-border">
             <div className="flex items-center gap-2.5">
               {displayData ? (
                 <button
                   onClick={handleBack}
-                  className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                  className="p-1.5 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
@@ -154,11 +154,11 @@ export const ImportPromptModal: React.FC = () => {
                   <Download className="w-4 h-4 text-emerald-400" />
                 </div>
               )}
-              <h3 className="text-white font-medium">{t.import.title}</h3>
+              <h3 className="text-theme-text-primary font-medium">{t.import.title}</h3>
             </div>
             <button
               onClick={handleClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+              className="p-1.5 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -170,7 +170,7 @@ export const ImportPromptModal: React.FC = () => {
               <div className="space-y-4">
                 {/* Input Field */}
                 <div>
-                  <label className="text-xs text-slate-500 mb-2 block">
+                  <label className="text-xs text-theme-text-muted mb-2 block">
                     {t.import.pasteLabel}
                   </label>
                   <input
@@ -182,7 +182,7 @@ export const ImportPromptModal: React.FC = () => {
                     }}
                     placeholder={t.import.pastePlaceholder}
                     autoFocus
-                    className="w-full bg-dark-900 border border-slate-700 rounded-lg px-3 py-2.5 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent transition-colors"
+                    className="w-full bg-theme-input-bg border border-theme-input-border rounded-lg px-3 py-2.5 font-mono text-sm text-theme-input-text focus:outline-none focus:border-theme-accent transition-colors"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && inputCode.trim()) {
                         handleFetchShare();
@@ -227,55 +227,55 @@ export const ImportPromptModal: React.FC = () => {
                 )}
 
                 {/* Preview Card */}
-                <div className="bg-dark-900 border border-slate-700 rounded-lg overflow-hidden">
+                <div className="bg-theme-bg-secondary border border-theme-border rounded-lg overflow-hidden">
                   {/* Header with category */}
-                  <div className="flex items-center gap-3 p-3 border-b border-slate-700/50">
+                  <div className="flex items-center gap-3 p-3 border-b border-theme-border">
                     {CategoryIcon && categoryStyle && (
                       <div className={cn('p-2 rounded-lg', categoryStyle.bg)}>
                         <CategoryIcon className={cn('w-4 h-4', categoryStyle.color)} />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-white font-medium text-sm truncate">{displayData.title}</h4>
-                      <p className="text-xs text-slate-500 truncate">
+                      <h4 className="text-theme-text-primary font-medium text-sm truncate">{displayData.title}</h4>
+                      <p className="text-xs text-theme-text-muted truncate">
                         {displayData.description || t.promptCard.noDescription}
                       </p>
                     </div>
                   </div>
 
                   {/* Meta info */}
-                  <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-xs border-b border-slate-700/50">
-                    <span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded">{displayData.model}</span>
-                    <span className="text-slate-500">T: {displayData.temperature}</span>
-                    <span className="text-slate-500">Max: {displayData.maxTokens}</span>
+                  <div className="px-3 py-2 flex flex-wrap items-center gap-2 text-xs border-b border-theme-border">
+                    <span className="bg-theme-bg-secondary text-theme-text-secondary px-2 py-0.5 rounded">{displayData.model}</span>
+                    <span className="text-theme-text-muted">T: {displayData.temperature}</span>
+                    <span className="text-theme-text-muted">Max: {displayData.maxTokens}</span>
                   </div>
 
                   {/* Tags */}
                   {displayData.tags.length > 0 && (
-                    <div className="px-3 py-2 flex flex-wrap gap-1.5 border-b border-slate-700/50">
+                    <div className="px-3 py-2 flex flex-wrap gap-1.5 border-b border-theme-border">
                       {displayData.tags.slice(0, 5).map((tag) => (
                         <Badge key={tag} variant="default" size="sm">
                           #{tag}
                         </Badge>
                       ))}
                       {displayData.tags.length > 5 && (
-                        <span className="text-xs text-slate-500">+{displayData.tags.length - 5}</span>
+                        <span className="text-xs text-theme-text-muted">+{displayData.tags.length - 5}</span>
                       )}
                     </div>
                   )}
 
                   {/* System Prompt Preview */}
                   {displayData.systemPrompt && (
-                    <div className="p-3 border-b border-slate-700/50">
-                      <p className="text-[10px] font-medium text-slate-600 uppercase mb-1">{t.import.preview.systemPrompt}</p>
-                      <p className="text-xs text-slate-400 line-clamp-2 font-mono leading-relaxed">
+                    <div className="p-3 border-b border-theme-border">
+                      <p className="text-[10px] font-medium text-theme-text-muted uppercase mb-1">{t.import.preview.systemPrompt}</p>
+                      <p className="text-xs text-theme-text-secondary line-clamp-2 font-mono leading-relaxed">
                         {displayData.systemPrompt}
                       </p>
                     </div>
                   )}
 
                   {/* Shared by */}
-                  <div className="px-3 py-2 flex items-center gap-2 text-xs text-slate-500">
+                  <div className="px-3 py-2 flex items-center gap-2 text-xs text-theme-text-muted">
                     <User className="w-3 h-3" />
                     <span>{displayData.sharedBy}</span>
                   </div>

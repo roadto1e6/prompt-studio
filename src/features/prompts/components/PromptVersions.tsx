@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { diffLines, type Change } from 'diff';
 import { X, Copy, Check, RotateCcw, Eye, GitCompare, Trash2, ChevronDown, ChevronUp, Clock } from 'lucide-react';
-import { usePromptStore, useUIStore, useI18nStore, useThemeStore } from '@/stores';
+import { usePromptStore, useUIStore, useI18nStore } from '@/stores';
 import { formatRelativeTime, cn } from '@/utils';
 import { Badge, Button } from '@/components/ui';
 import { PromptVersion } from '@/types';
@@ -93,13 +93,13 @@ const VersionModal: React.FC<VersionModalProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-dark-800 border border-slate-700 rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden m-4"
+          className="bg-theme-card-bg border border-theme-border rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden m-4"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-theme-border">
             <div className="flex items-center gap-3">
-              <h3 className="text-white font-semibold">
+              <h3 className="text-theme-text-primary font-semibold">
                 {t.versions.modal.version.replace('{number}', viewingVersion.versionNumber)}
               </h3>
               {viewingVersion.id === currentVersionId && (
@@ -114,7 +114,7 @@ const VersionModal: React.FC<VersionModalProps> = ({
                     'flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors',
                     showDiff
                       ? 'bg-theme-accent/10 text-theme-accent'
-                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      : 'text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-overlay'
                   )}
                 >
                   <GitCompare className="w-3.5 h-3.5" />
@@ -133,7 +133,7 @@ const VersionModal: React.FC<VersionModalProps> = ({
               )}
               <button
                 onClick={onClose}
-                className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                className="p-2 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -143,9 +143,9 @@ const VersionModal: React.FC<VersionModalProps> = ({
           {/* Modal Content */}
           <div className="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
             {/* Meta Info */}
-            <div className="flex items-center gap-4 mb-4 text-xs text-slate-500 flex-wrap">
+            <div className="flex items-center gap-4 mb-4 text-xs text-theme-text-muted flex-wrap">
               <span>{t.versions.createdAgo.replace('{time}', formatRelativeTime(viewingVersion.createdAt))}</span>
-              <span className="bg-slate-800 px-2 py-0.5 rounded">{viewingVersion.model}</span>
+              <span className="bg-theme-bg-secondary px-2 py-0.5 rounded">{viewingVersion.model}</span>
               <span>Temperature: {viewingVersion.temperature}</span>
               <span>Max Tokens: {viewingVersion.maxTokens}</span>
               {versionDiffs.get(viewingVersion.id) && (
@@ -159,10 +159,10 @@ const VersionModal: React.FC<VersionModalProps> = ({
             </div>
 
             {changedFields.length > 0 && (
-              <div className="flex items-center gap-2 mb-4 text-xs text-slate-300 flex-wrap">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t.versions.changed}</span>
+              <div className="flex items-center gap-2 mb-4 text-xs text-theme-text-secondary flex-wrap">
+                <span className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider">{t.versions.changed}</span>
                 {changedFields.map(field => (
-                  <span key={field} className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px]">
+                  <span key={field} className="px-2 py-0.5 rounded bg-theme-bg-secondary border border-theme-border text-[11px]">
                     {field}
                   </span>
                 ))}
@@ -171,23 +171,23 @@ const VersionModal: React.FC<VersionModalProps> = ({
 
             {/* Change Note */}
             <div className="mb-4">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">
+              <label className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider mb-1 block">
                 {t.versions.changeNote}
               </label>
-              <p className="text-sm text-slate-400">{viewingVersion.changeNote}</p>
+              <p className="text-sm text-theme-text-secondary">{viewingVersion.changeNote}</p>
             </div>
 
             {/* System Prompt */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider">
                   {showDiff && previousVersion
                     ? t.versions.modal.changesFrom.replace('{version}', previousVersion.versionNumber)
                     : t.versions.modal.systemPrompt}
                 </label>
                 <button
                   onClick={() => onCopy(viewingVersion.systemPrompt)}
-                  className="p-1 rounded text-slate-500 hover:text-theme-accent hover:bg-slate-700 transition-colors"
+                  className="p-1 rounded text-theme-text-muted hover:text-theme-accent hover:bg-theme-bg-hover transition-colors"
                   title={t.versions.copyToClipboard}
                 >
                   {copied ? (
@@ -199,7 +199,7 @@ const VersionModal: React.FC<VersionModalProps> = ({
               </div>
 
               {showDiff && diff ? (
-                <div className="bg-dark-900 border border-slate-700 rounded-lg p-4 font-mono text-sm max-h-60 overflow-y-auto">
+                <div className="bg-theme-input-bg border border-theme-input-border rounded-lg p-4 font-mono text-sm max-h-60 overflow-y-auto">
                   {diff.map((line, i) => (
                     <div
                       key={i}
@@ -207,10 +207,10 @@ const VersionModal: React.FC<VersionModalProps> = ({
                         'px-2 -mx-2',
                         line.type === 'added' && 'bg-emerald-500/10 text-emerald-300',
                         line.type === 'removed' && 'bg-red-500/10 text-red-300 line-through',
-                        line.type === 'same' && 'text-slate-400'
+                        line.type === 'same' && 'text-theme-text-secondary'
                       )}
                     >
-                      <span className="select-none mr-2 text-slate-600">
+                      <span className="select-none mr-2 text-theme-text-muted">
                         {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}
                       </span>
                       {line.text || ' '}
@@ -218,8 +218,8 @@ const VersionModal: React.FC<VersionModalProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="bg-dark-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-slate-300 whitespace-pre-wrap max-h-60 overflow-y-auto">
-                  {viewingVersion.systemPrompt || <span className="text-slate-600 italic">{t.versions.modal.noSystemPrompt}</span>}
+                <div className="bg-theme-input-bg border border-theme-input-border rounded-lg p-4 font-mono text-sm text-theme-input-text whitespace-pre-wrap max-h-60 overflow-y-auto">
+                  {viewingVersion.systemPrompt || <span className="text-theme-text-muted italic">{t.versions.modal.noSystemPrompt}</span>}
                 </div>
               )}
             </div>
@@ -227,10 +227,10 @@ const VersionModal: React.FC<VersionModalProps> = ({
             {/* User Template */}
             {viewingVersion.userTemplate && (
               <div>
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+                <label className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider mb-2 block">
                   {t.versions.modal.userTemplate}
                 </label>
-                <div className="bg-dark-900 border border-slate-700 rounded-lg p-4 font-mono text-sm text-slate-300 whitespace-pre-wrap max-h-40 overflow-y-auto">
+                <div className="bg-theme-input-bg border border-theme-input-border rounded-lg p-4 font-mono text-sm text-theme-input-text whitespace-pre-wrap max-h-40 overflow-y-auto">
                   {viewingVersion.userTemplate}
                 </div>
               </div>
@@ -246,21 +246,11 @@ export const PromptVersions: React.FC = () => {
   const { getActivePrompt, restoreVersion, deleteVersion, restoreDeletedVersion, permanentDeleteVersion } = usePromptStore();
   const { showConfirm } = useUIStore();
   const { t } = useI18nStore();
-  const { theme } = useThemeStore();
   const prompt = getActivePrompt();
   const [viewingVersion, setViewingVersion] = useState<PromptVersion | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showDeletedVersions, setShowDeletedVersions] = useState(false);
-
-  const isDark = theme === 'dark';
-
-  // 获取背景色用于 ring
-  const getRingColor = () => {
-    if (isDark) return 'ring-dark-900';
-    // 亮模式下使用页面背景色
-    return 'ring-white';
-  };
 
   const { activeVersions, deletedVersions } = useMemo(() => {
     if (!prompt) return { activeVersions: [], deletedVersions: [] };
@@ -322,7 +312,7 @@ export const PromptVersions: React.FC = () => {
 
   if (!prompt) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-500">
+      <div className="h-full flex items-center justify-center text-theme-text-muted">
         <p>{t.versions.selectPrompt}</p>
       </div>
     );
@@ -429,10 +419,10 @@ export const PromptVersions: React.FC = () => {
     <div className="h-full p-6 overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <h3 className="text-xs font-bold text-theme-text-muted uppercase tracking-wider">
           {t.versions.activeVersions || t.versions.title}
         </h3>
-        <span className="text-xs text-slate-600">
+        <span className="text-xs text-theme-text-muted">
           {activeVersions.length > 1
             ? t.versions.versionCountPlural.replace('{count}', String(activeVersions.length))
             : t.versions.versionCount.replace('{count}', String(activeVersions.length))}
@@ -454,15 +444,14 @@ export const PromptVersions: React.FC = () => {
                 'relative pl-6 border-l-2',
                 isCurrent
                   ? 'border-theme-accent'
-                  : isDark ? 'border-slate-800' : 'border-slate-300'
+                  : 'border-theme-border'
               )}
             >
               {/* Timeline Dot */}
               <div
                 className={cn(
-                  'absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full ring-4',
-                  getRingColor(),
-                  isCurrent ? 'bg-theme-accent' : isDark ? 'bg-slate-600' : 'bg-slate-400'
+                  'absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full ring-4 ring-theme-bg-primary',
+                  isCurrent ? 'bg-theme-accent' : 'bg-theme-text-muted'
                 )}
               />
 
@@ -471,12 +460,8 @@ export const PromptVersions: React.FC = () => {
                 className={cn(
                   'p-4 rounded-lg border transition-colors',
                   isCurrent
-                    ? isDark
-                      ? 'bg-dark-800 border-slate-700'
-                      : 'bg-white border-slate-300'
-                    : isDark
-                      ? 'bg-dark-800/50 border-slate-800 hover:border-slate-700'
-                      : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                    ? 'bg-theme-card-bg border-theme-card-border'
+                    : 'bg-theme-bg-secondary border-theme-border hover:border-theme-card-hover-border'
                 )}
               >
                 {/* Version Header */}
@@ -484,9 +469,7 @@ export const PromptVersions: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className={cn(
                       'text-sm font-bold',
-                      isCurrent
-                        ? isDark ? 'text-white' : 'text-slate-900'
-                        : isDark ? 'text-slate-300' : 'text-slate-700'
+                      isCurrent ? 'text-theme-text-primary' : 'text-theme-text-secondary'
                     )}>
                       v{version.versionNumber}
                     </span>
@@ -494,46 +477,30 @@ export const PromptVersions: React.FC = () => {
                       <Badge variant="primary" size="sm">{t.versions.current}</Badge>
                     )}
                   </div>
-                  <span className={cn(
-                    'text-xs',
-                    isCurrent
-                      ? isDark ? 'text-slate-500' : 'text-slate-600'
-                      : isDark ? 'text-slate-600' : 'text-slate-500'
-                  )}>
+                  <span className="text-xs text-theme-text-muted">
                     {t.versions.timeAgo.replace('{time}', formatRelativeTime(version.createdAt))}
                   </span>
                 </div>
 
                 {/* Change Note */}
-                <p className={cn(
-                  'text-xs mb-3',
-                  isCurrent
-                    ? isDark ? 'text-slate-400' : 'text-slate-600'
-                    : isDark ? 'text-slate-500' : 'text-slate-600'
-                )}>
+                <p className="text-xs mb-3 text-theme-text-secondary">
                   {version.changeNote}
                 </p>
 
                 {/* Diff Stats & Model Info */}
-                <div className={cn(
-                  'flex items-center gap-2 mb-3 text-[10px] flex-wrap',
-                  isDark ? 'text-slate-600' : 'text-slate-500'
-                )}>
+                <div className="flex items-center gap-2 mb-3 text-[10px] flex-wrap text-theme-text-muted">
                   {versionDiffs.get(version.id) && (
                     <>
-                      <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>
+                      <span className="text-emerald-400">
                         +{versionDiffs.get(version.id)!.added}
                       </span>
-                      <span className={isDark ? 'text-red-400' : 'text-red-600'}>
+                      <span className="text-red-400">
                         -{versionDiffs.get(version.id)!.removed}
                       </span>
-                      <span className={isDark ? 'text-slate-700' : 'text-slate-400'}>|</span>
+                      <span className="text-theme-text-muted">|</span>
                     </>
                   )}
-                  <span className={cn(
-                    'px-1.5 py-0.5 rounded',
-                    isDark ? 'bg-slate-800' : 'bg-slate-200'
-                  )}>{version.model}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-theme-bg-secondary">{version.model}</span>
                   <span>{t.versions.temp.replace('{value}', String(version.temperature))}</span>
                 </div>
 
@@ -562,12 +529,7 @@ export const PromptVersions: React.FC = () => {
                       <Button
                         variant="secondary"
                         size="sm"
-                        className={cn(
-                          'text-[10px] px-2 py-1',
-                          isDark
-                            ? 'text-red-400 hover:text-red-300 hover:bg-red-500/10'
-                            : 'text-red-600 hover:text-red-700 hover:bg-red-50'
-                        )}
+                        className="text-[10px] px-2 py-1 text-red-400 hover:text-red-300 hover:bg-red-500/10"
                         onClick={() => handleDelete(version.id, version.versionNumber)}
                       >
                         <Trash2 className="w-3 h-3 mr-1" />
@@ -592,18 +554,18 @@ export const PromptVersions: React.FC = () => {
           >
             <div className="flex items-center gap-3">
               {showDeletedVersions ? (
-                <ChevronUp className="w-3.5 h-3.5 text-slate-500" />
+                <ChevronUp className="w-3.5 h-3.5 text-theme-text-muted" />
               ) : (
-                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                <ChevronDown className="w-3.5 h-3.5 text-theme-text-muted" />
               )}
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-theme-text-muted uppercase tracking-wider">
                 {t.versions.deletedVersions}
               </h3>
-              <span className="text-xs text-slate-600">
+              <span className="text-xs text-theme-text-muted">
                 {deletedVersions.length}
               </span>
             </div>
-            <span className="text-[10px] text-slate-600">
+            <span className="text-[10px] text-theme-text-muted">
               {t.versions.autoDeleteWarning}
             </span>
           </button>
@@ -627,40 +589,22 @@ export const PromptVersions: React.FC = () => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className={cn(
-                        'relative pl-6 border-l-2',
-                        isDark ? 'border-slate-800' : 'border-slate-300'
-                      )}
+                      className="relative pl-6 border-l-2 border-theme-border"
                     >
                       {/* Timeline Dot */}
-                      <div className={cn(
-                        'absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full ring-4',
-                        getRingColor(),
-                        isDark ? 'bg-slate-600' : 'bg-slate-400'
-                      )} />
+                      <div className="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full ring-4 ring-theme-bg-primary bg-theme-text-muted" />
 
                       {/* Version Card */}
-                      <div className={cn(
-                        'p-4 rounded-lg border transition-colors',
-                        isDark
-                          ? 'bg-dark-800/50 border-slate-800 hover:border-slate-700'
-                          : 'bg-slate-50 border-slate-200 hover:border-slate-300'
-                      )}>
+                      <div className="p-4 rounded-lg border transition-colors bg-theme-bg-secondary border-theme-border hover:border-theme-card-hover-border">
                         {/* Version Header */}
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center gap-2">
-                            <span className={cn(
-                              'text-sm font-bold',
-                              isDark ? 'text-slate-300' : 'text-slate-700'
-                            )}>
+                            <span className="text-sm font-bold text-theme-text-secondary">
                               v{version.versionNumber}
                             </span>
                             <Badge variant="danger" size="sm">{t.versions.deleted}</Badge>
                             {version.deletedAt && (
-                              <div className={cn(
-                                'flex items-center gap-1 text-[10px]',
-                                isDark ? 'text-amber-400' : 'text-amber-600'
-                              )}>
+                              <div className="flex items-center gap-1 text-[10px] text-amber-400">
                                 <Clock className="w-3 h-3" />
                                 <span>
                                   {daysLeft === 0
@@ -670,31 +614,19 @@ export const PromptVersions: React.FC = () => {
                               </div>
                             )}
                           </div>
-                          <span className={cn(
-                            'text-xs',
-                            isDark ? 'text-slate-600' : 'text-slate-500'
-                          )}>
+                          <span className="text-xs text-theme-text-muted">
                             {t.versions.timeAgo.replace('{time}', formatRelativeTime(version.createdAt))}
                           </span>
                         </div>
 
                         {/* Change Note */}
-                        <p className={cn(
-                          'text-xs mb-3',
-                          isDark ? 'text-slate-500' : 'text-slate-600'
-                        )}>
+                        <p className="text-xs mb-3 text-theme-text-secondary">
                           {version.changeNote}
                         </p>
 
                         {/* Model Info */}
-                        <div className={cn(
-                          'flex items-center gap-2 mb-3 text-[10px] flex-wrap',
-                          isDark ? 'text-slate-600' : 'text-slate-500'
-                        )}>
-                          <span className={cn(
-                            'px-1.5 py-0.5 rounded',
-                            isDark ? 'bg-slate-800' : 'bg-slate-200'
-                          )}>{version.model}</span>
+                        <div className="flex items-center gap-2 mb-3 text-[10px] flex-wrap text-theme-text-muted">
+                          <span className="px-1.5 py-0.5 rounded bg-theme-bg-secondary">{version.model}</span>
                           <span>{t.versions.temp.replace('{value}', String(version.temperature))}</span>
                         </div>
 
@@ -721,12 +653,7 @@ export const PromptVersions: React.FC = () => {
                           <Button
                             variant="secondary"
                             size="sm"
-                            className={cn(
-                              'text-[10px] px-2 py-1',
-                              isDark
-                                ? 'text-red-400 hover:text-red-300 hover:bg-red-500/10'
-                                : 'text-red-600 hover:text-red-700 hover:bg-red-50'
-                            )}
+                            className="text-[10px] px-2 py-1 text-red-400 hover:text-red-300 hover:bg-red-500/10"
                             onClick={() => handlePermanentDelete(version.id, version.versionNumber)}
                           >
                             <Trash2 className="w-3 h-3 mr-1" />
