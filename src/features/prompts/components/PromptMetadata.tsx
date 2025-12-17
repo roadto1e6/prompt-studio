@@ -136,7 +136,7 @@ export const PromptMetadata: React.FC = () => {
             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               {t.metadata.maxTokens}
             </label>
-            <span className="text-xs text-indigo-400 font-mono">{maxTokens}</span>
+            <span className="text-xs text-theme-accent font-mono">{maxTokens}</span>
           </div>
           <Input
             type="number"

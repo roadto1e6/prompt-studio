@@ -120,7 +120,7 @@ export const PromptEditor: React.FC = () => {
           <button
             onClick={handleCopy}
             disabled={!systemPrompt}
-            className="p-1 rounded text-slate-500 hover:text-indigo-400 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-1 rounded text-slate-500 hover:text-theme-accent hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             title={t.editor.copyToClipboard}
           >
             {copied ? (
@@ -143,7 +143,7 @@ export const PromptEditor: React.FC = () => {
         <textarea
           value={systemPrompt}
           onChange={handleSystemPromptChange}
-          className="w-full h-full bg-dark-800 border border-slate-700 rounded-lg p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 resize-none leading-relaxed transition-colors"
+          className="w-full h-full bg-dark-800 border border-slate-700 rounded-lg p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent resize-none leading-relaxed transition-colors"
           placeholder={t.editor.systemPromptPlaceholder}
         />
         <div className="absolute bottom-4 right-4 text-[10px] text-slate-600 bg-dark-900/80 px-2 py-1 rounded backdrop-blur-sm">
@@ -159,7 +159,7 @@ export const PromptEditor: React.FC = () => {
         <textarea
           value={userTemplate}
           onChange={handleUserTemplateChange}
-          className="w-full h-24 bg-dark-800 border border-slate-700 rounded-lg p-3 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 resize-none"
+          className="w-full h-24 bg-dark-800 border border-slate-700 rounded-lg p-3 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent resize-none"
           placeholder={t.editor.userTemplatePlaceholder}
         />
       </div>
@@ -209,7 +209,7 @@ export const PromptEditor: React.FC = () => {
                 onClick={() => setVersionType('minor')}
                 className={`flex-1 px-4 py-3 rounded-lg border text-sm transition-all ${
                   versionType === 'minor'
-                    ? 'bg-indigo-500/20 border-indigo-500 text-indigo-400 shadow-lg'
+                    ? 'bg-theme-accent/10 border-theme-accent text-theme-accent shadow-lg'
                     : 'bg-dark-800 border-slate-700 text-slate-400 hover:border-slate-600'
                 }`}
               >
@@ -234,7 +234,7 @@ export const PromptEditor: React.FC = () => {
                 onClick={() => setVersionType('major')}
                 className={`flex-1 px-4 py-3 rounded-lg border text-sm transition-all ${
                   versionType === 'major'
-                    ? 'bg-indigo-500/20 border-indigo-500 text-indigo-400 shadow-lg'
+                    ? 'bg-theme-accent/10 border-theme-accent text-theme-accent shadow-lg'
                     : 'bg-dark-800 border-slate-700 text-slate-400 hover:border-slate-600'
                 }`}
               >

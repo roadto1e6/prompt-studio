@@ -12,7 +12,7 @@ import {
   Search,
   Settings,
 } from 'lucide-react';
-import { usePromptStore, useCollectionStore, useUIStore, useI18nStore, useAuthStore, useThemeStore } from '@/stores';
+import { usePromptStore, useCollectionStore, useUIStore, useI18nStore, useAuthStore } from '@/stores';
 import { CATEGORIES, QUICK_FILTERS } from '@/constants';
 import { cn, debounce } from '@/utils';
 
@@ -38,15 +38,10 @@ export const Sidebar: React.FC = () => {
   const { openModal, closeDetailPanel, showConfirm } = useUIStore();
   const { t } = useI18nStore();
   const { user } = useAuthStore();
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
   const rightColumnBase = 'inline-flex items-center min-w-[1.75rem]';
   const countColumnClass = cn(
-    'text-xs tabular-nums font-mono justify-end',
-    rightColumnBase,
-    isDark
-      ? 'text-slate-600 group-hover:text-slate-400'
-      : 'text-slate-400 group-hover:text-slate-600'
+    'text-xs tabular-nums font-mono justify-end text-theme-text-muted group-hover:text-theme-text-secondary',
+    rightColumnBase
   );
 
   // Close context menu when clicking outside
@@ -123,22 +118,11 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className={cn(
-      'w-[260px] flex-shrink-0 border-r flex flex-col',
-      isDark
-        ? 'bg-dark-900 border-slate-800'
-        : 'bg-white border-slate-200'
-    )}>
+    <aside className="w-[260px] flex-shrink-0 border-r border-theme-border bg-theme-bg-primary flex flex-col">
       {/* Logo */}
-      <div className={cn(
-        'h-16 flex items-center px-6 border-b',
-        isDark ? 'border-slate-800' : 'border-slate-200'
-      )}>
-        <Infinity className="w-8 h-8 text-indigo-500 mr-2" />
-        <span className={cn(
-          'font-display text-xl tracking-tight font-bold',
-          isDark ? 'text-white' : 'text-slate-900'
-        )}>
+      <div className="h-16 flex items-center px-6 border-b border-theme-border">
+        <Infinity className="w-8 h-8 text-theme-accent mr-2" />
+        <span className="font-display text-xl tracking-tight font-bold text-theme-text-primary">
           Prompt Studio
         </span>
       </div>
@@ -146,20 +130,12 @@ export const Sidebar: React.FC = () => {
       {/* Global Search */}
       <div className="p-4">
         <div className="relative group">
-          <Search className={cn(
-            'absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4',
-            isDark ? 'text-slate-500' : 'text-slate-400'
-          )} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted" />
           <input
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            className={cn(
-              'w-full rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-indigo-500 transition-colors text-xs font-medium border',
-              isDark
-                ? 'bg-dark-800 border-slate-700 text-slate-300 placeholder-slate-500'
-                : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
-            )}
+            className="w-full rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-theme-accent transition-colors text-xs font-medium border bg-theme-input-bg border-theme-input-border text-theme-input-text placeholder-theme-input-placeholder"
             placeholder={t.sidebar.searchPlaceholder}
           />
         </div>
@@ -169,10 +145,7 @@ export const Sidebar: React.FC = () => {
       <div className="flex-1 overflow-y-auto px-3 space-y-6">
         {/* Quick Access */}
         <div>
-          <h3 className={cn(
-            'px-3 text-xs font-semibold uppercase tracking-wider mb-2',
-            isDark ? 'text-slate-500' : 'text-slate-400'
-          )}>
+          <h3 className="px-3 text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-muted">
             {t.sidebar.quickAccess}
           </h3>
           <nav className="space-y-0.5">
@@ -199,10 +172,8 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-500'
-                      : isDark
-                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-theme-accent/10 text-theme-accent'
+                      : 'text-theme-text-secondary hover:bg-theme-bg-hover hover:text-theme-text-primary'
                   )}
                 >
                   <div className="flex items-center">
@@ -210,10 +181,8 @@ export const Sidebar: React.FC = () => {
                       className={cn(
                         'mr-3 w-5 h-5 transition-colors',
                         isActive
-                          ? 'text-indigo-500'
-                          : isDark
-                            ? 'text-slate-500 group-hover:text-white'
-                            : 'text-slate-400 group-hover:text-slate-900'
+                          ? 'text-theme-accent'
+                          : 'text-theme-text-muted group-hover:text-theme-text-primary'
                       )}
                     />
                     {t.filters[item.id as keyof typeof t.filters]}
@@ -227,10 +196,7 @@ export const Sidebar: React.FC = () => {
 
         {/* Categories */}
         <div>
-          <h3 className={cn(
-            'px-3 text-xs font-semibold uppercase tracking-wider mb-2',
-            isDark ? 'text-slate-500' : 'text-slate-400'
-          )}>
+          <h3 className="px-3 text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-muted">
             {t.sidebar.categories}
           </h3>
           <nav className="space-y-0.5">
@@ -246,10 +212,8 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-500'
-                      : isDark
-                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-theme-accent/10 text-theme-accent'
+                      : 'text-theme-text-secondary hover:bg-theme-bg-hover hover:text-theme-text-primary'
                   )}
                 >
                   <div className="flex items-center">
@@ -266,20 +230,14 @@ export const Sidebar: React.FC = () => {
         {/* Collections */}
         <div>
           <div className="flex items-center px-3 mb-2 gap-2">
-            <h3 className={cn(
-              'flex-1 text-xs font-semibold uppercase tracking-wider',
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            )}>
+            <h3 className="flex-1 text-xs font-semibold uppercase tracking-wider text-theme-text-muted">
               {t.sidebar.collections}
             </h3>
             <button
               onClick={() => openModal('createCollection')}
               className={cn(
                 rightColumnBase,
-                'justify-end w-[1.75rem] h-[1.75rem] rounded-md transition-colors ml-auto focus:outline-none',
-                isDark
-                  ? 'text-slate-500 hover:text-white'
-                  : 'text-slate-500 hover:text-slate-900'
+                'justify-end w-[1.75rem] h-[1.75rem] rounded-md transition-colors ml-auto focus:outline-none text-theme-text-muted hover:text-theme-text-primary'
               )}
               aria-label={t.createCollection.title}
             >
@@ -293,14 +251,12 @@ export const Sidebar: React.FC = () => {
               className={cn(
                 'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                 collectionFilter === 'uncategorized'
-                  ? 'bg-indigo-500/10 text-indigo-500'
-                  : isDark
-                    ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-theme-accent/10 text-theme-accent'
+                  : 'text-theme-text-secondary hover:bg-theme-bg-hover hover:text-theme-text-primary'
               )}
             >
               <div className="flex items-center">
-                <Folder className={cn('mr-3 w-5 h-5', isDark ? 'text-slate-500' : 'text-slate-400')} />
+                <Folder className="mr-3 w-5 h-5 text-theme-text-muted" />
                 {t.sidebar.noCollection}
               </div>
               <span className={countColumnClass}>{prompts.filter(p => !p.collectionId && p.status !== 'trash').length}</span>
@@ -317,10 +273,8 @@ export const Sidebar: React.FC = () => {
                   className={cn(
                     'group flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors',
                     isActive
-                      ? 'bg-indigo-500/10 text-indigo-500'
-                      : isDark
-                        ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-theme-accent/10 text-theme-accent'
+                      : 'text-theme-text-secondary hover:bg-theme-bg-hover hover:text-theme-text-primary'
                   )}
                 >
                   <div className="flex items-center">
@@ -339,20 +293,12 @@ export const Sidebar: React.FC = () => {
       {contextMenu && (
         <div
           ref={contextMenuRef}
-          className={cn(
-            'fixed z-50 rounded-lg shadow-xl py-1 min-w-[140px] border',
-            isDark
-              ? 'bg-dark-800 border-slate-700'
-              : 'bg-white border-slate-200'
-          )}
+          className="fixed z-50 rounded-lg shadow-xl py-1 min-w-[140px] border bg-theme-card-bg border-theme-card-border"
           style={{ left: contextMenu.x, top: contextMenu.y, transform: 'translate(-50%, -50%)' }}
         >
           <button
             onClick={() => handleDeleteCollection(contextMenu.collectionId)}
-            className={cn(
-              'flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 transition-colors',
-              isDark ? 'hover:bg-slate-700/50' : 'hover:bg-red-50'
-            )}
+            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 transition-colors hover:bg-theme-overlay"
           >
             <Trash2 className="w-4 h-4" />
             {t.common.delete}
@@ -361,17 +307,11 @@ export const Sidebar: React.FC = () => {
       )}
 
       {/* User/Settings */}
-      <div className={cn(
-        'p-4 border-t',
-        isDark ? 'border-slate-800' : 'border-slate-200'
-      )}>
+      <div className="p-4 border-t border-theme-border">
         {/* User Profile */}
         <button
           onClick={() => openModal('settings')}
-          className={cn(
-            'flex items-center gap-3 w-full p-2 rounded-lg transition-colors',
-            isDark ? 'hover:bg-slate-800/50' : 'hover:bg-slate-100'
-          )}
+          className="flex items-center gap-3 w-full p-2 rounded-lg transition-colors hover:bg-theme-bg-hover"
         >
           {user?.avatar ? (
             <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
@@ -381,16 +321,10 @@ export const Sidebar: React.FC = () => {
             </div>
           )}
           <div className="flex-1 min-w-0 text-left">
-            <p className={cn(
-              'text-sm font-medium truncate',
-              isDark ? 'text-white' : 'text-slate-900'
-            )}>{user?.name || 'User'}</p>
-            <p className={cn(
-              'text-xs truncate',
-              isDark ? 'text-slate-500' : 'text-slate-500'
-            )}>{user?.email || ''}</p>
+            <p className="text-sm font-medium truncate text-theme-text-primary">{user?.name || 'User'}</p>
+            <p className="text-xs truncate text-theme-text-muted">{user?.email || ''}</p>
           </div>
-          <Settings className={cn('w-4 h-4', isDark ? 'text-slate-500' : 'text-slate-400')} />
+          <Settings className="w-4 h-4 text-theme-text-muted" />
         </button>
       </div>
     </aside>

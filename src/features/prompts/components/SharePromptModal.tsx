@@ -110,8 +110,8 @@ export const SharePromptModal: React.FC = () => {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-slate-700">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 bg-indigo-500/20 rounded-lg">
-                <Share2 className="w-4 h-4 text-indigo-400" />
+              <div className="p-1.5 bg-theme-accent/20 rounded-lg">
+                <Share2 className="w-4 h-4 text-theme-accent" />
               </div>
               <h3 className="text-white font-medium">{t.share.title}</h3>
             </div>
@@ -153,16 +153,16 @@ export const SharePromptModal: React.FC = () => {
                 <div className="text-center">
                   <p className="text-xs text-slate-500 mb-2">{t.share.shareCode}</p>
                   <div
-                    className="inline-flex items-center gap-2 bg-dark-900 border border-slate-600 rounded-lg px-4 py-2.5 cursor-pointer hover:border-indigo-500/50 transition-colors group"
+                    className="inline-flex items-center gap-2 bg-dark-900 border border-slate-600 rounded-lg px-4 py-2.5 cursor-pointer hover:border-theme-accent/50 transition-colors group"
                     onClick={handleCopyCode}
                   >
-                    <span className="font-mono text-xl tracking-widest text-indigo-400 font-semibold">
+                    <span className="font-mono text-xl tracking-widest text-theme-accent font-semibold">
                       {shareResult.code}
                     </span>
                     {copiedCode ? (
                       <Check className="w-4 h-4 text-emerald-400" />
                     ) : (
-                      <Copy className="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                      <Copy className="w-4 h-4 text-slate-500 group-hover:text-theme-accent transition-colors" />
                     )}
                   </div>
                   {copiedCode && (

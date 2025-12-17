@@ -182,7 +182,7 @@ export const ImportPromptModal: React.FC = () => {
                     }}
                     placeholder={t.import.pastePlaceholder}
                     autoFocus
-                    className="w-full bg-dark-900 border border-slate-700 rounded-lg px-3 py-2.5 font-mono text-sm text-slate-300 focus:outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full bg-dark-900 border border-slate-700 rounded-lg px-3 py-2.5 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent transition-colors"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && inputCode.trim()) {
                         handleFetchShare();

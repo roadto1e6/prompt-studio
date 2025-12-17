@@ -107,11 +107,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/70',
+                  'w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-accent/70',
                   activeTab === tab.id
                     ? isDark
-                      ? 'bg-indigo-500/10 text-white'
-                      : 'bg-indigo-500/10 text-indigo-700'
+                      ? 'bg-theme-accent/10 text-white'
+                      : 'bg-theme-accent/10 text-theme-accent'
                     : isDark
                       ? 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
@@ -122,7 +122,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   className={cn(
                     'p-2 rounded-lg transition-colors',
                     activeTab === tab.id
-                      ? 'bg-indigo-500/20 text-indigo-400'
+                      ? 'bg-theme-accent/20 text-theme-accent'
                       : isDark
                         ? 'bg-slate-800/50 text-slate-500 group-hover:text-slate-400'
                         : 'bg-slate-200 text-slate-500 group-hover:text-slate-600'
@@ -133,7 +133,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex-1 text-left min-w-0">
                   <p className="text-sm font-semibold truncate">{tab.label}</p>
                 </div>
-                {activeTab === tab.id && <ChevronRight className="w-4 h-4 text-indigo-400 flex-shrink-0" />}
+                {activeTab === tab.id && <ChevronRight className="w-4 h-4 text-theme-accent flex-shrink-0" />}
               </button>
             ))}
           </nav>

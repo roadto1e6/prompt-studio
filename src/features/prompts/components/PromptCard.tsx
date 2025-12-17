@@ -63,7 +63,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
             ? 'bg-dark-800 hover:shadow-md hover:shadow-black/20'
             : 'bg-white hover:shadow-md hover:shadow-slate-200/50',
           isSelected
-            ? 'border-indigo-500 bg-indigo-500/5'
+            ? 'border-theme-accent bg-theme-accent/5'
             : isDark
               ? 'border-slate-800 hover:border-slate-700'
               : 'border-slate-200 hover:border-slate-300'
@@ -183,7 +183,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSelected, onCl
           ? 'bg-dark-800 hover:shadow-lg hover:shadow-black/20'
           : 'bg-white hover:shadow-lg hover:shadow-slate-200/50',
         isSelected
-          ? 'border-indigo-500 bg-indigo-500/5 shadow-lg shadow-indigo-500/10'
+          ? 'border-theme-accent bg-theme-accent/5 shadow-lg shadow-theme-accent/10'
           : isDark
             ? 'border-slate-800 hover:border-slate-700'
             : 'border-slate-200 hover:border-slate-300'

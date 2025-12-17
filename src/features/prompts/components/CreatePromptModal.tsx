@@ -124,14 +124,14 @@ export const CreatePromptModal: React.FC = () => {
                   className={cn(
                     'flex flex-col items-center gap-2 py-3 px-4 rounded-xl border-2 transition-all',
                     isSelected
-                      ? 'border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/20'
+                      ? 'border-theme-accent bg-theme-accent/10 shadow-lg shadow-theme-accent/20'
                       : 'border-slate-700 bg-dark-900 hover:border-slate-600 hover:bg-dark-800'
                   )}
                 >
                   <Icon className={cn('w-5 h-5', cat.color)} />
                   <span className={cn(
                     'text-sm font-medium',
-                    isSelected ? 'text-indigo-400' : 'text-slate-400'
+                    isSelected ? 'text-theme-accent' : 'text-slate-400'
                   )}>
                     {t.categories[cat.id as keyof typeof t.categories]}
                   </span>

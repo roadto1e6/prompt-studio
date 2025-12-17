@@ -113,7 +113,7 @@ const VersionModal: React.FC<VersionModalProps> = ({
                   className={cn(
                     'flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors',
                     showDiff
-                      ? 'bg-indigo-500/20 text-indigo-400'
+                      ? 'bg-theme-accent/10 text-theme-accent'
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
                   )}
                 >
@@ -187,7 +187,7 @@ const VersionModal: React.FC<VersionModalProps> = ({
                 </label>
                 <button
                   onClick={() => onCopy(viewingVersion.systemPrompt)}
-                  className="p-1 rounded text-slate-500 hover:text-indigo-400 hover:bg-slate-700 transition-colors"
+                  className="p-1 rounded text-slate-500 hover:text-theme-accent hover:bg-slate-700 transition-colors"
                   title={t.versions.copyToClipboard}
                 >
                   {copied ? (
@@ -453,7 +453,7 @@ export const PromptVersions: React.FC = () => {
               className={cn(
                 'relative pl-6 border-l-2',
                 isCurrent
-                  ? 'border-indigo-500'
+                  ? 'border-theme-accent'
                   : isDark ? 'border-slate-800' : 'border-slate-300'
               )}
             >
@@ -462,7 +462,7 @@ export const PromptVersions: React.FC = () => {
                 className={cn(
                   'absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full ring-4',
                   getRingColor(),
-                  isCurrent ? 'bg-indigo-500' : isDark ? 'bg-slate-600' : 'bg-slate-400'
+                  isCurrent ? 'bg-theme-accent' : isDark ? 'bg-slate-600' : 'bg-slate-400'
                 )}
               />
 

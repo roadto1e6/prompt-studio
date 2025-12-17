@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/utils';
-import { useThemeStore } from '@/stores';
 
 interface Tab {
   id: string;
@@ -21,15 +20,8 @@ export const Tabs: React.FC<TabsProps> = ({
   onChange,
   className,
 }) => {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
-
   return (
-    <div className={cn(
-      'flex border-b',
-      isDark ? 'border-slate-800' : 'border-slate-200',
-      className
-    )}>
+    <div className={cn('flex border-b border-theme-border', className)}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -37,10 +29,8 @@ export const Tabs: React.FC<TabsProps> = ({
           className={cn(
             'px-4 py-3 text-xs font-medium transition-colors flex items-center gap-2',
             activeTab === tab.id
-              ? 'text-indigo-500 border-b-2 border-indigo-500'
-              : isDark
-                ? 'text-slate-400 border-b-2 border-transparent hover:text-slate-200'
-                : 'text-slate-500 border-b-2 border-transparent hover:text-slate-900'
+              ? 'text-theme-accent border-b-2 border-theme-accent'
+              : 'text-theme-text-secondary border-b-2 border-transparent hover:text-theme-text-primary'
           )}
         >
           {tab.icon}

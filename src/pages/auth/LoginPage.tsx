@@ -64,7 +64,7 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={cn(
           'absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl',
-          isDark ? 'bg-indigo-500/10' : 'bg-indigo-500/20'
+          isDark ? 'bg-theme-accent/10' : 'bg-theme-accent/20'
         )} />
         <div className={cn(
           'absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl',
@@ -72,14 +72,14 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
         )} />
         <div className={cn(
           'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl',
-          isDark ? 'bg-indigo-600/5' : 'bg-indigo-600/10'
+          isDark ? 'bg-theme-accent/5' : 'bg-theme-accent/10'
         )} />
       </div>
 
       <div className="max-w-md w-full relative z-10">
         {/* Logo & Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 mb-6 shadow-lg shadow-indigo-500/25">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-theme-accent via-purple-500 to-pink-500 mb-6 shadow-lg shadow-theme-accent/25">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
           <h1 className={cn(
@@ -203,7 +203,7 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
                     className="sr-only peer"
                   />
                   <div className={cn(
-                    'w-4 h-4 rounded border-2 transition-all peer-checked:bg-indigo-500 peer-checked:border-indigo-500',
+                    'w-4 h-4 rounded border-2 transition-all peer-checked:bg-theme-accent peer-checked:border-theme-accent',
                     isDark
                       ? 'border-slate-600 group-hover:border-slate-500'
                       : 'border-slate-300 group-hover:border-slate-400'
@@ -230,7 +230,7 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
               <button
                 type="button"
                 onClick={onForgotPassword}
-                className="text-sm font-medium text-indigo-500 hover:text-indigo-400 transition-colors"
+                className="text-sm font-medium text-theme-accent hover:text-theme-accent/80 transition-colors"
               >
                 {t.auth?.login?.forgotPassword || 'Forgot password?'}
               </button>
@@ -322,7 +322,7 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
           <button
             type="button"
             onClick={onSwitchToRegister}
-            className="font-semibold text-indigo-500 hover:text-indigo-400 transition-colors"
+            className="font-semibold text-theme-accent hover:text-theme-accent/80 transition-colors"
           >
             {t.auth?.login?.signUp || 'Sign up'}
           </button>
@@ -333,18 +333,18 @@ export function LoginPage({ onSwitchToRegister, onForgotPassword }: LoginPagePro
           <div className={cn(
             'mt-6 p-4 rounded-xl border',
             isDark
-              ? 'bg-indigo-500/10 border-indigo-500/20'
-              : 'bg-indigo-50 border-indigo-200'
+              ? 'bg-theme-accent/10 border-theme-accent/20'
+              : 'bg-theme-accent/10 border-theme-accent/30'
           )}>
             <p className={cn(
               'text-sm font-medium mb-2',
-              isDark ? 'text-indigo-300' : 'text-indigo-700'
+              isDark ? 'text-theme-accent' : 'text-theme-accent'
             )}>
               Demo Credentials:
             </p>
             <p className={cn(
               'text-sm font-mono',
-              isDark ? 'text-indigo-400' : 'text-indigo-600'
+              isDark ? 'text-theme-accent' : 'text-theme-accent'
             )}>
               Email: demo@promptstudio.com<br />
               Password: demo123

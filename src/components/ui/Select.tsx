@@ -390,7 +390,7 @@ export const Select: React.FC<SelectProps> = ({
                               className={cn(
                                 'group w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors',
                                 isHighlighted
-                                  ? 'bg-indigo-500/10 text-indigo-400'
+                                  ? 'bg-theme-accent/10 text-theme-accent'
                                   : isSelected
                                     ? 'bg-theme-select-option-selected text-theme-text-primary'
                                     : 'text-theme-text-secondary hover:bg-theme-select-option-hover hover:text-theme-text-primary'
@@ -404,7 +404,7 @@ export const Select: React.FC<SelectProps> = ({
                               <div className="flex-1 min-w-0">
                                 <div className={cn(
                                   'text-sm font-medium truncate',
-                                  isSelected && 'text-indigo-400'
+                                  isSelected && 'text-theme-accent'
                                 )}>
                                   {option.label}
                                 </div>
@@ -415,7 +415,7 @@ export const Select: React.FC<SelectProps> = ({
                                 )}
                               </div>
                               {isSelected && (
-                                <Check className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                                <Check className="w-4 h-4 text-theme-accent flex-shrink-0" />
                               )}
                             </button>
                           );
@@ -441,7 +441,7 @@ export const Select: React.FC<SelectProps> = ({
                         className={cn(
                           'group w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors',
                           isHighlighted
-                            ? 'bg-indigo-500/10 text-indigo-400'
+                            ? 'bg-theme-accent/10 text-theme-accent'
                             : isSelected
                               ? 'bg-theme-select-option-selected text-theme-text-primary'
                               : 'text-theme-text-secondary hover:bg-theme-select-option-hover hover:text-theme-text-primary'
@@ -455,7 +455,7 @@ export const Select: React.FC<SelectProps> = ({
                         <div className="flex-1 min-w-0">
                           <div className={cn(
                             'text-sm font-medium truncate',
-                            isSelected && 'text-indigo-400'
+                            isSelected && 'text-theme-accent'
                           )}>
                             {option.label}
                           </div>
@@ -466,7 +466,7 @@ export const Select: React.FC<SelectProps> = ({
                           )}
                         </div>
                         {isSelected && (
-                          <Check className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                          <Check className="w-4 h-4 text-theme-accent flex-shrink-0" />
                         )}
                       </button>
                     );

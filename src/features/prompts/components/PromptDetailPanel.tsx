@@ -103,7 +103,7 @@ export const PromptDetailPanel: React.FC = () => {
                     value={prompt.title}
                     onChange={handleTitleChange}
                     className={cn(
-                      'bg-transparent font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-indigo-500 truncate transition-all',
+                      'bg-transparent font-semibold text-base w-full focus:outline-none border-b border-transparent focus:border-theme-accent truncate transition-all',
                       isDark ? 'text-white' : 'text-slate-900'
                     )}
                   />
@@ -141,7 +141,7 @@ export const PromptDetailPanel: React.FC = () => {
                     <button
                       onClick={() => openModal('sharePrompt')}
                       className={cn(
-                        'p-2 rounded-lg transition-colors hover:text-indigo-500',
+                        'p-2 rounded-lg transition-colors hover:text-theme-accent',
                         isDark
                           ? 'text-slate-400 hover:bg-white/5'
                           : 'text-slate-500 hover:bg-slate-100'

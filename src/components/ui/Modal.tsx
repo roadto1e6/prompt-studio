@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
-import { useThemeStore } from '@/stores';
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,8 +23,6 @@ export const Modal: React.FC<ModalProps> = ({
   showClose = true,
   className,
 }) => {
-  const { theme } = useThemeStore();
-  const isDark = theme === 'dark';
 
   // Close on Escape key
   useEffect(() => {
@@ -63,10 +60,7 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className={cn(
-              'absolute inset-0 backdrop-blur-sm',
-              isDark ? 'bg-black/60' : 'bg-black/40'
-            )}
+            className="absolute inset-0 backdrop-blur-sm bg-theme-overlay-backdrop"
             onClick={onClose}
           />
 
@@ -82,33 +76,17 @@ export const Modal: React.FC<ModalProps> = ({
               className
             )}
           >
-            <div className={cn(
-              'rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-full border',
-              isDark
-                ? 'bg-dark-800 border-slate-700'
-                : 'bg-white border-slate-200'
-            )}>
+            <div className="rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-full border bg-theme-card-bg border-theme-card-border">
               {/* Header */}
               {(title || showClose) && (
-                <div className={cn(
-                  'flex items-center justify-between px-6 py-4 border-b flex-shrink-0',
-                  isDark ? 'border-slate-700' : 'border-slate-200'
-                )}>
+                <div className="flex items-center justify-between px-6 py-4 border-b border-theme-border flex-shrink-0">
                   {title && (
-                    <h2 className={cn(
-                      'text-lg font-semibold',
-                      isDark ? 'text-white' : 'text-slate-900'
-                    )}>{title}</h2>
+                    <h2 className="text-lg font-semibold text-theme-text-primary">{title}</h2>
                   )}
                   {showClose && (
                     <button
                       onClick={onClose}
-                      className={cn(
-                        'p-1 rounded-lg transition-colors',
-                        isDark
-                          ? 'text-slate-400 hover:text-white hover:bg-white/5'
-                          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-                      )}
+                      className="p-1 rounded-lg transition-colors text-theme-text-secondary hover:text-theme-text-primary hover:bg-theme-overlay"
                     >
                       <X className="w-5 h-5" />
                     </button>

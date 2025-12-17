@@ -231,8 +231,8 @@ export function ModelManagement() {
         className={cn(
           'group relative p-4 rounded-lg border transition-all duration-200',
           isDark
-            ? 'bg-slate-800/50 border-slate-700/50 hover:border-indigo-500/30 hover:bg-slate-800/70'
-            : 'bg-white border-slate-200 hover:border-indigo-500/30 hover:shadow-sm'
+            ? 'bg-slate-800/50 border-slate-700/50 hover:border-theme-accent/30 hover:bg-slate-800/70'
+            : 'bg-white border-slate-200 hover:border-theme-accent/30 hover:shadow-sm'
         )}
       >
         <div className="flex items-start justify-between gap-3">
@@ -245,7 +245,7 @@ export function ModelManagement() {
               <span
                 className={cn(
                   'px-2 py-0.5 text-[10px] font-semibold rounded-full border flex-shrink-0',
-                  'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+                  'bg-theme-accent/10 text-theme-accent border-theme-accent/30'
                 )}
               >
                 {t.settings?.customModelBadge || 'Custom'}
@@ -419,7 +419,7 @@ export function ModelManagement() {
               className={cn(
                 'w-full px-3.5 py-2.5 border rounded-lg text-sm',
                 isDark ? 'bg-dark-900 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900',
-                'focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500',
+                'focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent',
                 editingModel ? 'opacity-50 cursor-not-allowed' : ''
               )}
             >
@@ -451,7 +451,7 @@ export function ModelManagement() {
                   className={cn(
                     'px-3.5 py-2 text-sm rounded-lg border-2 transition-all duration-200 font-medium',
                     formData.capabilities.includes(cap.value)
-                      ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-400'
+                      ? 'bg-theme-accent/10 border-theme-accent/50 text-theme-accent'
                       : isDark
                         ? 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
@@ -519,7 +519,7 @@ export function ModelManagement() {
                 isDark
                   ? 'bg-dark-900 border-slate-700 text-white placeholder:text-slate-500'
                   : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400',
-                'focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500'
+                'focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent'
               )}
             />
           </div>
@@ -573,7 +573,7 @@ export function ModelManagement() {
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
                   className={cn(
-                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50',
+                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50',
                     isDark ? 'bg-dark-900 border-slate-700 text-slate-300' : 'bg-white border-slate-300 text-slate-900'
                   )}
                 >
@@ -588,7 +588,7 @@ export function ModelManagement() {
                   value={selectedCapability}
                   onChange={(e) => setSelectedCapability(e.target.value as ModelCapability | '')}
                   className={cn(
-                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50',
+                    'flex-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent/50',
                     isDark ? 'bg-dark-900 border-slate-700 text-slate-300' : 'bg-white border-slate-300 text-slate-900'
                   )}
                 >
