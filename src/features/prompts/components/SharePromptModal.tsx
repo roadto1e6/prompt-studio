@@ -104,20 +104,20 @@ export const SharePromptModal: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-dark-800 border border-slate-700 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden m-4"
+          className="bg-theme-card-bg border border-theme-border rounded-xl shadow-2xl w-full max-w-sm overflow-hidden m-4"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-slate-700">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-theme-border">
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 bg-theme-accent/20 rounded-lg">
                 <Share2 className="w-4 h-4 text-theme-accent" />
               </div>
-              <h3 className="text-white font-medium">{t.share.title}</h3>
+              <h3 className="text-theme-text-primary font-medium">{t.share.title}</h3>
             </div>
             <button
               onClick={handleClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+              className="p-1.5 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -126,7 +126,7 @@ export const SharePromptModal: React.FC = () => {
           {/* Content */}
           <div className="p-5">
             {loading ? (
-              <div className="flex items-center justify-center gap-3 py-6 text-slate-400">
+              <div className="flex items-center justify-center gap-3 py-6 text-theme-text-secondary">
                 <Loader2 className="w-5 h-5 animate-spin" />
                 <p className="text-sm">{t.share.generating}</p>
               </div>
@@ -144,16 +144,16 @@ export const SharePromptModal: React.FC = () => {
             ) : shareResult ? (
               <div className="space-y-4">
                 {/* Prompt Title Preview */}
-                <div className="text-center pb-3 border-b border-slate-700/50">
-                  <p className="text-sm text-slate-300 font-medium truncate">{prompt.title}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{prompt.model}</p>
+                <div className="text-center pb-3 border-b border-theme-border">
+                  <p className="text-sm text-theme-text-primary font-medium truncate">{prompt.title}</p>
+                  <p className="text-xs text-theme-text-muted mt-0.5">{prompt.model}</p>
                 </div>
 
                 {/* Short Code - Prominent Display */}
                 <div className="text-center">
-                  <p className="text-xs text-slate-500 mb-2">{t.share.shareCode}</p>
+                  <p className="text-xs text-theme-text-muted mb-2">{t.share.shareCode}</p>
                   <div
-                    className="inline-flex items-center gap-2 bg-dark-900 border border-slate-600 rounded-lg px-4 py-2.5 cursor-pointer hover:border-theme-accent/50 transition-colors group"
+                    className="inline-flex items-center gap-2 bg-theme-bg-secondary border border-theme-border rounded-lg px-4 py-2.5 cursor-pointer hover:border-theme-accent/50 transition-colors group"
                     onClick={handleCopyCode}
                   >
                     <span className="font-mono text-xl tracking-widest text-theme-accent font-semibold">
@@ -162,7 +162,7 @@ export const SharePromptModal: React.FC = () => {
                     {copiedCode ? (
                       <Check className="w-4 h-4 text-emerald-400" />
                     ) : (
-                      <Copy className="w-4 h-4 text-slate-500 group-hover:text-theme-accent transition-colors" />
+                      <Copy className="w-4 h-4 text-theme-text-muted group-hover:text-theme-accent transition-colors" />
                     )}
                   </div>
                   {copiedCode && (
@@ -172,19 +172,19 @@ export const SharePromptModal: React.FC = () => {
 
                 {/* Full URL */}
                 <div>
-                  <p className="text-xs text-slate-500 mb-1.5">{t.share.shareLink}</p>
+                  <p className="text-xs text-theme-text-muted mb-1.5">{t.share.shareLink}</p>
                   <div
-                    className="flex items-center gap-2 bg-dark-900 border border-slate-700 rounded-lg px-3 py-2 cursor-pointer hover:border-slate-600 transition-colors group"
+                    className="flex items-center gap-2 bg-theme-bg-secondary border border-theme-border rounded-lg px-3 py-2 cursor-pointer hover:border-theme-card-hover-border transition-colors group"
                     onClick={handleCopyUrl}
                   >
-                    <Link2 className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
-                    <span className="flex-1 text-xs text-slate-400 truncate font-mono">
+                    <Link2 className="w-3.5 h-3.5 text-theme-text-muted flex-shrink-0" />
+                    <span className="flex-1 text-xs text-theme-text-secondary truncate font-mono">
                       {shareResult.shareUrl}
                     </span>
                     {copiedUrl ? (
                       <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300 flex-shrink-0 transition-colors" />
+                      <Copy className="w-3.5 h-3.5 text-theme-text-muted group-hover:text-theme-text-secondary flex-shrink-0 transition-colors" />
                     )}
                   </div>
                 </div>
@@ -194,7 +194,7 @@ export const SharePromptModal: React.FC = () => {
 
           {/* Footer */}
           {shareResult && (
-            <div className="px-5 py-3 border-t border-slate-700/50 bg-dark-900/50">
+            <div className="px-5 py-3 border-t border-theme-border bg-theme-bg-secondary">
               <Button variant="primary" onClick={handleClose} className="w-full">
                 {t.common.close}
               </Button>

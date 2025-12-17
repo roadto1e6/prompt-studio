@@ -99,7 +99,7 @@ export const PromptEditor: React.FC = () => {
 
   if (!prompt) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-500">
+      <div className="h-full flex items-center justify-center text-theme-text-muted">
         <p>{t.editor.selectPrompt}</p>
       </div>
     );
@@ -114,13 +114,13 @@ export const PromptEditor: React.FC = () => {
       {/* System Prompt */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+          <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider">
             {t.editor.systemPrompt}
           </label>
           <button
             onClick={handleCopy}
             disabled={!systemPrompt}
-            className="p-1 rounded text-slate-500 hover:text-theme-accent hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-1 rounded text-theme-text-muted hover:text-theme-accent hover:bg-theme-bg-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             title={t.editor.copyToClipboard}
           >
             {copied ? (
@@ -132,7 +132,7 @@ export const PromptEditor: React.FC = () => {
         </div>
         <div className="flex gap-2">
           {currentVersion && (
-            <span className="text-[10px] text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
+            <span className="text-[10px] text-theme-text-muted bg-theme-bg-secondary px-2 py-0.5 rounded">
               v{currentVersion.versionNumber} ({t.editor.currentVersion})
             </span>
           )}
@@ -143,23 +143,23 @@ export const PromptEditor: React.FC = () => {
         <textarea
           value={systemPrompt}
           onChange={handleSystemPromptChange}
-          className="w-full h-full bg-dark-800 border border-slate-700 rounded-lg p-4 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent resize-none leading-relaxed transition-colors"
+          className="w-full h-full bg-theme-input-bg border border-theme-input-border rounded-lg p-4 font-mono text-sm text-theme-input-text focus:outline-none focus:border-theme-accent resize-none leading-relaxed transition-colors"
           placeholder={t.editor.systemPromptPlaceholder}
         />
-        <div className="absolute bottom-4 right-4 text-[10px] text-slate-600 bg-dark-900/80 px-2 py-1 rounded backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 text-[10px] text-theme-text-muted bg-theme-bg-secondary px-2 py-1 rounded backdrop-blur-sm">
           {t.editor.charsAndTokens.replace('{chars}', String(charCount)).replace('{tokens}', String(tokenCount))}
         </div>
       </div>
 
       {/* User Template */}
       <div className="mb-2">
-        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+        <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2 block">
           {t.editor.userTemplateOptional}
         </label>
         <textarea
           value={userTemplate}
           onChange={handleUserTemplateChange}
-          className="w-full h-24 bg-dark-800 border border-slate-700 rounded-lg p-3 font-mono text-sm text-slate-300 focus:outline-none focus:border-theme-accent resize-none"
+          className="w-full h-24 bg-theme-input-bg border border-theme-input-border rounded-lg p-3 font-mono text-sm text-theme-input-text focus:outline-none focus:border-theme-accent resize-none"
           placeholder={t.editor.userTemplatePlaceholder}
         />
       </div>
@@ -182,13 +182,13 @@ export const PromptEditor: React.FC = () => {
         title={t.editor.createVersionModal.title}
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-theme-text-secondary">
             {t.editor.createVersionModal.description}
           </p>
 
           {/* Change Note Input */}
           <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2 block">
               {t.editor.createVersionModal.changeNote}
             </label>
             <Input
@@ -201,7 +201,7 @@ export const PromptEditor: React.FC = () => {
 
           {/* Version Type Selection */}
           <div>
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2 block">
               {t.editor.createVersionModal.versionType}
             </label>
             <div className="flex gap-3">
@@ -210,11 +210,11 @@ export const PromptEditor: React.FC = () => {
                 className={`flex-1 px-4 py-3 rounded-lg border text-sm transition-all ${
                   versionType === 'minor'
                     ? 'bg-theme-accent/10 border-theme-accent text-theme-accent shadow-lg'
-                    : 'bg-dark-800 border-slate-700 text-slate-400 hover:border-slate-600'
+                    : 'bg-theme-card-bg border-theme-border text-theme-text-secondary hover:border-theme-card-hover-border'
                 }`}
               >
                 <div className="font-bold mb-1">{t.editor.createVersionModal.minorVersion}</div>
-                <div className="text-xs text-slate-500 mb-1">
+                <div className="text-xs text-theme-text-muted mb-1">
                   {prompt?.versions[0] ? (
                     <>
                       {t.editor.createVersionModal.currentVersion
@@ -228,18 +228,18 @@ export const PromptEditor: React.FC = () => {
                     </>
                   ) : t.editor.createVersionModal.currentVersion.replace('{current}', '1.0').replace('{next}', '1.1')}
                 </div>
-                <div className="text-xs text-slate-600">{t.editor.createVersionModal.minorDescription}</div>
+                <div className="text-xs text-theme-text-muted">{t.editor.createVersionModal.minorDescription}</div>
               </button>
               <button
                 onClick={() => setVersionType('major')}
                 className={`flex-1 px-4 py-3 rounded-lg border text-sm transition-all ${
                   versionType === 'major'
                     ? 'bg-theme-accent/10 border-theme-accent text-theme-accent shadow-lg'
-                    : 'bg-dark-800 border-slate-700 text-slate-400 hover:border-slate-600'
+                    : 'bg-theme-card-bg border-theme-border text-theme-text-secondary hover:border-theme-card-hover-border'
                 }`}
               >
                 <div className="font-bold mb-1">{t.editor.createVersionModal.majorVersion}</div>
-                <div className="text-xs text-slate-500 mb-1">
+                <div className="text-xs text-theme-text-muted mb-1">
                   {prompt?.versions[0] ? (
                     <>
                       {t.editor.createVersionModal.currentVersion
@@ -253,10 +253,10 @@ export const PromptEditor: React.FC = () => {
                     </>
                   ) : t.editor.createVersionModal.currentVersion.replace('{current}', '1.0').replace('{next}', '2.0')}
                 </div>
-                <div className="text-xs text-slate-600">{t.editor.createVersionModal.majorDescription}</div>
+                <div className="text-xs text-theme-text-muted">{t.editor.createVersionModal.majorDescription}</div>
               </button>
             </div>
-            <p className="text-xs text-slate-600 mt-2">
+            <p className="text-xs text-theme-text-muted mt-2">
               {t.editor.createVersionModal.versionHint}
             </p>
           </div>

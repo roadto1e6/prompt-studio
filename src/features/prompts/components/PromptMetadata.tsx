@@ -91,7 +91,7 @@ export const PromptMetadata: React.FC = () => {
 
   if (!prompt) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-500">
+      <div className="h-full flex items-center justify-center text-theme-text-muted">
         <p>{t.metadata.selectPrompt}</p>
       </div>
     );
@@ -133,7 +133,7 @@ export const PromptMetadata: React.FC = () => {
         {/* Max Tokens */}
         <div>
           <div className="flex justify-between mb-2">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <label className="text-xs font-bold text-theme-text-label uppercase tracking-wider">
               {t.metadata.maxTokens}
             </label>
             <span className="text-xs text-theme-accent font-mono">{maxTokens}</span>
@@ -161,7 +161,7 @@ export const PromptMetadata: React.FC = () => {
 
         {/* Tags */}
         <div>
-          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-theme-text-label uppercase tracking-wider mb-2">
             {t.metadata.tags}
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
@@ -187,10 +187,10 @@ export const PromptMetadata: React.FC = () => {
         </div>
 
         {/* Advanced Settings (Collapsible) */}
-        <div className="border-t border-slate-800 pt-4">
+        <div className="border-t border-theme-border pt-4">
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center justify-between w-full text-left text-slate-400 hover:text-white transition-colors"
+            className="flex items-center justify-between w-full text-left text-theme-text-secondary hover:text-theme-text-primary transition-colors"
           >
             <span className="text-xs font-bold uppercase tracking-wider">
               {t.metadata.advancedSettings}
@@ -202,8 +202,8 @@ export const PromptMetadata: React.FC = () => {
 
           {showAdvanced && (
             <div className="mt-4 space-y-4">
-              <div className="p-4 bg-dark-900 rounded-lg border border-slate-800">
-                <p className="text-xs text-slate-500">
+              <div className="p-4 bg-theme-bg-secondary rounded-lg border border-theme-border">
+                <p className="text-xs text-theme-text-muted">
                   {t.metadata.advancedSettingsHint}
                 </p>
               </div>
