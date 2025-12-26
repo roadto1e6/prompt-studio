@@ -12,7 +12,30 @@
       "Bash(git push)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(dir:*)",
+      "Bash(cat:*)",
+      "Bash(if [ -f \".env.example\" ])",
+      "Bash(then mv .env.example frontend/)",
+      "Bash(fi)",
+      "Bash(if [ -f \"README.zh-CN.md\" ])",
+      "Bash(then mv README.zh-CN.md frontend/)",
+      "Bash(if [ -f \"../prompt-studio-api/.env.example\" ])",
+      "Bash(then cp \"../prompt-studio-api/.env.example\" backend/)",
+      "Bash(if [ -f \"../prompt-studio-api/README_CN.md\" ])",
+      "Bash(then cp \"../prompt-studio-api/README_CN.md\" backend/)",
+      "Bash(if [ -f \"../prompt-studio-api/scripts/init-db.sql\" ])",
+      "Bash(then cp \"../prompt-studio-api/scripts/init-db.sql\" docker/)",
+      "Bash(chmod:*)",
+      "Bash(tree:*)",
+      "Bash(ls:*)",
+      "Bash(docker-compose config:*)",
+      "Bash(test:*)",
+      "Bash(docker info:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker volume:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)"
     ]
   }
 }

@@ -1,409 +1,544 @@
-# 🎨 Prompt Studio
+# Prompt Studio
 
-<div align="center">
+A modern, full-stack prompt management system with version control, collections, and sharing capabilities. Built with React, TypeScript, Fastify, and PostgreSQL.
 
-A modern, powerful AI prompt management platform built with React and TypeScript.
+## Features
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.3-646cff.svg)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+### Core Functionality
+- **Prompt Management**: Create, edit, organize and version your AI prompts
+- **Version Control**: Track changes with detailed version history and diff viewing
+- **Collections**: Organize prompts into collections with custom colors and icons
+- **Sharing**: Share prompts with others using short codes, passwords, and expiration
+- **Multi-language**: English and Chinese (Simplified) interface
+- **Theme Support**: Seamless dark/light mode switching
+- **Model Management**: Support for multiple AI providers (OpenAI, Anthropic, etc.)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+### User Experience
+- **Keyboard Shortcuts**: Quick actions with intuitive shortcuts
+- **Responsive Design**: Beautiful on desktop and mobile
+- **Real-time Search**: Instant filtering across all prompts
+- **Drag & Drop**: Intuitive organization
+- **Import/Export**: Easy backup and migration
 
-</div>
+### Authentication
+- **Email/Password**: Secure traditional authentication
+- **OAuth**: Google and GitHub login
+- **Password Reset**: Secure recovery flow
+- **Session Management**: Automatic token refresh
 
----
+## Tech Stack
 
-## ✨ Features
+### Frontend
+- **React 18** + **TypeScript** + **Vite**
+- **Tailwind CSS** for styling
+- **Zustand** for state management
+- **Framer Motion** for animations
+- **Lucide React** for icons
 
-### 🗂️ **Prompt Management**
-- **Create & Organize** - Create, edit, and manage AI prompts with ease
-- **Collections** - Group prompts into customizable collections with color coding
-- **Categories** - Support for Text, Image, Audio, and Video prompts
-- **Tags** - Flexible tagging system for better organization
-- **Search & Filter** - Quick search and advanced filtering capabilities
-- **Favorites** - Mark important prompts for quick access
+### Backend
+- **Fastify** - High-performance Node.js framework
+- **PostgreSQL 16** - Primary database with full-text search
+- **Redis 7** - Caching and session management
+- **Prisma** - Type-safe database ORM
+- **JWT** - Stateless authentication
+- **Zod** - Runtime validation
 
-### 🎯 **Advanced Features**
-- **Version Control** - Track and restore prompt versions with detailed history
-- **Template Variables** - Dynamic prompt templates with `{{variable}}` syntax
-- **Model Selection** - Support for multiple AI models (OpenAI, Anthropic, Google, etc.)
-- **Share Prompts** - Generate shareable links with import/export functionality
-- **Batch Import** - Import prompts from various sources
+### DevOps
+- **Docker** + **Docker Compose** - Complete containerization
+- **Nginx** - Reverse proxy and static file serving
+- **Multi-stage Builds** - Optimized image sizes
 
-### 🎨 **User Experience**
-- **Dark/Light Theme** - Beautiful dark mode with smooth transitions
-- **Internationalization** - Built-in support for English and Chinese (易于扩展)
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- **Keyboard Shortcuts** - Efficient workflow with keyboard navigation
-- **Grid/List Views** - Multiple viewing options for your prompts
-
-### 🔐 **Security & Authentication**
-- **User Authentication** - Secure login/registration system
-- **Profile Management** - Manage user profiles and preferences
-- **OAuth Integration** - Support for Google, GitHub authentication (ready for backend)
-- **Password Management** - Secure password change and recovery
-
-### 🛠️ **Developer Experience**
-- **TypeScript** - Full type safety and excellent IntelliSense
-- **Modern Stack** - React 18, Vite, Zustand for state management
-- **Component Library** - Reusable UI components with consistent design
-- **Mock Data** - Built-in mock data for development
-- **API Ready** - Service layer architecture ready for backend integration
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- **Node.js** >= 18.0.0
-- **npm** >= 9.0.0 or **yarn** >= 1.22.0
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/prompt-studio.git
-cd prompt-studio
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The app will be available at `http://localhost:5173`
-
-### Build for Production
-
-```bash
-# Build the project
-npm run build
-
-# Preview production build
-npm run preview
-```
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 prompt-studio/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── ui/             # Base UI components (Button, Input, Modal, etc.)
-│   │   ├── layout/         # Layout components (Header, Sidebar, etc.)
-│   │   ├── auth/           # Authentication components
-│   │   └── settings/       # Settings components
-│   ├── features/           # Feature-specific components
-│   │   ├── prompts/        # Prompt management
-│   │   └── collections/    # Collection management
-│   ├── pages/              # Page components
-│   │   ├── HomePage.tsx
-│   │   └── auth/          # Auth pages (Login, Register, etc.)
-│   ├── stores/            # Zustand state management
-│   │   ├── promptStore.ts
-│   │   ├── collectionStore.ts
-│   │   ├── authStore.ts
-│   │   ├── modelStore.ts
-│   │   ├── themeStore.ts
-│   │   └── i18nStore.ts
-│   ├── services/          # API service layer
-│   │   ├── authService.ts
-│   │   ├── promptService.ts
-│   │   └── shareService.ts
-│   ├── types/             # TypeScript type definitions
-│   ├── i18n/              # Internationalization
-│   │   ├── en.ts
-│   │   └── zh.ts
-│   ├── utils/             # Utility functions
-│   ├── constants/         # App constants
-│   ├── data/              # Mock data
-│   ├── hooks/             # Custom React hooks
-│   ├── App.tsx            # Root component
-│   └── main.tsx           # Entry point
-├── public/                # Static assets
-├── docs/                  # Documentation
-│   └── API_DESIGN.md     # Backend API specification
-├── dist/                  # Build output
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── tailwind.config.js
+├── frontend/           # React frontend application
+│   ├── src/           # Source code
+│   │   ├── components/  # React components
+│   │   ├── features/    # Feature modules
+│   │   ├── services/    # API services
+│   │   ├── stores/      # Zustand stores
+│   │   └── types/       # TypeScript types
+│   ├── public/        # Static assets
+│   ├── Dockerfile     # Frontend container
+│   └── nginx.conf     # Nginx configuration
+│
+├── backend/           # Fastify backend API
+│   ├── src/          # Source code
+│   │   ├── modules/    # Feature modules
+│   │   ├── middlewares/  # Middleware
+│   │   ├── config/     # Configuration
+│   │   └── utils/      # Utilities
+│   ├── prisma/       # Database schema
+│   ├── Dockerfile    # Backend container
+│   └── .env.example  # Environment template
+│
+├── docker/           # Docker configurations
+│   ├── nginx.conf    # Reverse proxy config
+│   └── init-db.sql   # Database initialization
+│
+├── scripts/          # Utility scripts
+│   ├── start.bat     # Windows startup
+│   └── start.sh      # Linux/Mac startup
+│
+├── docker-compose.yml # Service orchestration
+├── .env              # Environment variables
+├── .env.example      # Environment template
+└── README.md         # This file
 ```
 
----
+## Quick Start
 
-## 🎨 Tech Stack
+### Prerequisites
 
-### Core
-- **[React 18](https://reactjs.org/)** - UI library
-- **[TypeScript 5](https://www.typescriptlang.org/)** - Type safety
-- **[Vite](https://vitejs.dev/)** - Build tool & dev server
+- **Docker** and **Docker Compose** installed
+- **Git** (optional, for cloning)
 
-### State Management
-- **[Zustand](https://github.com/pmndrs/zustand)** - Lightweight state management
-- **Persist middleware** - State persistence
+### One-Click Deployment
 
-### Styling
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS
-- **[Framer Motion](https://www.framer.com/motion/)** - Animation library
-- **Custom Design System** - Consistent UI components
+#### Windows
 
-### UI Components
-- **[Lucide Icons](https://lucide.dev/)** - Beautiful icon set
-- **Custom Components** - Modal, Input, Select, Tabs, etc.
+```batch
+# 1. Configure environment variables
+copy .env.example .env
+notepad .env
 
-### Utilities
-- **[date-fns](https://date-fns.org/)** - Date manipulation
-- **[uuid](https://github.com/uuidjs/uuid)** - Unique ID generation
-- **[clsx](https://github.com/lukeed/clsx)** - Classname utility
-
----
-
-## 🌍 Internationalization
-
-Prompt Studio supports multiple languages with a flexible i18n system:
-
-```typescript
-// Available languages
-- English (en)
-- 简体中文 (zh)
-
-// Add new language
-// 1. Create translation file: src/i18n/your-lang.ts
-// 2. Follow the structure from en.ts
-// 3. Update i18nStore to include new language
+# 2. Run the startup script
+scripts\start.bat
 ```
 
-**Switching Languages:**
-- Click on the language selector in the header
-- Or use the theme toggle dropdown
-
----
-
-## 🔌 API Integration
-
-The frontend is ready for backend integration with a clean service layer architecture.
-
-### Mock Data Mode (Development)
-
-```env
-VITE_ENABLE_MOCK_DATA=true
-```
-
-### Production API Mode
-
-```env
-VITE_ENABLE_MOCK_DATA=false
-VITE_API_BASE_URL=https://api.promptstudio.com/api
-```
-
-### API Documentation
-
-See [API_DESIGN.md](./docs/API_DESIGN.md) for detailed API specifications including:
-- Authentication endpoints
-- Prompt CRUD operations
-- Collection management
-- Share functionality
-- Model configuration
-
----
-
-## 🛠️ Development
-
-### Available Scripts
+#### Linux/Mac
 
 ```bash
-# Start development server with hot reload
-npm run dev
+# 1. Configure environment variables
+cp .env.example .env
+nano .env  # or vim, code, etc.
 
-# Type check
-npx tsc --noEmit
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# 2. Run the startup script
+chmod +x scripts/start.sh
+./scripts/start.sh
 ```
 
-### Code Style
+#### Manual Deployment
 
-- **TypeScript** - Strict mode enabled
-- **ESLint** - Code linting (can be added)
-- **Prettier** - Code formatting (can be added)
+```bash
+# 1. Configure environment
+cp .env.example .env
+# Edit .env and set your configuration
 
-### Component Guidelines
+# 2. Start all services
+docker-compose up -d
 
-1. **Functional Components** - Use function components with hooks
-2. **TypeScript** - All components should have proper types
-3. **Props Interface** - Define props interface for each component
-4. **Styling** - Use Tailwind CSS utility classes
-5. **State Management** - Use Zustand stores for global state
-6. **i18n** - Use translation keys for all user-facing text
+# 3. View logs to monitor startup
+docker-compose logs -f
 
----
-
-## 🎯 Key Features Guide
-
-### Creating a Prompt
-
-1. Click **"New Prompt"** button in the header
-2. Fill in the details:
-   - **Title** - Name your prompt
-   - **Description** - Brief description
-   - **Category** - Text, Image, Audio, or Video
-   - **Model** - Select AI model
-   - **Collection** - Optional organization
-   - **System Prompt** - Your AI instructions
-3. Click **"Create Prompt"**
-
-### Managing Collections
-
-1. Click **"+" button** next to Collections in sidebar
-2. Enter collection name and description
-3. Choose a color for visual identification
-4. Organize prompts by dragging them to collections
-
-### Version Control
-
-1. Edit a prompt and make changes
-2. Click **"Save as New Version"**
-3. Add version notes describing changes
-4. View version history in the **Versions** tab
-5. Restore any previous version when needed
-
-### Sharing Prompts
-
-1. Click the **Share** icon on any prompt
-2. Copy the generated share link
-3. Recipients can import the prompt with one click
-4. Supports duplicate detection
-
----
-
-## 🎨 Theme Customization
-
-Prompt Studio uses a carefully crafted design system:
-
-### Colors
-- **Primary**: Indigo (customizable in tailwind.config.js)
-- **Dark Mode**: Slate-based dark palette
-- **Accents**: Category-specific colors
-
-### Customization
-
-Edit `tailwind.config.js` to customize:
-```js
-theme: {
-  extend: {
-    colors: {
-      // Your custom colors
-    }
-  }
-}
+# 4. Run database migrations (if needed)
+docker-compose exec backend npx prisma migrate deploy
 ```
 
----
+### Access the Application
 
-## 🤝 Contributing
+Once deployed, access at:
 
-We welcome contributions! Here's how you can help:
+- **Frontend**: http://localhost
+- **Backend API**: http://localhost/api
+- **Health Check**: http://localhost/health
+- **API Health**: http://localhost/api-health
 
-### Ways to Contribute
+## Environment Configuration
 
-1. **Report Bugs** - Open an issue with bug details
-2. **Suggest Features** - Share your ideas for new features
-3. **Submit PRs** - Fix bugs or add features
-4. **Improve Docs** - Help improve documentation
-5. **Translations** - Add support for new languages
+Create a `.env` file from `.env.example` and configure:
 
-### Pull Request Process
+### Required Settings
+
+```env
+# JWT Secret (IMPORTANT: Change in production!)
+# Generate with: openssl rand -hex 32
+JWT_SECRET=your-secure-random-string-min-32-characters
+
+# Database Password
+DB_PASSWORD=your-database-password
+
+# Redis Password
+REDIS_PASSWORD=your-redis-password
+```
+
+### Optional Settings
+
+```env
+# Service Ports
+FRONTEND_PORT=80
+
+# CORS (change for production)
+CORS_ORIGIN=http://localhost
+FRONTEND_URL=http://localhost
+
+# OAuth (Google)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# OAuth (GitHub)
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+```
+
+## Development
+
+### Local Development (Hot Reload)
+
+For development with hot reload:
+
+```bash
+# 1. Start only database services
+docker-compose up -d postgres redis
+
+# 2. Start backend (Terminal 1)
+cd backend
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run dev  # Runs on http://localhost:3001
+
+# 3. Start frontend (Terminal 2)
+cd frontend
+npm install
+npm run dev  # Runs on http://localhost:5173
+```
+
+**Note**: For local development, create `frontend/.env`:
+```env
+VITE_API_BASE_URL=http://localhost:3001/api
+```
+
+### Building for Production
+
+```bash
+# Build all images
+docker-compose build
+
+# Start production stack
+docker-compose up -d
+```
+
+## Docker Commands
+
+### Basic Operations
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Stop all services
+docker-compose down
+
+# View logs (all services)
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f frontend
+docker-compose logs -f backend
+docker-compose logs -f postgres
+
+# Restart services
+docker-compose restart
+
+# Rebuild and restart
+docker-compose up -d --build
+```
+
+### Container Management
+
+```bash
+# Check service status
+docker-compose ps
+
+# Execute command in container
+docker-compose exec backend sh
+docker-compose exec postgres psql -U postgres prompt_studio
+
+# Remove everything (including volumes)
+docker-compose down -v
+
+# Remove images too
+docker-compose down -v --rmi all
+```
+
+## Database Management
+
+### Backup
+
+```bash
+# Backup database
+docker-compose exec postgres pg_dump -U postgres prompt_studio > backup.sql
+
+# Backup with timestamp
+docker-compose exec postgres pg_dump -U postgres prompt_studio > backup-$(date +%Y%m%d-%H%M%S).sql
+
+# Backup volumes
+docker run --rm -v prompt-studio-postgres-data:/data -v $(pwd):/backup alpine tar czf /backup/postgres-backup.tar.gz -C /data .
+```
+
+### Restore
+
+```bash
+# Restore from SQL dump
+docker-compose exec -T postgres psql -U postgres prompt_studio < backup.sql
+
+# Restore volumes
+docker run --rm -v prompt-studio-postgres-data:/data -v $(pwd):/backup alpine tar xzf /backup/postgres-backup.tar.gz -C /data
+```
+
+### Migrations
+
+```bash
+# Run migrations
+docker-compose exec backend npx prisma migrate deploy
+
+# Create new migration (development)
+cd backend
+npx prisma migrate dev --name your_migration_name
+
+# Reset database (WARNING: Deletes all data)
+docker-compose exec backend npx prisma migrate reset
+
+# Open Prisma Studio (Database GUI)
+docker-compose exec backend npx prisma studio
+```
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 80 is already in use:
+
+```env
+# In .env file
+FRONTEND_PORT=8080
+```
+
+Then restart:
+```bash
+docker-compose down && docker-compose up -d
+```
+
+### Database Connection Failed
+
+1. Check if PostgreSQL is healthy:
+   ```bash
+   docker-compose ps postgres
+   docker-compose logs postgres
+   ```
+
+2. Verify connection string in .env:
+   ```env
+   DB_USER=postgres
+   DB_PASSWORD=postgres123
+   DB_NAME=prompt_studio
+   ```
+
+3. Restart PostgreSQL:
+   ```bash
+   docker-compose restart postgres
+   ```
+
+### Frontend Can't Connect to Backend
+
+1. Check Nginx proxy configuration:
+   ```bash
+   docker-compose exec frontend cat /etc/nginx/conf.d/default.conf
+   ```
+
+2. Test backend directly:
+   ```bash
+   curl http://localhost/api-health
+   ```
+
+3. Check backend logs:
+   ```bash
+   docker-compose logs backend | tail -50
+   ```
+
+### CORS Errors
+
+Ensure `CORS_ORIGIN` in `.env` matches your frontend URL:
+
+```env
+# For local Docker deployment
+CORS_ORIGIN=http://localhost
+
+# For production
+CORS_ORIGIN=https://yourdomain.com
+```
+
+### Clear Everything and Start Fresh
+
+```bash
+# Stop and remove all containers, volumes, and images
+docker-compose down -v --rmi all
+
+# Remove orphaned volumes
+docker volume prune
+
+# Rebuild and start
+docker-compose up -d --build
+```
+
+## Architecture
+
+### Network Flow
+
+```
+External Request (localhost:80)
+         ↓
+  [Nginx Container]
+         ├─→ /api/*      → [Backend:3001]
+         │                      ↓
+         │                  [PostgreSQL:5432]
+         │                      ↓
+         │                  [Redis:6379]
+         │
+         └─→ /* (other)  → Static Files (React SPA)
+```
+
+### Service Dependencies
+
+```
+1. PostgreSQL starts → Health check passes
+         ↓
+2. Redis starts → Health check passes
+         ↓
+3. Backend starts → Connects to DB/Redis → Health check passes
+         ↓
+4. Frontend starts → Nginx serves static files → Proxies /api to backend
+```
+
+### Security Features
+
+- **JWT Authentication**: Stateless, secure tokens
+- **Password Hashing**: bcrypt with salt rounds
+- **CORS Protection**: Configurable origins
+- **SQL Injection Prevention**: Prisma ORM parameterized queries
+- **XSS Protection**: Security headers in Nginx
+- **Rate Limiting**: Configurable rate limits on sensitive endpoints
+- **Non-root Containers**: All containers run as non-root users
+
+## Security Considerations
+
+### Production Checklist
+
+- [ ] Change `JWT_SECRET` to a strong random string (min 32 chars)
+- [ ] Use strong passwords for `DB_PASSWORD` and `REDIS_PASSWORD`
+- [ ] Update `CORS_ORIGIN` to your production domain
+- [ ] Set up HTTPS with SSL/TLS certificates (use nginx-proxy + Let's Encrypt)
+- [ ] Configure firewall rules (only expose ports 80/443)
+- [ ] Enable Docker security scanning
+- [ ] Regular security updates (`docker-compose pull`)
+- [ ] Set up backup automation
+- [ ] Configure logging and monitoring
+- [ ] Review and restrict OAuth redirect URIs
+
+### Generate Secure Secrets
+
+```bash
+# Generate JWT secret (64 characters)
+openssl rand -hex 32
+
+# Generate strong passwords (32 characters)
+openssl rand -base64 24
+
+# Generate all secrets at once
+echo "JWT_SECRET=$(openssl rand -hex 32)"
+echo "DB_PASSWORD=$(openssl rand -base64 24)"
+echo "REDIS_PASSWORD=$(openssl rand -base64 24)"
+```
+
+## Performance Optimization
+
+- **Redis Caching**: 256MB memory with LRU eviction policy
+- **Nginx Gzip**: Enabled for all text-based responses
+- **Static Asset Caching**: 1-year cache for immutable assets (JS, CSS, images)
+- **HTML No-Cache**: Ensures SPA always gets latest index.html
+- **PostgreSQL Connection Pooling**: Prisma connection pooling enabled
+- **Multi-stage Docker Builds**: Minimal production images
+- **Alpine Base Images**: Smaller image sizes (~5-50MB vs 100+MB)
+
+## Monitoring
+
+### Check Service Health
+
+```bash
+# All services
+docker-compose ps
+
+# Frontend health
+curl http://localhost/health
+
+# Backend health
+curl http://localhost/api-health
+
+# PostgreSQL
+docker-compose exec postgres pg_isready -U postgres
+
+# Redis
+docker-compose exec redis redis-cli -a redis123 ping
+```
+
+### View Resource Usage
+
+```bash
+# Container stats
+docker stats
+
+# Disk usage
+docker system df
+
+# Logs size
+docker-compose logs --tail=100 | wc -l
+```
+
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Test thoroughly (both frontend and backend)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-### Development Setup
+## License
 
-```bash
-# Fork and clone your fork
-git clone https://github.com/YOUR_USERNAME/prompt-studio.git
+MIT License - see LICENSE file for details
 
-# Add upstream remote
-git remote add upstream https://github.com/ORIGINAL_OWNER/prompt-studio.git
+## Support
 
-# Create feature branch
-git checkout -b feature/my-feature
+For issues and questions:
 
-# Make changes and commit
-git add .
-git commit -m "feat: add my feature"
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review logs: `docker-compose logs`
+3. Check existing GitHub issues
+4. Create a new issue with:
+   - Description of the problem
+   - Steps to reproduce
+   - Docker logs
+   - Environment details
 
-# Push and create PR
-git push origin feature/my-feature
-```
+## Roadmap
 
----
-
-## 📝 Roadmap
-
-### Upcoming Features
 - [ ] Real-time collaboration
+- [ ] Advanced search with filters
 - [ ] Prompt templates marketplace
-- [ ] Advanced analytics
-- [ ] API playground
-- [ ] Plugin system
-- [ ] Mobile app (React Native)
-- [ ] Browser extension
-- [ ] VS Code extension
+- [ ] API usage analytics
+- [ ] Webhook integrations
+- [ ] Team workspaces
+- [ ] Advanced permissions
 
-### Backend Integration
-- [ ] RESTful API implementation
-- [ ] Database schema (PostgreSQL/MongoDB)
-- [ ] Authentication & authorization
-- [ ] Rate limiting & security
-- [ ] File upload & storage
-- [ ] Email service integration
+## Credits
+
+Built with modern web technologies and best practices for production-ready deployments.
 
 ---
 
-## 📄 License
+**Enjoy using Prompt Studio!** 🚀
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **[React](https://reactjs.org/)** - The amazing UI library
-- **[Tailwind CSS](https://tailwindcss.com/)** - For the utility-first CSS framework
-- **[Lucide Icons](https://lucide.dev/)** - Beautiful icon set
-- **[Zustand](https://github.com/pmndrs/zustand)** - Simple state management
-- All contributors and supporters
-
----
-
-## 📧 Contact
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/prompt-studio/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/prompt-studio/discussions)
-
----
-
-<div align="center">
-
-**[⬆ Back to Top](#-prompt-studio)**
-
-Made with ❤️ by the Prompt Studio Team
-
-</div>
+For detailed Chinese documentation, see `frontend/README.zh-CN.md`

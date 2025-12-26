@@ -1,0 +1,78 @@
+# ================================================
+# Prompt Studio - Development Stack
+# ================================================
+# Usage: docker-compose -f docker-compose.dev.yml up -d
+# This starts only PostgreSQL and Redis for local development
+# Frontend and Backend run locally with hot reload
+
+services:
+  # ================================
+  # PostgreSQL Database
+  # ================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: prompt-studio-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: prompt_studio
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"  # Exposed for local development
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d prompt_studio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - prompt-studio-dev
+
+  # ================================
+  # Redis Cache
+  # ================================
+  redis:
+    image: redis:7-alpine
+    container_name: prompt-studio-redis-dev
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass redis123
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"  # Exposed for local development
+    volumes:
+      - redis_dev_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redis123", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - prompt-studio-dev
+
+# ================================
+# Volumes
+# ================================
+volumes:
+  postgres_dev_data:
+    driver: local
+    name: prompt-studio-postgres-dev-data
+  redis_dev_data:
+    driver: local
+    name: prompt-studio-redis-dev-data
+
+# ================================
+# Networks
+# ================================
+networks:
+  prompt-studio-dev:
+    driver: bridge
+    name: prompt-studio-dev-network

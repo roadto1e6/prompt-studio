@@ -1,0 +1,252 @@
+// Prisma Schema for Prompt Studio
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User & Authentication
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String?   // OAuth users may not have password
+  name          String
+  avatar        String?
+  emailVerified Boolean   @default(false)
+
+  // OAuth providers
+  googleId      String?   @unique
+  githubId      String?   @unique
+
+  // User settings (stored as JSON)
+  settings      Json      @default("{\"language\":\"en\",\"theme\":\"dark\",\"defaultModel\":\"gpt-4-turbo\",\"emailNotifications\":true}")
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  prompts            Prompt[]
+  collections        Collection[]
+  shares             Share[]
+  refreshTokens      RefreshToken[]
+  verificationTokens VerificationToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+// Verification tokens for email verification, password reset, etc.
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  type      String   // 'email_verify', 'password_reset'
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@index([type, userId])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// Prompts & Versions
+// ============================================
+
+model Prompt {
+  id               String          @id @default(cuid())
+  title            String
+  description      String          @default("")
+  category         String          @default("text") // text, image, audio, video
+  systemPrompt     String          @default("") @db.Text
+  userTemplate     String          @default("") @db.Text
+  model            String          @default("gpt-4-turbo")
+  temperature      Float           @default(0.7)
+  maxTokens        Int             @default(2048)
+  tags             String[]        @default([])
+  favorite         Boolean         @default(false)
+  status           String          @default("active") // active, archived, trash
+
+  // Current version reference
+  currentVersionId String?
+
+  // Timestamps
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  // Relations
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collectionId     String?
+  collection       Collection?     @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  versions         PromptVersion[]
+
+  @@index([userId])
+  @@index([collectionId])
+  @@index([status])
+  @@index([favorite])
+  @@index([userId, status])
+  @@index([userId, favorite])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("prompts")
+}
+
+model PromptVersion {
+  id            String    @id @default(cuid())
+  versionNumber String
+  systemPrompt  String    @db.Text
+  userTemplate  String    @db.Text
+  model         String
+  temperature   Float
+  maxTokens     Int
+  changeNote    String    @default("")
+
+  // Soft delete fields
+  deleted       Boolean   @default(false)
+  deletedAt     DateTime?
+
+  // Timestamps
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  promptId      String
+  prompt        Prompt    @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  createdBy     String    // userId who created this version
+
+  @@index([promptId])
+  @@index([deleted])
+  @@map("prompt_versions")
+}
+
+// ============================================
+// Collections
+// ============================================
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  color       String   @default("text-blue-500")
+  icon        String   @default("Folder")
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompts     Prompt[]
+
+  @@index([userId])
+  @@map("collections")
+}
+
+// ============================================
+// Sharing
+// ============================================
+
+model Share {
+  id        String    @id @default(cuid())
+  code      String    @unique // 8-character short code
+  data      Json      // SharedPromptData
+  password  String?   // Optional password protection
+  viewCount Int       @default(0)
+  expiresAt DateTime?
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+
+  // Relations
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+  @@index([userId])
+  @@map("shares")
+}
+
+// ============================================
+// AI Models (Crowdsourced)
+// ============================================
+
+model ModelProvider {
+  id          String   @id // e.g., 'openai', 'anthropic', 'custom-xxx'
+  name        String
+  website     String?
+  apiDocsUrl  String?
+  description String?
+  logoUrl     String?
+  isActive    Boolean  @default(true)
+
+  // Crowdsourcing fields
+  contributedBy String?  // userId who added this, null = system preset
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  models      Model[]
+
+  @@index([contributedBy])
+  @@map("model_providers")
+}
+
+model Model {
+  id                 String   @id // e.g., 'gpt-4-turbo', 'custom-xxx'
+  name               String
+  providerId         String
+  provider           ModelProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  capabilities       String[] // ['text', 'vision', 'image', 'audio', 'video']
+  maxTokens          Int
+  contextWindow      Int?
+  status             String   @default("active") // active, deprecated, beta
+  description        String?
+  releasedAt         DateTime?
+  defaultTemperature Float?
+  defaultMaxTokens   Int?
+  pricing            Json?    // {inputPer1kTokens, outputPer1kTokens, currency}
+  features           Json?    // {streaming, vision, functionCalling, jsonMode}
+  sortOrder          Int      @default(0)
+
+  // Crowdsourcing fields
+  contributedBy      String?  // userId who added this, null = system preset
+  useCount           Int      @default(0) // how many users are using this model
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([providerId])
+  @@index([status])
+  @@index([contributedBy])
+  @@index([useCount])
+  @@map("models")
+}
