@@ -1,0 +1,641 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptVersions/index.module.css */
+
+/**
+ * PromptVersions 样式
+ * 保持与项目整体风格一致
+ */
+
+/* ==================== 容器 ==================== */
+
+.container {
+  height: 100%;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ==================== 头部 ==================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.headerTitle {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.headerCount {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* ==================== 时间线 ==================== */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  margin-left: 3px;
+  position: relative;
+}
+
+/* 贯穿整个时间线的竖线 */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.timelineItem {
+  position: relative;
+  padding-left: 1.25rem;
+  padding-top: 0;
+  padding-bottom: 0.75rem;
+}
+
+.timelineItem:last-child {
+  padding-bottom: 0;
+}
+
+.timelineDot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--color-bg-primary);
+  z-index: 1;
+}
+
+.timelineDotCurrent {
+  background-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-bg-primary), 0 0 0 5px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.timelineDotNormal {
+  background-color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* ==================== 版本卡片 ==================== */
+
+.versionCard {
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s;
+}
+
+.versionCardCurrent {
+  background-color: var(--color-bg-secondary);
+}
+
+.versionCardNormal {
+  background-color: transparent;
+}
+
+.versionCardNormal:hover {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 50%, transparent);
+}
+
+.versionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.375rem;
+}
+
+.versionInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.versionNumber {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.versionNumberCurrent {
+  color: var(--color-text-primary);
+}
+
+.versionNumberNormal {
+  color: var(--color-text-secondary);
+}
+
+.versionTime {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.versionNote {
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.versionMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.625rem;
+  font-size: 0.625rem;
+  flex-wrap: wrap;
+  color: var(--color-text-muted);
+}
+
+.versionMetaDivider {
+  opacity: 0.4;
+}
+
+.versionMetaBadge {
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-bg-tertiary);
+  font-weight: 500;
+}
+
+.diffAdded {
+  color: rgb(52, 211, 153);
+}
+
+.diffRemoved {
+  color: rgb(248, 113, 113);
+}
+
+.versionActions {
+  display: flex;
+  gap: 0.375rem;
+}
+
+/* ==================== 已删除版本区域 ==================== */
+
+.deletedSection {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+
+.deletedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border: none;
+}
+
+.deletedHeader:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.deletedHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deletedHeaderIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.deletedHeaderTitle {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.deletedHeaderCount {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.deletedHeaderHint {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.expirationBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  color: rgb(251, 191, 36);
+}
+
+.expirationIcon {
+  width: 0.6875rem;
+  height: 0.6875rem;
+}
+
+/* ==================== 模态框 ==================== */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.modalContent {
+  background-color: var(--color-bg-primary);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  width: 90vw;
+  max-width: 64rem;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  flex-shrink: 0;
+  background-color: var(--color-bg-secondary);
+}
+
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modalTitle {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modalHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modalDiffButton {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.15s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modalDiffButtonActive {
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: var(--color-accent);
+}
+
+.modalDiffButtonInactive {
+  color: var(--color-text-muted);
+}
+
+.modalDiffButtonInactive:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+.modalDiffIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.modalCloseButton {
+  padding: 0.375rem;
+  color: var(--color-text-muted);
+  border-radius: 0.375rem;
+  transition: all 0.15s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modalCloseButton:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+.modalCloseIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.modalBody {
+  flex: 1;
+  min-height: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* ==================== 模态框内容 ==================== */
+
+.modalMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.6875rem;
+  flex-wrap: wrap;
+  color: var(--color-text-muted);
+}
+
+.modalMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.modalMetaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.modalMetaBadge {
+  background-color: var(--color-bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.modalChangedFields {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modalChangedFieldsLabel {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-right: 0.25rem;
+}
+
+.modalChangedFieldBadge {
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  color: var(--color-accent);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.modalSection {
+  margin-bottom: 1.25rem;
+}
+
+.modalSection:last-child {
+  margin-bottom: 0;
+}
+
+.modalSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+}
+
+.modalSectionLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.modalCopyButton {
+  padding: 0.375rem;
+  border-radius: 0.25rem;
+  color: var(--color-text-muted);
+  transition: all 0.15s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modalCopyButton:hover {
+  color: var(--color-accent);
+  background-color: var(--color-bg-secondary);
+}
+
+.modalCopyIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.modalNote {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+}
+
+/* ==================== Diff 视图 - 并排对比 ==================== */
+
+.diffSideBySide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.diffPanel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+}
+
+.diffPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.625rem 0.875rem;
+  flex-shrink: 0;
+}
+
+.diffPanelTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.diffPanelBadge {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.diffPanelBadgeOld {
+  background-color: rgba(248, 113, 113, 0.12);
+  color: rgb(248, 113, 113);
+}
+
+.diffPanelBadgeNew {
+  background-color: rgba(52, 211, 153, 0.12);
+  color: rgb(52, 211, 153);
+}
+
+.diffPanelContent {
+  flex: 1;
+  min-height: 10rem;
+  max-height: 20rem;
+  padding: 0.5rem 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  overflow-y: auto;
+  color: var(--color-text-secondary);
+}
+
+/* 并排视图中的 Diff 行 */
+.diffPanelContent .diffLine {
+  padding: 0.125rem 0.375rem;
+  margin: 0 -0.375rem;
+  border-radius: 0.25rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.diffPanelContent .diffLineRemoved {
+  background-color: rgba(248, 113, 113, 0.15);
+  color: rgb(252, 129, 129);
+}
+
+.diffPanelContent .diffLineAdded {
+  background-color: rgba(52, 211, 153, 0.15);
+  color: rgb(74, 222, 168);
+}
+
+.diffPanelContent .diffLinePrefix {
+  display: inline-block;
+  width: 1rem;
+  margin-right: 0.25rem;
+  font-weight: 600;
+  opacity: 0.7;
+  user-select: none;
+}
+
+/* ==================== Diff 视图 - 统一视图（备用） ==================== */
+
+.diffContainer {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.diffLine {
+  padding: 0.125rem 0.5rem;
+  margin: 0 -0.5rem;
+  border-radius: 0.25rem;
+}
+
+.diffLineAdded {
+  background-color: rgba(52, 211, 153, 0.12);
+  color: rgb(74, 222, 168);
+}
+
+.diffLineRemoved {
+  background-color: rgba(248, 113, 113, 0.12);
+  color: rgb(252, 129, 129);
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.diffLineSame {
+  color: var(--color-text-muted);
+}
+
+.diffLinePrefix {
+  user-select: none;
+  margin-right: 0.75rem;
+  opacity: 0.5;
+  font-weight: 600;
+}
+
+/* ==================== 内容显示 ==================== */
+
+.contentDisplay {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  max-height: 20rem;
+  overflow-y: auto;
+  word-break: break-word;
+}
+
+.contentDisplayEmpty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}

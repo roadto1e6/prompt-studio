@@ -14,6 +14,57 @@ export const en = {
     noResults: 'No results found',
     copied: 'Copied!',
     copy: 'Copy',
+    error: 'Error',
+    ok: 'OK',
+    submitFailed: 'Submit failed',
+    closeModal: 'Close modal',
+  },
+
+  // Keyboard Shortcuts
+  keyboard: {
+    title: 'Keyboard Shortcuts',
+    macTip: 'Tip: Use ⌘ Command key for shortcuts',
+    otherTip: 'Tip: On macOS use ⌘ Command key, on Windows/Linux use Ctrl key',
+    keyLabel: 'Key: {key}',
+    // Categories
+    categories: {
+      searchAndNav: 'Search & Navigation',
+      promptActions: 'Prompt Actions',
+      viewSwitching: 'View Switching',
+      globalActions: 'Global Actions',
+    },
+    // Shortcuts
+    shortcuts: {
+      focusSearch: 'Focus search box',
+      clearOrClose: 'Clear search / Close panel',
+      showHelp: 'Show shortcuts help',
+      createPrompt: 'Create new prompt',
+      savePrompt: 'Save current prompt',
+      editPrompt: 'Edit current prompt',
+      duplicatePrompt: 'Duplicate current prompt',
+      deletePrompt: 'Delete current prompt',
+      gridView: 'Switch to grid view',
+      listView: 'Switch to list view',
+      toggleSidebar: 'Toggle sidebar',
+      toggleDetail: 'Toggle detail panel',
+      openSettings: 'Open settings',
+      toggleTheme: 'Toggle theme',
+      toggleLanguage: 'Toggle language',
+    },
+  },
+
+  // Error State
+  errorState: {
+    defaultTitle: 'Something went wrong',
+    defaultMessage: 'Sorry, an error occurred. Please try again later.',
+    retry: 'Retry',
+    retryAriaLabel: 'Retry action',
+    goHome: 'Go Home',
+    goHomeAriaLabel: 'Return to home page',
+    networkTitle: 'Network connection failed',
+    networkMessage: 'Unable to connect to the server. Please check your network connection and try again.',
+    notFoundTitle: 'Page not found',
+    notFoundMessage: 'Sorry, the page you are looking for does not exist or has been removed.',
   },
 
   // App
@@ -35,6 +86,11 @@ export const en = {
     categories: 'Categories',
     collections: 'Collections',
     noCollection: 'No Collection',
+    mainNavigation: 'Main navigation',
+    clearSearch: 'Clear search',
+    collectionActions: 'Collection actions',
+    createCollection: 'Create collection',
+    settings: 'Settings',
   },
 
   // Quick Filters
@@ -71,10 +127,19 @@ export const en = {
   // Prompt Card
   promptCard: {
     noDescription: 'No description',
-    favorite: 'Toggle favorite',
+    favorite: 'Add to favorites',
+    unfavorite: 'Remove from favorites',
     moveToTrash: 'Move to trash',
     restore: 'Restore',
     deletePermanently: 'Delete permanently',
+    ago: 'ago',
+    categoryPrompt: '{title} - {category} prompt',
+    restoreAriaLabel: 'Restore {title}',
+    addFavoriteAriaLabel: 'Add {title} to favorites',
+    removeFavoriteAriaLabel: 'Remove {title} from favorites',
+    deleteAriaLabel: 'Move {title} to trash',
+    deletePermanentlyAriaLabel: 'Permanently delete {title}',
+    moreTagsAriaLabel: '{count} more tags',
   },
 
   // Prompt Grid
@@ -253,6 +318,10 @@ export const en = {
     collectionLabel: 'Collection (Optional)',
     selectCollection: 'Select collection',
     createButton: 'Create Prompt',
+    creating: 'Creating...',
+    selectCategoryAriaLabel: 'Select {category} category',
+    cancelAriaLabel: 'Cancel and close modal',
+    createAriaLabel: 'Create new prompt',
   },
 
   // Create Collection Modal
@@ -266,6 +335,8 @@ export const en = {
     colorLabel: 'Color',
     promptsCount: 'prompts',
     createButton: 'Create Collection',
+    creating: 'Creating...',
+    selectColor: 'Select color',
   },
 
   // Share Modal
@@ -281,6 +352,10 @@ export const en = {
     generateError: 'Failed to generate share link',
     retry: 'Retry',
     viewCount: 'views',
+    retryAriaLabel: 'Retry generating share link',
+    closeAriaLabel: 'Close share modal',
+    copyCodeAriaLabel: 'Copy share code: {code}',
+    copyUrlAriaLabel: 'Copy share URL: {url}',
   },
 
   // Import Modal
@@ -297,6 +372,10 @@ export const en = {
     duplicateMessage: 'A prompt with the same title and content already exists in your library.',
     importButton: 'Import to Library',
     importAnyway: 'Import Anyway',
+    importing: 'Importing...',
+    backToInput: 'Back to input',
+    closeModal: 'Close modal',
+    shareCodeInput: 'Share code input',
     preview: {
       systemPrompt: 'System Prompt Preview',
       noSystemPrompt: 'No system prompt',
@@ -311,6 +390,7 @@ export const en = {
     deleteCollection: {
       title: 'Delete Collection',
       message: 'Are you sure you want to delete this collection? Prompts in this collection will not be deleted.',
+      confirmText: 'Delete',
     },
     deletePermanently: {
       title: 'Delete Permanently',
@@ -428,6 +508,39 @@ export const en = {
     filterByCapability: 'Filter by capability',
     allProviders: 'All Providers',
     allCapabilities: 'All Capabilities',
+    // ModelManagement form (新增键，避免重复)
+    selectAProvider: 'Select a provider...',
+    showingCustomModels: 'Showing {count} custom model(s)',
+    noCustomModelsTitle: 'No custom models',
+    noCustomModelsDesc: 'Add your own AI models to use with Prompt Studio',
+    addFirstModel: 'Add Your First Model',
+    error: 'Error',
+    modelIdLabel: 'Model ID',
+    displayNameLabel: 'Display Name',
+    providerLabel: 'Provider',
+    capabilitiesLabel: 'Capabilities',
+    maxOutputTokens: 'Max Output Tokens',
+    contextWindowLabel: 'Context Window (optional)',
+    descriptionLabel: 'Description (optional)',
+    modelIdFormPlaceholder: 'e.g., gpt-4-turbo-2024',
+    displayNameFormPlaceholder: 'e.g., GPT-4 Turbo',
+    maxTokensFormPlaceholder: 'e.g., 4096',
+    contextFormPlaceholder: 'e.g., 128000',
+    descriptionFormPlaceholder: 'A brief description of this model...',
+    updateModel: 'Update Model',
+    createModel: 'Create Model',
+    editModelTitle: 'Edit Model',
+    addNewModelTitle: 'Add New Model',
+    backToList: 'Back to list',
+    confirmDelete: 'Confirm delete',
+    cancelDelete: 'Cancel',
+    edit: 'Edit',
+    delete: 'Delete',
+    customBadge: 'Custom',
+    maxTokensInfo: 'Max {count} tokens',
+    contextInfo: '{size}K context',
+    closeSettings: 'Close settings',
+    settingsTabs: 'Settings tabs',
   },
 
   // User

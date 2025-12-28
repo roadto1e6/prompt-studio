@@ -1,0 +1,183 @@
+/* 文件路径: frontend/src/features/prompts/components/ModelPicker/index.module.css */
+
+/**
+ * ModelPicker 组件样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ */
+
+/* 触发器按钮 */
+.trigger {
+  @apply w-full flex items-center justify-between gap-2;
+  @apply px-3 py-2.5 rounded-lg text-left;
+  @apply border border-[var(--color-border)];
+  @apply bg-[var(--color-bg-secondary)];
+  @apply hover:border-[var(--color-border-light)];
+  @apply transition-all duration-200;
+}
+
+.trigger:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: none;
+}
+
+.triggerExpanded {
+  @apply ring-2 border-[var(--color-accent)];
+  --tw-ring-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.triggerDisabled {
+  @apply opacity-50 cursor-not-allowed;
+  @apply hover:border-[var(--color-border)];
+}
+
+/* 触发器文本 */
+.triggerText {
+  @apply text-sm truncate flex-1;
+}
+
+.triggerTextSelected {
+  @apply text-[var(--color-text-primary)];
+}
+
+.triggerTextPlaceholder {
+  @apply text-[var(--color-text-muted)];
+}
+
+/* 下拉箭头 */
+.chevron {
+  @apply w-4 h-4 text-[var(--color-text-muted)] flex-shrink-0;
+  @apply transition-transform duration-200;
+}
+
+.chevronRotated {
+  @apply rotate-180;
+}
+
+/* 遮罩层 */
+.overlay {
+  @apply fixed inset-0 bg-black/20 backdrop-blur-[1px];
+  z-index: 9998;
+}
+
+/* 下拉面板 */
+.panel {
+  @apply rounded-lg border border-[var(--color-border)];
+  @apply bg-[var(--color-bg-primary)] shadow-2xl overflow-hidden;
+  z-index: 9999;
+}
+
+/* 搜索容器 */
+.searchContainer {
+  @apply p-2 border-b border-[var(--color-border)];
+}
+
+.searchWrapper {
+  @apply relative;
+}
+
+.searchIcon {
+  @apply absolute left-2.5 top-1/2 -translate-y-1/2;
+  @apply w-3.5 h-3.5 text-[var(--color-text-muted)] pointer-events-none;
+}
+
+.searchInput {
+  @apply w-full pl-8 pr-8 py-1.5 text-sm rounded-md;
+  @apply bg-[var(--color-bg-tertiary)] border-none;
+  @apply text-[var(--color-text-primary)];
+  @apply placeholder:text-[var(--color-text-muted)];
+  @apply focus:outline-none focus:ring-1;
+  --tw-ring-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.clearButton {
+  @apply absolute right-2 top-1/2 -translate-y-1/2;
+  @apply text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)];
+  @apply transition-colors p-0.5 rounded;
+  @apply hover:bg-[var(--color-bg-tertiary)];
+}
+
+/* 选项列表容器 */
+.listContainer {
+  @apply overflow-y-auto;
+}
+
+.listContainerGroup {
+  @apply max-h-[248px];
+}
+
+.listContainerSimple {
+  @apply max-h-[200px];
+}
+
+/* 分组标题 */
+.groupHeader {
+  @apply sticky top-0 z-10 flex items-center justify-between px-3 py-1.5;
+  @apply bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)];
+}
+
+.groupHeaderWithBorder {
+  @apply border-t;
+}
+
+.groupLabel {
+  @apply text-[10px] font-semibold text-[var(--color-text-label)] uppercase tracking-wider;
+}
+
+.groupCount {
+  @apply text-[9px] text-[var(--color-text-muted)];
+  @apply bg-[var(--color-bg-tertiary)] px-1.5 py-0.5 rounded;
+}
+
+/* 选项组 */
+.optionsWrapper {
+  @apply p-1;
+}
+
+.optionsWrapperSpaced {
+  @apply space-y-2;
+}
+
+/* 选项按钮 */
+.option {
+  @apply w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md;
+  @apply text-left text-sm transition-colors duration-150;
+}
+
+/* 禁用选项的 focus 边框 */
+.option:focus,
+.option:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.optionSimple {
+  @apply py-2;
+}
+
+.optionSelected {
+  @apply bg-[var(--theme-accent-bg)] text-[var(--color-accent)];
+}
+
+.optionDefault {
+  @apply text-[var(--color-text-secondary)];
+  @apply hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-primary)];
+}
+
+.optionLabel {
+  @apply truncate;
+}
+
+.optionCheck {
+  @apply w-3.5 h-3.5 flex-shrink-0;
+}
+
+/* 空状态 */
+.emptyState {
+  @apply px-3 py-6 text-center text-sm text-[var(--color-text-muted)];
+}
+
+/* 标签 */
+.label {
+  @apply block text-xs font-bold text-[var(--color-text-label)] uppercase tracking-wider mb-2;
+}

@@ -1,0 +1,51 @@
+/**
+ * Toast 组件样式
+ */
+
+.container {
+  @apply fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none;
+}
+
+.toast {
+  @apply relative flex items-start gap-3 p-4 rounded-lg border shadow-lg backdrop-blur-sm overflow-hidden;
+  @apply min-w-[320px] max-w-[420px];
+  @apply transition-shadow hover:shadow-xl;
+  @apply pointer-events-auto;
+}
+
+.icon {
+  @apply w-5 h-5 flex-shrink-0 mt-0.5;
+}
+
+.content {
+  @apply flex-1 min-w-0;
+}
+
+.message {
+  @apply text-sm font-medium;
+}
+
+.description {
+  @apply text-xs mt-1;
+}
+
+.action {
+  @apply text-xs font-medium mt-2;
+  @apply hover:underline;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-theme-accent rounded;
+}
+
+.closeButton {
+  @apply flex-shrink-0 p-1 rounded;
+  @apply hover:bg-[var(--color-bg-hover)];
+  @apply transition-colors;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-theme-accent;
+}
+
+.closeIcon {
+  @apply w-4 h-4;
+}
+
+.progress {
+  @apply absolute bottom-0 left-0 h-1 rounded-full;
+}

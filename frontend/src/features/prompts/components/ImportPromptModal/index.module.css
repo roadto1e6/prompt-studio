@@ -1,0 +1,228 @@
+/* 文件路径: frontend/src/features/prompts/components/ImportPromptModal/index.module.css */
+
+/**
+ * ImportPromptModal 样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ * 通过 @apply 封装长类名，保持 HTML 清爽
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  @apply flex flex-col gap-4;
+}
+
+/* ==================== 输入区域样式 ==================== */
+
+.inputSection {
+  @apply flex flex-col gap-4;
+}
+
+.inputLabel {
+  @apply text-xs text-theme-text-muted;
+}
+
+.inputField {
+  @apply w-full bg-theme-input-bg border border-theme-input-border rounded-lg
+         px-3 py-2.5 font-mono text-sm text-theme-input-text
+         focus:outline-none focus:border-theme-accent
+         transition-colors;
+  --tw-placeholder-opacity: 1;
+  color: var(--color-text-primary);
+}
+
+.inputField::placeholder {
+  color: var(--color-text-muted);
+}
+
+.inputError {
+  @apply text-xs text-red-400 mt-2;
+}
+
+/* ==================== 预览卡片样式 ==================== */
+
+.previewCard {
+  @apply bg-theme-bg-secondary border border-theme-border rounded-lg overflow-hidden;
+}
+
+.previewHeader {
+  @apply flex items-center gap-3 p-3 border-b border-theme-border;
+}
+
+.categoryIconWrapper {
+  @apply p-2 rounded-lg;
+}
+
+.categoryIcon {
+  @apply w-4 h-4;
+}
+
+.previewContent {
+  @apply flex-1 min-w-0;
+}
+
+.previewTitle {
+  @apply text-theme-text-primary font-medium text-sm truncate;
+}
+
+.previewDescription {
+  @apply text-xs text-theme-text-muted truncate;
+}
+
+.previewMeta {
+  @apply px-3 py-2 flex flex-wrap items-center gap-2 text-xs border-b border-theme-border;
+}
+
+.metaBadge {
+  @apply bg-theme-bg-secondary text-theme-text-secondary px-2 py-0.5 rounded;
+}
+
+.metaText {
+  @apply text-theme-text-muted;
+}
+
+.tagsContainer {
+  @apply px-3 py-2 flex flex-wrap gap-1.5 border-b border-theme-border;
+}
+
+.tagsOverflow {
+  @apply text-xs text-theme-text-muted;
+}
+
+.systemPromptSection {
+  @apply p-3 border-b border-theme-border;
+}
+
+.systemPromptLabel {
+  @apply text-[10px] font-medium text-theme-text-muted uppercase mb-1;
+}
+
+.systemPromptContent {
+  @apply text-xs text-theme-text-secondary line-clamp-2 font-mono leading-relaxed;
+}
+
+.sharedBySection {
+  @apply px-3 py-2 flex items-center gap-2 text-xs text-theme-text-muted;
+}
+
+.sharedByIcon {
+  @apply w-3 h-3;
+}
+
+/* ==================== 警告提示样式 ==================== */
+
+.warningAlert {
+  @apply flex items-start gap-2.5 p-3
+         bg-amber-500/10 border border-amber-500/30 rounded-lg;
+}
+
+.warningIcon {
+  @apply w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5;
+}
+
+.warningContent {
+  @apply text-xs;
+}
+
+.warningTitle {
+  @apply text-amber-400 font-medium;
+}
+
+.warningMessage {
+  @apply text-amber-400/70 mt-0.5;
+}
+
+/* ==================== 错误提示样式 ==================== */
+
+.errorAlert {
+  @apply flex items-start gap-3 p-4 rounded-lg
+         bg-red-50 dark:bg-red-900/20
+         border border-red-200 dark:border-red-800;
+}
+
+.errorIcon {
+  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5;
+}
+
+.errorContent {
+  @apply flex-1 min-w-0;
+}
+
+.errorTitle {
+  @apply text-sm font-medium text-red-800 dark:text-red-300;
+}
+
+.errorMessage {
+  @apply text-sm text-red-700 dark:text-red-400 mt-1;
+}
+
+/* ==================== 加载状态样式 ==================== */
+
+.loadingOverlay {
+  @apply absolute inset-0 backdrop-blur-sm flex items-center justify-center rounded-lg z-10;
+  background-color: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
+}
+
+.loadingSpinner {
+  @apply w-6 h-6 animate-spin;
+}
+
+.loadingText {
+  @apply sr-only;
+}
+
+/* ==================== 按钮区域样式 ==================== */
+
+.buttonGroup {
+  @apply flex items-center gap-2;
+}
+
+.buttonIcon {
+  @apply w-4 h-4;
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animateFadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animateShimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+@media (max-width: 640px) {
+  .previewHeader {
+    @apply flex-col items-start gap-2;
+  }
+
+  .buttonGroup {
+    @apply flex-col w-full;
+  }
+
+  .buttonGroup > button {
+    @apply w-full;
+  }
+}

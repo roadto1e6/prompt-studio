@@ -1,0 +1,161 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptDetailPanel/index.module.css */
+
+/**
+ * PromptDetailPanel 样式
+ * 填充父容器，由 MainLayout 控制宽度
+ */
+
+/* ==================== 面板容器 ==================== */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+}
+
+/* ==================== 头部区域 ==================== */
+
+.header {
+  padding: 1rem 1.5rem 0.75rem;
+  flex-shrink: 0;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.categoryDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.categoryName {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.titleInputWrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleInput {
+  background: transparent;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  color: var(--color-text-primary);
+  transition: border-color 0.2s;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+}
+
+/* ==================== 操作按钮 ==================== */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  background-color: var(--color-overlay);
+}
+
+.actionButtonRestore:hover {
+  color: rgb(16, 185, 129);
+}
+
+.actionButtonDelete:hover {
+  color: rgb(239, 68, 68);
+}
+
+.actionButtonShare:hover {
+  color: var(--color-accent);
+}
+
+.actionButtonClose:hover {
+  color: var(--color-text-primary);
+}
+
+.actionIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ==================== 内容区域 ==================== */
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+}
+
+.tabContent {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== 空状态 ==================== */
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-secondary);
+}
+
+.emptyStateContent {
+  text-align: center;
+}
+
+.emptyStateTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.emptyStateText {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,76 @@
+/* 文件路径: frontend/src/components/shared/ErrorState/index.module.css */
+
+/**
+ * ErrorState 样式
+ * 表现层：使用 Tailwind @apply 封装可复用样式
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  @apply flex flex-col items-center justify-center py-20 px-4;
+}
+
+/* ==================== 图标容器 ==================== */
+
+.iconContainer {
+  @apply w-24 h-24 rounded-full flex items-center justify-center mb-6 border-2;
+}
+
+/* 错误变体样式 */
+.iconContainer.error {
+  @apply bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800;
+}
+
+.iconContainer.warning {
+  @apply bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-800;
+}
+
+.iconContainer.offline {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+}
+
+/* ==================== 图标样式 ==================== */
+
+.icon {
+  @apply w-12 h-12;
+}
+
+.icon.error {
+  @apply text-red-500 dark:text-red-400;
+}
+
+.icon.warning {
+  @apply text-yellow-500 dark:text-yellow-400;
+}
+
+.icon.offline {
+  color: var(--color-text-muted);
+}
+
+/* ==================== 内容区域 ==================== */
+
+.content {
+  @apply text-center max-w-md;
+}
+
+.title {
+  @apply text-lg font-semibold text-theme-text-primary mb-2;
+}
+
+.message {
+  @apply text-sm text-theme-text-secondary leading-relaxed;
+}
+
+/* ==================== 操作按钮区域 ==================== */
+
+.actions {
+  @apply mt-6 flex gap-3;
+}
+
+/* ==================== 按钮图标 ==================== */
+
+.buttonIcon {
+  @apply w-4 h-4;
+}

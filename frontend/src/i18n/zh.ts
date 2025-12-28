@@ -16,6 +16,57 @@ export const zh: TranslationKeys = {
     noResults: '未找到结果',
     copied: '已复制！',
     copy: '复制',
+    error: '错误',
+    ok: '确定',
+    submitFailed: '提交失败',
+    closeModal: '关闭弹窗',
+  },
+
+  // Keyboard Shortcuts
+  keyboard: {
+    title: '键盘快捷键',
+    macTip: '提示：使用 ⌘ Command 键执行快捷操作',
+    otherTip: '提示：在 macOS 上使用 ⌘ Command 键，在 Windows/Linux 上使用 Ctrl 键',
+    keyLabel: '按键：{key}',
+    // Categories
+    categories: {
+      searchAndNav: '搜索和导航',
+      promptActions: '提示词操作',
+      viewSwitching: '视图切换',
+      globalActions: '全局操作',
+    },
+    // Shortcuts
+    shortcuts: {
+      focusSearch: '聚焦搜索框',
+      clearOrClose: '清除搜索 / 关闭面板',
+      showHelp: '显示快捷键帮助',
+      createPrompt: '创建新提示词',
+      savePrompt: '保存当前提示词',
+      editPrompt: '编辑当前提示词',
+      duplicatePrompt: '复制当前提示词',
+      deletePrompt: '删除当前提示词',
+      gridView: '切换到网格视图',
+      listView: '切换到列表视图',
+      toggleSidebar: '切换侧边栏',
+      toggleDetail: '切换详情面板',
+      openSettings: '打开设置',
+      toggleTheme: '切换主题',
+      toggleLanguage: '切换语言',
+    },
+  },
+
+  // Error State
+  errorState: {
+    defaultTitle: '出错了',
+    defaultMessage: '抱歉，发生了一个错误。请稍后重试。',
+    retry: '重试',
+    retryAriaLabel: '重试操作',
+    goHome: '返回首页',
+    goHomeAriaLabel: '返回首页',
+    networkTitle: '网络连接失败',
+    networkMessage: '无法连接到服务器。请检查您的网络连接，然后重试。',
+    notFoundTitle: '页面未找到',
+    notFoundMessage: '抱歉，您访问的页面不存在或已被删除。',
   },
 
   // App
@@ -37,6 +88,11 @@ export const zh: TranslationKeys = {
     categories: '分类',
     collections: '集合',
     noCollection: '未分类',
+    mainNavigation: '主导航',
+    clearSearch: '清除搜索',
+    collectionActions: '集合操作',
+    createCollection: '创建集合',
+    settings: '设置',
   },
 
   // Quick Filters
@@ -73,10 +129,19 @@ export const zh: TranslationKeys = {
   // Prompt Card
   promptCard: {
     noDescription: '暂无描述',
-    favorite: '切换收藏',
+    favorite: '添加收藏',
+    unfavorite: '取消收藏',
     moveToTrash: '移至回收站',
     restore: '恢复',
     deletePermanently: '永久删除',
+    ago: '前',
+    categoryPrompt: '{title} - {category} 提示词',
+    restoreAriaLabel: '恢复 {title}',
+    addFavoriteAriaLabel: '收藏 {title}',
+    removeFavoriteAriaLabel: '取消收藏 {title}',
+    deleteAriaLabel: '将 {title} 移至回收站',
+    deletePermanentlyAriaLabel: '永久删除 {title}',
+    moreTagsAriaLabel: '还有 {count} 个标签',
   },
 
   // Prompt Grid
@@ -255,6 +320,10 @@ export const zh: TranslationKeys = {
     collectionLabel: '集合（可选）',
     selectCollection: '选择集合',
     createButton: '创建提示词',
+    creating: '创建中...',
+    selectCategoryAriaLabel: '选择 {category} 分类',
+    cancelAriaLabel: '取消并关闭',
+    createAriaLabel: '创建新提示词',
   },
 
   // Create Collection Modal
@@ -268,6 +337,8 @@ export const zh: TranslationKeys = {
     colorLabel: '颜色',
     promptsCount: '个提示词',
     createButton: '创建集合',
+    creating: '创建中...',
+    selectColor: '选择颜色',
   },
 
   // Share Modal
@@ -283,6 +354,10 @@ export const zh: TranslationKeys = {
     generateError: '生成分享链接失败',
     retry: '重试',
     viewCount: '次查看',
+    retryAriaLabel: '重试生成分享链接',
+    closeAriaLabel: '关闭分享弹窗',
+    copyCodeAriaLabel: '复制分享码：{code}',
+    copyUrlAriaLabel: '复制分享链接：{url}',
   },
 
   // Import Modal
@@ -299,6 +374,10 @@ export const zh: TranslationKeys = {
     duplicateMessage: '您的库中已存在具有相同标题和内容的提示词。',
     importButton: '导入到库',
     importAnyway: '仍然导入',
+    importing: '导入中...',
+    backToInput: '返回输入',
+    closeModal: '关闭弹窗',
+    shareCodeInput: '分享码输入',
     preview: {
       systemPrompt: '系统提示词预览',
       noSystemPrompt: '无系统提示词',
@@ -313,6 +392,7 @@ export const zh: TranslationKeys = {
     deleteCollection: {
       title: '删除集合',
       message: '确定要删除此集合吗？集合中的提示词不会被删除。',
+      confirmText: '删除',
     },
     deletePermanently: {
       title: '永久删除',
@@ -430,6 +510,39 @@ export const zh: TranslationKeys = {
     filterByCapability: '按能力筛选',
     allProviders: '全部提供商',
     allCapabilities: '全部能力',
+    // ModelManagement form (新增键，避免重复)
+    selectAProvider: '选择提供商...',
+    showingCustomModels: '显示 {count} 个自定义模型',
+    noCustomModelsTitle: '暂无自定义模型',
+    noCustomModelsDesc: '添加您自己的 AI 模型以在 Prompt Studio 中使用',
+    addFirstModel: '添加第一个模型',
+    error: '错误',
+    modelIdLabel: '模型 ID',
+    displayNameLabel: '显示名称',
+    providerLabel: '提供商',
+    capabilitiesLabel: '能力',
+    maxOutputTokens: '最大输出令牌数',
+    contextWindowLabel: '上下文窗口（可选）',
+    descriptionLabel: '描述（可选）',
+    modelIdFormPlaceholder: '例如：gpt-4-turbo-2024',
+    displayNameFormPlaceholder: '例如：GPT-4 Turbo',
+    maxTokensFormPlaceholder: '例如：4096',
+    contextFormPlaceholder: '例如：128000',
+    descriptionFormPlaceholder: '简要描述此模型...',
+    updateModel: '更新模型',
+    createModel: '创建模型',
+    editModelTitle: '编辑模型',
+    addNewModelTitle: '添加新模型',
+    backToList: '返回列表',
+    confirmDelete: '确认删除',
+    cancelDelete: '取消',
+    edit: '编辑',
+    delete: '删除',
+    customBadge: '自定义',
+    maxTokensInfo: '最大 {count} 令牌',
+    contextInfo: '{size}K 上下文',
+    closeSettings: '关闭设置',
+    settingsTabs: '设置标签页',
   },
 
   // User

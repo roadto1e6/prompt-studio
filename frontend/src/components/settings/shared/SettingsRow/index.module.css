@@ -1,0 +1,46 @@
+/* 文件路径: frontend/src/components/settings/shared/SettingsRow/index.module.css */
+
+/**
+ * SettingsRow 组件样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ */
+
+/* 水平布局容器 */
+.containerHorizontal {
+  @apply flex items-center justify-between gap-4 py-3;
+}
+
+/* 垂直布局容器 */
+.containerVertical {
+  @apply space-y-3;
+}
+
+/* 标签区域 */
+.labelWrapper {
+  @apply flex-1 min-w-0;
+}
+
+/* 垂直布局的标签区域 */
+.labelWrapperVertical {
+  @apply block;
+}
+
+/* 标签文字 */
+.label {
+  @apply text-sm font-medium text-theme-text-primary;
+}
+
+/* 描述文字 */
+.description {
+  @apply text-xs mt-0.5 text-theme-text-secondary;
+}
+
+/* 水平布局的内容区域 */
+.contentHorizontal {
+  @apply flex-shrink-0;
+}
+
+/* 垂直布局的内容区域 */
+.contentVertical {
+  @apply block;
+}

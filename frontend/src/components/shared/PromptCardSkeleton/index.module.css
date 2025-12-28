@@ -1,0 +1,228 @@
+/* 文件路径: frontend/src/components/shared/PromptCardSkeleton/index.module.css */
+
+/**
+ * PromptCardSkeleton 样式
+ * 表现层：提示词卡片骨架屏样式
+ */
+
+/* ==================== 网格视图骨架 ==================== */
+
+.gridCard {
+  @apply p-5 bg-theme-bg-secondary rounded-lg border border-theme-border space-y-4;
+}
+
+/* 头部区域 */
+.gridHeader {
+  @apply flex items-start justify-between;
+}
+
+.gridIconSkeleton {
+  @apply w-12 h-12 rounded-full bg-theme-border animate-pulse;
+}
+
+.gridActionGroup {
+  @apply flex gap-2;
+}
+
+.gridActionSkeleton {
+  @apply w-6 h-6 rounded bg-theme-border animate-pulse;
+}
+
+/* 标题区域 */
+.gridTitleArea {
+  @apply space-y-2;
+}
+
+.gridTitleSkeleton {
+  @apply h-5 w-[70%] bg-theme-border rounded animate-pulse;
+}
+
+.gridSubtitleSkeleton {
+  @apply h-4 w-[50%] bg-theme-border rounded animate-pulse;
+}
+
+/* 描述区域 */
+.gridDescriptionArea {
+  @apply space-y-2;
+}
+
+.gridDescriptionLine {
+  @apply h-3.5 bg-theme-border rounded animate-pulse;
+}
+
+.gridDescriptionLine.full {
+  @apply w-full;
+}
+
+.gridDescriptionLine.medium {
+  @apply w-[90%];
+}
+
+.gridDescriptionLine.short {
+  @apply w-[60%];
+}
+
+/* 标签区域 */
+.gridTagArea {
+  @apply flex gap-2 flex-wrap;
+}
+
+.gridTagSkeleton {
+  @apply h-6 bg-theme-border rounded animate-pulse;
+}
+
+.gridTagSkeleton.sm {
+  @apply w-14;
+}
+
+.gridTagSkeleton.md {
+  @apply w-20;
+}
+
+.gridTagSkeleton.lg {
+  @apply w-[4.5rem];
+}
+
+/* 底部元信息 */
+.gridFooter {
+  @apply flex items-center justify-between pt-2 border-t border-theme-border;
+}
+
+.gridFooterSkeleton {
+  @apply h-4 bg-theme-border rounded animate-pulse;
+}
+
+.gridFooterSkeleton.left {
+  @apply w-24;
+}
+
+.gridFooterSkeleton.right {
+  @apply w-20;
+}
+
+/* ==================== 列表视图骨架 ==================== */
+
+.listCard {
+  @apply flex items-start gap-4 p-4 bg-theme-bg-secondary rounded-lg border border-theme-border;
+}
+
+/* 图标 */
+.listIconSkeleton {
+  @apply w-10 h-10 rounded-full bg-theme-border animate-pulse flex-shrink-0;
+}
+
+/* 内容区域 */
+.listContent {
+  @apply flex-1 space-y-3;
+}
+
+/* 标题和标签行 */
+.listTopRow {
+  @apply flex items-center justify-between gap-4;
+}
+
+.listTitleSkeleton {
+  @apply h-5 w-48 bg-theme-border rounded animate-pulse;
+}
+
+.listBadgeGroup {
+  @apply flex gap-2;
+}
+
+.listBadgeSkeleton {
+  @apply h-5 w-14 bg-theme-border rounded animate-pulse;
+}
+
+/* 描述区域 */
+.listDescriptionArea {
+  @apply space-y-2;
+}
+
+.listDescriptionLine {
+  @apply h-3.5 bg-theme-border rounded animate-pulse;
+}
+
+.listDescriptionLine.full {
+  @apply w-full;
+}
+
+.listDescriptionLine.partial {
+  @apply w-[80%];
+}
+
+/* 底部信息 */
+.listFooter {
+  @apply flex items-center justify-between;
+}
+
+.listFooterLeft {
+  @apply flex gap-2;
+}
+
+.listFooterSkeleton {
+  @apply h-4 bg-theme-border rounded animate-pulse;
+}
+
+.listFooterSkeleton.sm {
+  @apply w-20;
+}
+
+.listFooterSkeleton.md {
+  @apply w-24;
+}
+
+.listFooterSkeleton.lg {
+  @apply w-32;
+}
+
+/* ==================== 网格容器 ==================== */
+
+.gridContainer {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4;
+}
+
+.listContainer {
+  @apply flex flex-col gap-3;
+}
+
+/* ==================== 动画效果 ==================== */
+
+/**
+ * 脉冲动画（已由 Tailwind 的 animate-pulse 提供）
+ * 这里提供自定义动画作为备选
+ */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--theme-border) 0%,
+    var(--theme-bg-tertiary) 50%,
+    var(--theme-border) 100%
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/**
+ * 淡入动画（可选）
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}

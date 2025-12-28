@@ -1,0 +1,76 @@
+/**
+ * LoadingSpinner 组件样式
+ */
+
+.container {
+  @apply flex flex-col items-center justify-center gap-3;
+}
+
+.fullscreen {
+  @apply fixed inset-0 backdrop-blur-sm z-[9999];
+  background-color: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
+}
+
+.spinner {
+  @apply animate-spin text-[var(--color-accent)];
+}
+
+.spinnerSm {
+  @apply w-4 h-4;
+}
+
+.spinnerMd {
+  @apply w-6 h-6;
+}
+
+.spinnerLg {
+  @apply w-8 h-8;
+}
+
+.spinnerXl {
+  @apply w-12 h-12;
+}
+
+.dotsContainer {
+  @apply flex items-center justify-center gap-1;
+}
+
+.dot {
+  @apply w-2 h-2 rounded-full bg-[var(--color-accent)] animate-bounce;
+}
+
+.dotDelay1 {
+  animation-delay: 0ms;
+}
+
+.dotDelay2 {
+  animation-delay: 150ms;
+}
+
+.dotDelay3 {
+  animation-delay: 300ms;
+}
+
+.text {
+  @apply text-sm text-[var(--color-text-secondary)] animate-pulse;
+}
+
+.buttonSpinner {
+  @apply animate-spin;
+}
+
+.inlineContainer {
+  @apply flex items-center gap-2;
+}
+
+.inlineSpinner {
+  @apply animate-spin text-[var(--color-accent)];
+}
+
+.inlineText {
+  @apply text-sm text-[var(--color-text-secondary)];
+}
+
+.pageContainer {
+  @apply flex items-center justify-center h-full;
+}

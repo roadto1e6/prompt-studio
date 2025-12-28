@@ -1,0 +1,178 @@
+/**
+ * SettingsSection 样式
+ * 优雅的设置区块样式
+ */
+
+/* ==================== 主容器 ==================== */
+
+.container {
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.container:hover {
+  border-color: color-mix(in srgb, var(--color-border) 80%, var(--color-accent));
+}
+
+/* 禁用状态 */
+.container.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ==================== 头部 ==================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-tertiary) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  transition: background-color 0.2s ease;
+}
+
+/* 可折叠头部 */
+.header.collapsible {
+  cursor: pointer;
+}
+
+.header.collapsible:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.header.collapsible:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+/* ==================== 头部内容 ==================== */
+
+.headerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.125rem;
+}
+
+.title.collapsible {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.description {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* ==================== 头部操作 ==================== */
+
+.headerAction {
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* ==================== 折叠图标 ==================== */
+
+.collapseIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-muted);
+  transition: transform 0.2s ease;
+}
+
+.collapseIcon.expanded {
+  transform: rotate(180deg);
+}
+
+/* ==================== 内容区域 ==================== */
+
+.content {
+  padding: 1.25rem;
+  background-color: var(--color-bg-primary);
+  transition: all 0.2s ease;
+}
+
+.content.noPadding {
+  padding: 0;
+}
+
+.content.collapsed {
+  display: none;
+}
+
+/* ==================== 分隔线 ==================== */
+
+.divider {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ==================== 动画 ==================== */
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content.animate {
+  animation: fadeInDown 0.2s ease-out;
+}
+
+/* ==================== 响应式设计 ==================== */
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0.875rem 1rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 0.8125rem;
+  }
+
+  .description {
+    font-size: 0.6875rem;
+  }
+
+  .headerAction {
+    margin-left: 0.75rem;
+  }
+}
+
+/* ==================== 无障碍支持 ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .header,
+  .content,
+  .collapseIcon {
+    transition: none;
+  }
+
+  .content.animate {
+    animation: none;
+  }
+}

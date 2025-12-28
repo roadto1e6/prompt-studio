@@ -17,8 +17,8 @@
   --color-text-muted: #64748b;      /* slate-500 */
   --color-accent: #6366f1;
   --color-accent-hover: #818cf8;
-  --color-scrollbar: #334155;
-  --color-scrollbar-hover: #475569;
+  --color-scrollbar: #252542;
+  --color-scrollbar-hover: #334155;
   --color-input-bg: #1a1a2e;
   --color-input-border: #334155;
 
@@ -59,6 +59,41 @@
   /* Label/Caption colors */
   --color-label: #64748b;           /* slate-500 */
   --color-caption: #475569;         /* slate-600 */
+
+  /* Semantic colors - Status */
+  --color-error: #f87171;           /* red-400 */
+  --color-error-light: #fca5a5;     /* red-300 */
+  --color-error-bg: rgba(248, 113, 113, 0.1);
+  --color-error-border: rgba(248, 113, 113, 0.2);
+  --color-success: #34d399;         /* emerald-400 */
+  --color-success-bg: rgba(52, 211, 153, 0.1);
+  --color-warning: #fbbf24;         /* amber-400 */
+  --color-warning-bg: rgba(251, 191, 36, 0.1);
+
+  /* Theme aliases for backward compatibility */
+  --theme-bg-primary: var(--color-bg-primary);
+  --theme-bg-secondary: var(--color-bg-secondary);
+  --theme-bg-tertiary: var(--color-bg-tertiary);
+  --theme-bg-hover: var(--color-bg-hover);
+  --theme-border: var(--color-border);
+  --theme-text-primary: var(--color-text-primary);
+  --theme-text-secondary: var(--color-text-secondary);
+  --theme-text-muted: var(--color-text-muted);
+  --theme-text-label: var(--color-label);
+  --theme-accent: var(--color-accent);
+  --theme-accent-hover: var(--color-accent-hover);
+  --theme-accent-rgb: 99, 102, 241;
+  --theme-accent-bg: rgba(99, 102, 241, 0.1);
+  --theme-accent-border: rgba(99, 102, 241, 0.3);
+  --theme-accent-muted: rgba(99, 102, 241, 0.2);
+  --theme-accent-shadow: rgba(99, 102, 241, 0.25);
+  --theme-card-bg: var(--card-bg);
+  --theme-card-border: var(--card-border);
+  --theme-card-hover-border: var(--card-hover-border);
+  --theme-input-bg: var(--color-input-bg);
+  --theme-input-border: var(--color-input-border);
+  --theme-input-text: var(--input-text);
+  --theme-input-placeholder: var(--input-placeholder);
 }
 
 [data-theme="light"] {
@@ -74,8 +109,8 @@
   --color-text-muted: #64748b;
   --color-accent: #4f46e5;
   --color-accent-hover: #4338ca;
-  --color-scrollbar: #cbd5e1;
-  --color-scrollbar-hover: #94a3b8;
+  --color-scrollbar: #e2e8f0;
+  --color-scrollbar-hover: #cbd5e1;
   --color-input-bg: #ffffff;
   --color-input-border: #e2e8f0;
 
@@ -116,6 +151,23 @@
   /* Label/Caption colors */
   --color-label: #64748b;           /* slate-500 */
   --color-caption: #64748b;         /* slate-500 */
+
+  /* Semantic colors - Status (light theme - darker for contrast) */
+  --color-error: #dc2626;           /* red-600 */
+  --color-error-light: #ef4444;     /* red-500 */
+  --color-error-bg: rgba(220, 38, 38, 0.1);
+  --color-error-border: rgba(220, 38, 38, 0.2);
+  --color-success: #059669;         /* emerald-600 */
+  --color-success-bg: rgba(5, 150, 105, 0.1);
+  --color-warning: #d97706;         /* amber-600 */
+  --color-warning-bg: rgba(217, 119, 6, 0.1);
+
+  /* Theme aliases - light theme overrides */
+  --theme-accent-rgb: 79, 70, 229;
+  --theme-accent-bg: rgba(79, 70, 229, 0.1);
+  --theme-accent-border: rgba(79, 70, 229, 0.3);
+  --theme-accent-muted: rgba(79, 70, 229, 0.2);
+  --theme-accent-shadow: rgba(79, 70, 229, 0.25);
 }
 
 /* Smooth theme toggle animation */
@@ -665,23 +717,36 @@ textarea:focus:not(.bg-transparent) {
   color: #475569;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+/* Custom Scrollbar - Webkit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-scrollbar);
-  border-radius: 3px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-scrollbar-hover);
+}
+
+/* 滚动条角落 */
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Line clamp utility */
@@ -719,27 +784,64 @@ textarea:focus:not(.bg-transparent) {
   color: white;
 }
 
-/* Focus visible */
-:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
+/* 全局禁用默认 focus outline */
+*:focus {
+  outline: none !important;
 }
 
-/* Override focus-visible for specific inputs that have custom focus styles */
-input.bg-transparent:focus-visible {
-  outline: none;
+/* 为需要的元素添加自定义 focus 样式 */
+button:focus-visible,
+a:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent);
+}
+
+/* 输入框 focus 只改变边框颜色 */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-accent) !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
 }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  overflow: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

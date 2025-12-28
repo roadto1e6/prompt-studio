@@ -1,0 +1,398 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptCard/index.module.css */
+
+/**
+ * PromptCard 样式模块
+ * 使用 CSS Modules 封装样式，避免全局污染
+ */
+
+/* ==================== 共用卡片基础样式 ==================== */
+
+.cardBase {
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition:
+    border-color 0.25s ease-out,
+    box-shadow 0.25s ease-out,
+    transform 0.25s ease-out;
+  background-color: var(--card-bg);
+}
+
+.cardBase:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+  transform: scale(1.01);
+}
+
+/* ==================== 未选中状态 ==================== */
+
+.cardUnselected {
+  border-color: var(--card-border);
+}
+
+/* ==================== 选中状态 ==================== */
+
+.cardSelected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+  transform: scale(1.01);
+}
+
+/* ==================== 列表视图样式 ==================== */
+
+.listCard {
+  composes: cardBase;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.listCardSelected {
+  composes: cardSelected;
+}
+
+.listCardUnselected {
+  composes: cardUnselected;
+}
+
+/* 列表视图 - 图标容器 */
+.listIconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  flex-shrink: 0;
+}
+
+.listIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 列表视图 - 内容区域 */
+.listContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.listContentMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.listTitle {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+
+.listDescription {
+  font-size: 0.6875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.125rem;
+  color: var(--color-text-muted);
+}
+
+/* 列表视图 - 标签区域（内嵌在内容区域） */
+.listTags {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+/* 列表视图 - 元数据区域 */
+.listMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.625rem;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.listMetaDivider {
+  width: 1px;
+  height: 0.75rem;
+  background-color: var(--color-border);
+}
+
+.listModel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 5rem;
+}
+
+.listTime {
+  white-space: nowrap;
+}
+
+/* 列表视图 - 操作按钮区域 */
+.listActions {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
+
+/* ==================== 网格视图样式 ==================== */
+
+.gridCard {
+  composes: cardBase;
+  padding: 1.25rem;
+  border: 1px solid var(--card-border);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 14rem;
+  position: relative;
+}
+
+.gridCard:hover {
+  border-color: var(--card-hover-border);
+}
+
+.gridCardSelected {
+  composes: cardSelected;
+}
+
+.gridCardUnselected {
+  composes: cardUnselected;
+}
+
+/* 网格视图 - 头部区域 */
+.gridHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+}
+
+.gridIconContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  border-radius: 0.5rem;
+}
+
+.gridIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.gridActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* 网格视图 - 标题 */
+.gridTitle {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 网格视图 - 描述 */
+.gridDescription {
+  font-size: 0.75rem;
+  line-height: 1.625;
+  height: 2.25rem;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 网格视图 - 标签和底部区域 */
+.gridFooter {
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.gridTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.75rem;
+  min-height: 1.5rem;
+}
+
+.gridMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.625rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.gridModel {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60%;
+}
+
+.gridModelDot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--color-text-muted);
+}
+
+.gridModelText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gridTime {
+  flex-shrink: 0;
+}
+
+/* ==================== 操作按钮样式 ==================== */
+
+.actionButton {
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  color: var(--color-text-muted);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* 收藏按钮 - 已收藏状态 */
+.actionButtonFavorite {
+  color: rgb(234, 179, 8); /* yellow-500 */
+  opacity: 1;
+}
+
+.actionButtonFavorite:hover {
+  color: rgb(234, 179, 8);
+  background-color: var(--color-bg-hover);
+}
+
+/* 收藏按钮 - 未收藏状态（悬停显示） */
+.actionButtonFavoriteInactive {
+  opacity: 0;
+}
+
+.cardBase:hover .actionButtonFavoriteInactive {
+  opacity: 1;
+}
+
+.actionButtonFavoriteInactive:hover {
+  color: rgb(234, 179, 8);
+  background-color: var(--color-bg-hover);
+}
+
+/* 删除按钮（悬停显示） */
+.actionButtonDelete {
+  opacity: 0;
+}
+
+.cardBase:hover .actionButtonDelete {
+  opacity: 1;
+}
+
+.actionButtonDelete:hover {
+  color: rgb(239, 68, 68); /* red-500 */
+  background-color: var(--color-bg-hover);
+}
+
+/* 恢复按钮（悬停显示） */
+.actionButtonRestore {
+  opacity: 0;
+}
+
+.cardBase:hover .actionButtonRestore {
+  opacity: 1;
+}
+
+.actionButtonRestore:hover {
+  color: rgb(16, 185, 129); /* emerald-500 */
+  background-color: var(--color-bg-hover);
+}
+
+/* 操作按钮图标 */
+.actionButtonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 列表视图的操作按钮图标调整 */
+.listActions .actionButtonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 网格视图的操作按钮图标调整 */
+.gridActions .actionButtonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 收藏图标填充效果 */
+.actionIconFilled {
+  fill: rgb(234, 179, 8); /* yellow-500 */
+}
+
+/* ==================== 无障碍访问优化 ==================== */
+
+.actionButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.cardBase:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ==================== 响应式调整 ==================== */
+
+@media (max-width: 640px) {
+  .listCard {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .gridCard {
+    min-height: 12rem;
+    padding: 1rem;
+  }
+}

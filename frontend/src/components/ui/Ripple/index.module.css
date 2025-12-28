@@ -1,0 +1,44 @@
+/* 文件路径: frontend/src/components/ui/Ripple/index.module.css */
+
+/**
+ * Ripple 样式
+ * 表现层：使用纯 CSS 动画实现波纹效果
+ */
+
+/* ==================== 波纹容器 ==================== */
+
+.rippleContainer {
+  @apply relative overflow-hidden;
+}
+
+/* ==================== 波纹元素 ==================== */
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: ripple-animation 0.6s ease-out forwards;
+}
+
+/* ==================== 波纹动画 ==================== */
+
+@keyframes ripple-animation {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  to {
+    width: var(--ripple-size);
+    height: var(--ripple-size);
+    opacity: 0;
+  }
+}
+
+/* ==================== 自定义动画时长 ==================== */
+
+.ripple[data-duration] {
+  animation-duration: var(--ripple-duration);
+}

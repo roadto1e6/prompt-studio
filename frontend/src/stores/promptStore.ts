@@ -88,11 +88,8 @@ export const usePromptStore = create<PromptState>()(
 
         try {
           if (USE_MOCK) {
-            // Mock 模式：使用本地数据或初始化 mock 数据
-            const storedPrompts = get().prompts;
-            if (storedPrompts.length === 0) {
-              set({ prompts: mockPrompts });
-            }
+            // Mock 模式：始终使用最新的 mock 数据（开发模式）
+            set({ prompts: mockPrompts });
           } else {
             // 真实模式：从 API 加载
             const response = await promptService.getPrompts({ pageSize: 1000 });
@@ -609,6 +606,9 @@ export const usePromptStore = create<PromptState>()(
       getFilteredPrompts: () => {
         const { prompts, filter, categoryFilter, collectionFilter, searchQuery, sortBy, sortOrder } = get();
 
+        // 防御性检查：确保 prompts 是数组
+        if (!Array.isArray(prompts)) return [];
+
         let filtered = prompts.filter((p) => {
           // Status filter
           if (filter === 'trash') {
@@ -650,11 +650,14 @@ export const usePromptStore = create<PromptState>()(
 
       getActivePrompt: () => {
         const { prompts, activePromptId } = get();
+        if (!Array.isArray(prompts)) return null;
         return prompts.find((p) => p.id === activePromptId) || null;
       },
 
       getPromptById: (id) => {
-        return get().prompts.find((p) => p.id === id) || null;
+        const prompts = get().prompts;
+        if (!Array.isArray(prompts)) return null;
+        return prompts.find((p) => p.id === id) || null;
       },
     }),
     {

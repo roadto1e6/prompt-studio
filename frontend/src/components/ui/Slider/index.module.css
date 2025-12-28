@@ -1,0 +1,224 @@
+/* 文件路径: frontend/src/components/ui/Slider/index.module.css */
+
+/**
+ * Slider 样式封装
+ * 表现层：CSS Modules 隔离，主题变量支持
+ */
+
+/* ==================== 容器布局 ==================== */
+
+.container {
+  width: 100%;
+  position: relative;
+}
+
+/* ==================== 标签和值显示区域 ==================== */
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem; /* 8px */
+}
+
+.label {
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  color: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.valueDisplay {
+  font-size: 0.75rem; /* 12px */
+  color: var(--color-accent);
+  font-family: ui-monospace, 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  font-weight: 600;
+  transition: transform 0.15s ease-out;
+}
+
+.valueDisplay.active {
+  transform: scale(1.1);
+  color: var(--color-accent-hover);
+}
+
+/* ==================== 轨道容器 ==================== */
+
+.trackContainer {
+  position: relative;
+  width: 100%;
+  height: 2.5rem; /* 40px - 增加点击区域 */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.trackContainer.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ==================== 轨道背景 ==================== */
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 0.5rem; /* 8px */
+  background: var(--border);
+  border-radius: 9999px;
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+
+.track:hover {
+  background: var(--border-hover);
+}
+
+.trackContainer.disabled .track:hover {
+  background: var(--border);
+}
+
+/* ==================== 进度条（填充部分） ==================== */
+
+.trackFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+  border-radius: 9999px;
+  transition: width 0.15s ease-out;
+}
+
+.trackFill.dragging {
+  transition: none; /* 拖拽时禁用过渡，确保即时响应 */
+}
+
+/* ==================== 滑块手柄 ==================== */
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  background: var(--color-accent);
+  border: 3px solid var(--background);
+  border-radius: 9999px;
+  cursor: grab;
+  box-shadow:
+    0 0 0 0 rgba(var(--color-accent-rgb), 0),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+  z-index: 10;
+}
+
+.thumb:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow:
+    0 0 0 4px rgba(var(--color-accent-rgb), 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.thumb.dragging {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow:
+    0 0 0 6px rgba(var(--color-accent-rgb), 0.15),
+    0 6px 12px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease; /* 拖拽时仅保留阴影过渡 */
+}
+
+.thumb.keyboard {
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow:
+    0 0 0 8px rgba(var(--color-accent-rgb), 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.thumb:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.trackContainer.disabled .thumb {
+  cursor: not-allowed;
+  background: var(--text-muted);
+}
+
+.trackContainer.disabled .thumb:hover {
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== 最小/最大值标签 ==================== */
+
+.labelsRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.375rem; /* 6px */
+}
+
+.minMaxLabel {
+  font-size: 0.625rem; /* 10px */
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ==================== 隐藏的原生 Input（辅助功能） ==================== */
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ==================== 焦点可见状态 ==================== */
+
+.trackContainer:focus-within .track {
+  box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.1);
+}
+
+/* ==================== 响应式调整 ==================== */
+
+@media (max-width: 640px) {
+  .label,
+  .valueDisplay {
+    font-size: 0.6875rem; /* 11px */
+  }
+
+  .minMaxLabel {
+    font-size: 0.5625rem; /* 9px */
+  }
+
+  .thumb {
+    width: 1.125rem; /* 18px */
+    height: 1.125rem; /* 18px */
+  }
+}
+
+/* ==================== 主题变量（Dark Mode） ==================== */
+
+:root {
+  --color-accent-rgb: 59, 130, 246; /* blue-500 */
+}
+
+@media (prefers-color-scheme: dark) {
+  /* 深色模式下的微调（如需要） */
+  .track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .thumb {
+    border-color: var(--background-elevated);
+  }
+}

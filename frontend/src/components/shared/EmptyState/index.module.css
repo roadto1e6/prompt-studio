@@ -1,0 +1,206 @@
+/* 文件路径: frontend/src/components/shared/EmptyState/index.module.css */
+
+/**
+ * EmptyState 样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ * 通过 @apply 封装长类名，保持 HTML 清爽
+ */
+
+/* ==================== 主容器样式 ==================== */
+
+.container {
+  @apply h-full flex flex-col items-center justify-center
+         text-theme-text-secondary py-20 px-4;
+}
+
+/* ==================== 图标容器样式 ==================== */
+
+.iconContainer {
+  @apply w-24 h-24 rounded-full flex items-center justify-center mb-6
+         transition-all duration-300;
+}
+
+/* 空数据变体 */
+.iconContainer.empty {
+  @apply bg-theme-bg-tertiary;
+}
+
+/* 错误变体 */
+.iconContainer.error {
+  @apply bg-red-50 dark:bg-red-900/10;
+}
+
+/* 无搜索结果变体 */
+.iconContainer.noResults {
+  @apply bg-blue-50 dark:bg-blue-900/10;
+}
+
+/* 无内容变体 */
+.iconContainer.noData {
+  background-color: var(--color-bg-tertiary);
+}
+
+/* 图标样式 */
+.icon {
+  @apply w-12 h-12 transition-colors duration-200;
+}
+
+.icon.empty {
+  @apply text-theme-text-muted;
+}
+
+.icon.error {
+  @apply text-red-400 dark:text-red-500;
+}
+
+.icon.noResults {
+  @apply text-blue-400 dark:text-blue-500;
+}
+
+.icon.noData {
+  color: var(--color-text-muted);
+}
+
+/* ==================== 文本内容样式 ==================== */
+
+.textContent {
+  @apply text-center max-w-md;
+}
+
+.title {
+  @apply text-lg font-semibold text-theme-text-primary mb-2;
+}
+
+.description {
+  @apply text-sm text-theme-text-secondary leading-relaxed;
+}
+
+/* ==================== 操作按钮容器 ==================== */
+
+.actionContainer {
+  @apply mt-6;
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 应用动画类 */
+.animateContainer {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.animateIcon {
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+}
+
+.animateText {
+  animation: fadeIn 0.4s ease-out 0.2s backwards;
+}
+
+.animateAction {
+  animation: slideUp 0.3s ease-out 0.3s backwards;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+@media (max-width: 640px) {
+  .container {
+    @apply py-16 px-6;
+  }
+
+  .iconContainer {
+    @apply w-20 h-20 mb-5;
+  }
+
+  .icon {
+    @apply w-10 h-10;
+  }
+
+  .title {
+    @apply text-base;
+  }
+
+  .description {
+    @apply text-xs;
+  }
+
+  .textContent {
+    @apply max-w-xs;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    @apply py-12 px-4;
+  }
+
+  .iconContainer {
+    @apply w-16 h-16 mb-4;
+  }
+
+  .icon {
+    @apply w-8 h-8;
+  }
+}
+
+/* ==================== 无障碍支持 ==================== */
+
+.container:focus-visible {
+  @apply outline-none ring-2 ring-theme-accent;
+}
+
+/* 减少动画（用户偏好设置） */
+@media (prefers-reduced-motion: reduce) {
+  .animateContainer,
+  .animateIcon,
+  .animateText,
+  .animateAction {
+    animation: none;
+  }
+
+  .iconContainer,
+  .icon {
+    @apply transition-none;
+  }
+}

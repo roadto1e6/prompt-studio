@@ -1,0 +1,259 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptEditor/index.module.css */
+
+/**
+ * PromptEditor 样式
+ * 保持与项目整体风格一致
+ */
+
+/* ==================== 容器 ==================== */
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+/* ==================== 编辑器头部 ==================== */
+
+.editorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.labelGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.copyButton {
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color 0.2s;
+}
+
+.copyButton:hover:not(:disabled) {
+  color: var(--color-accent);
+}
+
+.copyButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.copyIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.copyIconSuccess {
+  color: rgb(52, 211, 153);
+}
+
+.versionBadge {
+  font-size: 0.625rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+}
+
+/* ==================== 文本区域 ==================== */
+
+.textareaWrapper {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-input-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: none;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.textarea::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.statsOverlay {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* ==================== 用户模板区域 ==================== */
+
+.userTemplateSection {
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.userTemplateLabel {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.textareaSmall {
+  width: 100%;
+  min-height: 5rem;
+  max-height: 8rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-input-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.textareaSmall::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.textareaSmall:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+/* ==================== 保存区域 ==================== */
+
+.saveSection {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* ==================== 模态框内容 ==================== */
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modalDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.versionTypeGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.versionTypeButton {
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.versionTypeButton:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.versionTypeButtonActive {
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.versionTypeTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.versionTypeVersion {
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  margin-top: 0.25rem;
+}
+
+.versionTypeDescription {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.versionHint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}

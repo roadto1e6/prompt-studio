@@ -1,0 +1,149 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptMetadata/index.module.css */
+
+/**
+ * PromptMetadata 样式
+ * 表现层：元数据展示样式
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  height: 100%;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.formContainer {
+  @apply space-y-6;
+}
+
+/* ==================== 空状态样式 ==================== */
+
+.emptyState {
+  @apply h-full flex items-center justify-center text-theme-text-muted;
+}
+
+.emptyText {
+  @apply text-sm;
+}
+
+/* ==================== 表单字段样式 ==================== */
+
+.fieldGroup {
+  @apply space-y-2;
+}
+
+.label {
+  @apply text-xs font-bold text-theme-text-label uppercase tracking-wider;
+}
+
+.fieldHeader {
+  @apply flex justify-between items-center mb-2;
+}
+
+.valueDisplay {
+  @apply text-xs text-theme-accent font-mono;
+}
+
+/* ==================== 标签容器 ==================== */
+
+.tagsContainer {
+  @apply flex flex-wrap gap-2 mb-2;
+}
+
+.tagInput {
+  @apply mt-2;
+}
+
+/* ==================== 时间戳信息 ==================== */
+
+.timestampSection {
+  @apply pt-4 mt-4;
+}
+
+.timestampGrid {
+  @apply grid grid-cols-2 gap-4;
+}
+
+.timestampItem {
+  @apply space-y-1;
+}
+
+.timestampLabel {
+  @apply text-xs font-bold text-theme-text-label uppercase tracking-wider;
+}
+
+.timestampValue {
+  @apply text-sm text-theme-text-secondary;
+}
+
+.timestampTime {
+  @apply block text-xs text-theme-text-muted mt-0.5;
+}
+
+/* ==================== 高级设置 ==================== */
+
+.advancedSection {
+  @apply pt-4;
+}
+
+.advancedToggle {
+  @apply flex items-center justify-between w-full text-left
+         text-theme-text-secondary hover:text-theme-text-primary
+         transition-colors;
+}
+
+.advancedLabel {
+  @apply text-xs font-bold uppercase tracking-wider;
+}
+
+.chevronIcon {
+  @apply w-4 h-4 transition-transform duration-200;
+}
+
+.chevronIcon.expanded {
+  @apply rotate-90;
+}
+
+.advancedContent {
+  @apply mt-4 space-y-4;
+}
+
+.advancedHint {
+  @apply p-4 bg-theme-bg-secondary rounded-lg;
+}
+
+.advancedHintText {
+  @apply text-xs text-theme-text-muted;
+}
+
+/* ==================== 响应式调整 ==================== */
+
+@media (max-width: 768px) {
+  .container {
+    @apply p-4;
+  }
+
+  .timestampGrid {
+    @apply grid-cols-1 gap-3;
+  }
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+.advancedContent {
+  animation: slideDown 0.3s ease-out;
+}

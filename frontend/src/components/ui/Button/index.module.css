@@ -1,0 +1,56 @@
+/**
+ * Button 组件样式
+ */
+
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply font-medium rounded-lg;
+  @apply transition-all duration-200;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-theme-accent;
+  @apply active:scale-95;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.buttonLoading {
+  @apply pointer-events-none;
+}
+
+.buttonFullWidth {
+  @apply w-full;
+}
+
+.buttonSuccess {
+  @apply bg-green-600 hover:bg-green-600 text-white shadow-lg;
+}
+
+.spinner {
+  @apply animate-spin;
+}
+
+.spinnerSm {
+  @apply h-3 w-3;
+}
+
+.spinnerMd {
+  @apply h-4 w-4;
+}
+
+.spinnerLg {
+  @apply h-5 w-5;
+}
+
+.iconSm {
+  @apply w-3 h-3;
+}
+
+.iconMd {
+  @apply w-4 h-4;
+}
+
+.iconLg {
+  @apply w-5 h-5;
+}
+
+.iconWrapper {
+  @apply inline-flex items-center justify-center flex-shrink-0;
+}

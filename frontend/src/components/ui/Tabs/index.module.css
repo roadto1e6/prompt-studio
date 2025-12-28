@@ -1,0 +1,31 @@
+/**
+ * Tabs 组件样式
+ */
+
+.tabButton {
+  @apply flex items-center gap-2;
+  outline: none !important;
+  box-shadow: none;
+}
+
+.tabButton:focus,
+.tabButton:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.tabButton:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.tabIcon {
+  @apply flex-shrink-0;
+}
+
+.tabPanel {
+  @apply h-full;
+}
+
+.tabPanelHidden {
+  @apply hidden;
+}

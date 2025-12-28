@@ -1,0 +1,25 @@
+/* 文件路径: frontend/src/components/auth/AuthGuard/index.module.css */
+
+/**
+ * AuthGuard 组件样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ */
+
+.loadingContainer {
+  @apply min-h-screen flex items-center justify-center;
+  background-color: var(--color-bg-primary);
+}
+
+.loadingContent {
+  @apply text-center;
+}
+
+.spinner {
+  @apply w-8 h-8 animate-spin mx-auto;
+  color: var(--color-accent);
+}
+
+.loadingText {
+  @apply mt-2 text-sm;
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,113 @@
+/**
+ * Select 组件样式
+ */
+
+.trigger {
+  @apply w-full flex items-center justify-between;
+  @apply bg-[var(--color-bg-primary)];
+  @apply border rounded-lg;
+  @apply transition-all duration-200;
+  @apply text-left cursor-pointer;
+}
+
+.triggerOpen {
+  @apply border-[var(--color-accent)] ring-2;
+  --tw-ring-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.triggerClosed {
+  @apply border-[var(--color-border)] hover:border-[var(--color-border-light)];
+}
+
+.triggerError {
+  @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+}
+
+.triggerDisabled {
+  @apply opacity-50 cursor-not-allowed hover:border-[var(--color-border)];
+}
+
+.dropdown {
+  @apply fixed z-[9999];
+  @apply bg-[var(--color-bg-primary)];
+  @apply border border-[var(--color-border)];
+  @apply rounded-xl shadow-2xl;
+  @apply overflow-hidden;
+  animation: dropdownEnter 0.2s ease-out;
+}
+
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.searchContainer {
+  @apply p-2 border-b border-[var(--color-border)];
+}
+
+.searchInput {
+  @apply w-full pl-8 pr-8 py-1.5 text-sm;
+  @apply bg-[var(--color-bg-secondary)];
+  @apply border border-[var(--color-border)];
+  @apply rounded-md;
+  @apply text-[var(--color-text-primary)];
+  @apply placeholder:text-[var(--color-text-muted)];
+  @apply focus:outline-none focus:border-[var(--color-accent)] focus:ring-2;
+  @apply transition-all duration-200;
+}
+
+.searchInput:focus {
+  --tw-ring-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.optionItem {
+  @apply w-full flex items-center gap-2 px-2.5 py-1.5;
+  @apply text-left rounded-md;
+  @apply transition-all duration-150;
+}
+
+/* 禁用选项的 focus 边框 */
+.optionItem:focus,
+.optionItem:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.optionHighlighted {
+  @apply text-[var(--color-accent)];
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.optionSelected {
+  @apply bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)];
+}
+
+.optionDefault {
+  @apply text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] hover:text-[var(--color-text-primary)];
+}
+
+.groupLabel {
+  @apply text-[10px] font-semibold text-[var(--color-text-label)] uppercase tracking-wider;
+}
+
+.groupCount {
+  @apply text-[9px] text-[var(--color-text-muted)] bg-[var(--color-bg-tertiary)] px-1 py-0.5 rounded;
+}
+
+.emptyMessage {
+  @apply px-3 py-8 text-center text-sm text-[var(--color-text-muted)];
+}
+
+.errorText {
+  @apply mt-1 text-xs text-red-400;
+}
+
+.label {
+  @apply block text-xs font-bold text-[var(--color-text-label)] uppercase tracking-wider mb-2;
+}

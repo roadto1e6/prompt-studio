@@ -1,0 +1,19 @@
+/**
+ * Tooltip 组件样式
+ */
+
+.tooltip {
+  @apply whitespace-nowrap;
+}
+
+.default {
+  @apply px-2 py-1 text-xs rounded shadow-lg z-[1070] max-w-xs;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.light {
+  @apply px-2 py-1 text-xs rounded shadow-lg z-[1070] max-w-xs;
+  @apply bg-theme-card-bg text-theme-text-primary border border-theme-border;
+}

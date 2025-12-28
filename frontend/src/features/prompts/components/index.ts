@@ -7,3 +7,5 @@ export { PromptDetailPanel } from './PromptDetailPanel';
 export { CreatePromptModal } from './CreatePromptModal';
 export { SharePromptModal } from './SharePromptModal';
 export { ImportPromptModal } from './ImportPromptModal';
+export { ModelPicker } from './ModelPicker';
+export type { ModelPickerProps, SimpleOption } from './ModelPicker';

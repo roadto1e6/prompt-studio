@@ -1,0 +1,175 @@
+/* 文件路径: frontend/src/features/prompts/components/SharePromptModal/index.module.css */
+
+/**
+ * SharePromptModal 样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.contentContainer {
+  @apply p-5;
+}
+
+/* ==================== 加载状态 ==================== */
+
+.loadingContainer {
+  @apply flex items-center justify-center gap-3 py-6 text-theme-text-secondary;
+}
+
+.loadingText {
+  @apply text-sm;
+}
+
+/* ==================== 错误状态 ==================== */
+
+.errorContainer {
+  @apply flex flex-col items-center justify-center py-6;
+}
+
+.errorIconWrapper {
+  @apply p-2.5 bg-red-500/20 rounded-full mb-3;
+}
+
+.errorIcon {
+  @apply w-5 h-5 text-red-400;
+}
+
+.errorText {
+  @apply text-sm text-red-400 mb-3;
+}
+
+/* ==================== 分享内容区域 ==================== */
+
+.shareContent {
+  @apply space-y-4;
+}
+
+/* ==================== 预览区域 ==================== */
+
+.previewSection {
+  @apply text-center pb-3 border-b border-theme-border;
+}
+
+.previewTitle {
+  @apply text-sm text-theme-text-primary font-medium truncate;
+}
+
+.previewModel {
+  @apply text-xs text-theme-text-muted mt-0.5;
+}
+
+/* ==================== 分享码区域 ==================== */
+
+.codeSection {
+  @apply text-center;
+}
+
+.codeLabel {
+  @apply text-xs text-theme-text-muted mb-2;
+}
+
+.codeBox {
+  @apply inline-flex items-center gap-2 bg-theme-bg-secondary border border-theme-border
+         rounded-lg px-4 py-2.5 cursor-pointer hover:border-theme-accent
+         transition-colors;
+}
+
+.codeText {
+  @apply font-mono text-xl tracking-widest text-theme-accent font-semibold;
+}
+
+.copyIcon {
+  @apply w-4 h-4 text-theme-text-muted transition-colors;
+}
+
+.codeBox:hover .copyIcon {
+  @apply text-theme-accent;
+}
+
+.copiedIcon {
+  @apply w-4 h-4 text-emerald-400;
+}
+
+.copiedText {
+  @apply text-xs text-emerald-400 mt-1.5;
+}
+
+/* ==================== 分享链接区域 ==================== */
+
+.urlSection {
+  @apply space-y-1.5;
+}
+
+.urlLabel {
+  @apply text-xs text-theme-text-muted;
+}
+
+.urlBox {
+  @apply flex items-center gap-2 bg-theme-bg-secondary border border-theme-border
+         rounded-lg px-3 py-2 cursor-pointer hover:border-theme-card-hover-border
+         transition-colors;
+}
+
+.urlIcon {
+  @apply w-3.5 h-3.5 text-theme-text-muted flex-shrink-0;
+}
+
+.urlText {
+  @apply flex-1 text-xs text-theme-text-secondary truncate font-mono;
+}
+
+.urlCopyIcon {
+  @apply w-3.5 h-3.5 text-theme-text-muted flex-shrink-0 transition-colors;
+}
+
+.urlBox:hover .urlCopyIcon {
+  @apply text-theme-text-secondary;
+}
+
+.urlCopiedIcon {
+  @apply w-3.5 h-3.5 text-emerald-400 flex-shrink-0;
+}
+
+/* ==================== 底部操作区域 ==================== */
+
+.footerContainer {
+  @apply px-5 py-3 border-t border-theme-border bg-theme-bg-secondary;
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeInAnimation {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+@media (max-width: 640px) {
+  .contentContainer {
+    @apply p-4;
+  }
+
+  .codeBox {
+    @apply px-3 py-2;
+  }
+
+  .codeText {
+    @apply text-lg;
+  }
+
+  .footerContainer {
+    @apply px-4;
+  }
+}

@@ -1,0 +1,89 @@
+/**
+ * ConfirmModal 组件样式
+ */
+
+.container {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+}
+
+.modal {
+  @apply relative w-full max-w-sm mx-4;
+}
+
+.content {
+  @apply rounded-xl shadow-2xl overflow-hidden border;
+  @apply bg-[var(--color-bg-primary)] border-[var(--color-border)];
+}
+
+.body {
+  @apply p-6;
+}
+
+.iconWrapper {
+  @apply flex justify-center mb-4;
+}
+
+.iconContainer {
+  @apply inline-flex items-center justify-center p-3 rounded-full;
+}
+
+.icon {
+  @apply w-6 h-6;
+}
+
+.title {
+  @apply text-lg font-semibold text-center mb-2 text-[var(--color-text-primary)];
+}
+
+.message {
+  @apply text-sm text-center text-[var(--color-text-secondary)];
+}
+
+.footer {
+  @apply flex gap-3 p-4 border-t border-[var(--color-border)] bg-[var(--color-bg-primary)];
+}
+
+.footerButton {
+  @apply flex-1;
+}
+
+/* 变体颜色 */
+.iconBgDanger {
+  @apply bg-red-500/20;
+}
+
+.iconColorDanger {
+  @apply text-red-500;
+}
+
+.iconBgWarning {
+  @apply bg-amber-500/20;
+}
+
+.iconColorWarning {
+  @apply text-amber-500;
+}
+
+.iconBgInfo {
+  @apply bg-primary-muted;
+}
+
+.iconColorInfo {
+  @apply text-theme-accent;
+}
+
+.iconBgSuccess {
+  @apply bg-green-500/20;
+}
+
+.iconColorSuccess {
+  @apply text-green-500;
+}
+
+.iconBgError {
+  @apply bg-red-500/20;
+}
+
+.iconColorError {
+  @apply text-red-500;
+}

@@ -47,7 +47,7 @@ export const useToastStore = create<ToastStore>((set) => ({
     });
 
     // 自动移除
-    if (newToast.duration > 0) {
+    if (newToast.duration && newToast.duration > 0) {
       setTimeout(() => {
         set((state) => ({
           toasts: state.toasts.filter((t) => t.id !== id),

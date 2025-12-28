@@ -1,0 +1,163 @@
+/* 文件路径: frontend/src/features/prompts/components/CreatePromptModal/index.module.css */
+
+/**
+ * CreatePromptModal 样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ * 通过 @apply 封装长类名，保持 HTML 清爽
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.formContainer {
+  @apply flex flex-col gap-5;
+}
+
+/* ==================== 表单区块样式 ==================== */
+
+.formSection {
+  @apply flex flex-col gap-1.5;
+}
+
+.formSectionLabel {
+  @apply text-xs font-bold text-theme-text-label uppercase tracking-wider;
+}
+
+.formSectionError {
+  @apply text-xs text-red-500 dark:text-red-400 mt-1 flex items-center gap-1;
+}
+
+/* ==================== 分类选择器样式 ==================== */
+
+.categoryGrid {
+  @apply grid grid-cols-4 gap-2;
+}
+
+.categoryButton {
+  @apply flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border transition-all duration-200;
+}
+
+.categoryButtonSelected {
+  @apply shadow-sm;
+  border-color: var(--color-accent);
+  background-color: var(--theme-accent-bg);
+}
+
+.categoryButtonUnselected {
+  border-color: var(--color-border);
+  background-color: var(--card-bg);
+}
+
+.categoryButtonUnselected:hover {
+  border-color: var(--card-hover-border);
+  background-color: var(--color-bg-hover);
+}
+
+.categoryIcon {
+  @apply w-4 h-4;
+}
+
+.categoryLabel {
+  @apply text-sm font-medium;
+}
+
+.categoryLabelSelected {
+  color: var(--color-accent);
+}
+
+.categoryLabelUnselected {
+  color: var(--color-text-secondary);
+}
+
+/* ==================== 两列布局样式 ==================== */
+
+.twoColumnGrid {
+  @apply grid grid-cols-2 gap-4;
+}
+
+/* ==================== 系统提示词区域 ==================== */
+
+.systemPromptTextarea {
+  @apply h-32 resize-none;
+}
+
+/* ==================== 操作按钮区域 ==================== */
+
+.actionsContainer {
+  @apply flex justify-end gap-3 pt-4 mt-1;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ==================== 错误提示样式 ==================== */
+
+.errorAlert {
+  @apply flex items-start gap-3 p-4 rounded-lg
+         bg-red-50 dark:bg-red-900/20
+         border border-red-200 dark:border-red-800;
+}
+
+.errorAlertIcon {
+  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5;
+}
+
+.errorAlertContent {
+  @apply flex-1 min-w-0;
+}
+
+.errorAlertTitle {
+  @apply text-sm font-medium text-red-800 dark:text-red-300;
+}
+
+.errorAlertMessage {
+  @apply text-sm text-red-700 dark:text-red-400 mt-1;
+}
+
+/* ==================== 加载状态样式 ==================== */
+
+.loadingOverlay {
+  @apply absolute inset-0 backdrop-blur-sm
+         flex items-center justify-center rounded-lg z-10;
+  background-color: var(--overlay-backdrop);
+}
+
+.loadingSpinner {
+  @apply w-6 h-6 border-2 rounded-full animate-spin;
+  border-color: var(--color-border);
+  border-top-color: var(--color-accent);
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animateSlideIn {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+@media (max-width: 640px) {
+  .categoryGrid {
+    @apply grid-cols-2;
+  }
+
+  .twoColumnGrid {
+    @apply grid-cols-1;
+  }
+
+  .actionsContainer {
+    @apply flex-col-reverse;
+  }
+
+  .actionsContainer > button {
+    @apply w-full;
+  }
+}

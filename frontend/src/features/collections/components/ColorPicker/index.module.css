@@ -1,0 +1,82 @@
+/* 文件路径: frontend/src/features/collections/components/ColorPicker/index.module.css */
+
+/**
+ * ColorPicker 样式
+ * 表现层：使用 Tailwind @apply 封装可复用样式
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  @apply flex flex-col gap-2;
+}
+
+.label {
+  @apply block text-xs font-bold text-theme-text-label uppercase tracking-wider;
+}
+
+/* ==================== 颜色网格 ==================== */
+
+.colorGrid {
+  @apply flex gap-2 flex-wrap;
+}
+
+/* ==================== 颜色按钮样式 ==================== */
+
+.colorButton {
+  @apply rounded-full transition-all duration-200
+         focus:outline-none focus-visible:ring-2
+         focus-visible:ring-theme-accent;
+}
+
+/* 尺寸变体 */
+.colorButton.sm {
+  @apply w-8 h-8;
+}
+
+.colorButton.md {
+  @apply w-10 h-10;
+}
+
+.colorButton.lg {
+  @apply w-12 h-12;
+}
+
+/* 选中状态 */
+.colorButton.selected {
+  @apply ring-2 ring-offset-2 ring-offset-theme-bg-secondary
+         ring-theme-text-primary scale-110 shadow-lg;
+}
+
+/* 未选中状态 */
+.colorButton.unselected {
+  @apply opacity-80 hover:opacity-100 hover:scale-105;
+}
+
+/* 禁用状态 */
+.colorButton.disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* ==================== 选中图标容器 ==================== */
+
+.checkIconContainer {
+  @apply flex items-center justify-center;
+}
+
+.checkIcon {
+  @apply text-white drop-shadow-md;
+}
+
+.checkIcon.sm {
+  @apply w-3 h-3;
+}
+
+.checkIcon.md {
+  @apply w-4 h-4;
+}
+
+.checkIcon.lg {
+  @apply w-5 h-5;
+}
+

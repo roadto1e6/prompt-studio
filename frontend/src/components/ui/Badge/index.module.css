@@ -1,0 +1,37 @@
+/**
+ * Badge 组件样式
+ */
+
+.badge {
+  @apply inline-flex items-center gap-1 rounded-full font-medium whitespace-nowrap;
+  @apply transition-all;
+}
+
+.badgeClickable {
+  @apply cursor-pointer hover:opacity-80 active:scale-95;
+}
+
+.dot {
+  @apply w-1.5 h-1.5 rounded-full bg-current;
+}
+
+.iconWrapper {
+  @apply flex-shrink-0 flex items-center;
+}
+
+.removeButton {
+  @apply ml-1 transition-opacity hover:opacity-70;
+  @apply focus:outline-none focus:ring-1 focus:ring-current rounded-sm;
+}
+
+.removeIconSm {
+  @apply w-2.5 h-2.5;
+}
+
+.removeIconMd {
+  @apply w-3 h-3;
+}
+
+.removeIconLg {
+  @apply w-3.5 h-3.5;
+}

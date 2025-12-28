@@ -1,0 +1,300 @@
+/* 文件路径: frontend/src/features/prompts/components/PromptGrid/index.module.css */
+
+/**
+ * PromptGrid 样式
+ * 表现层：响应式网格布局 + 加载/空状态样式
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  @apply relative flex flex-col p-6;
+  height: 100%;
+  min-height: 0; /* 关键：允许flex子元素正确收缩 */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ==================== 网格布局 ==================== */
+
+/**
+ * 网格模式 - 响应式列数
+ * - 默认（详情面板关闭）: 1/2/3/4 列
+ * - 详情面板打开: 1/2 列（为面板留出空间）
+ */
+.gridContainer {
+  @apply grid gap-5;
+  flex: 1 1 auto;
+  align-content: start; /* 确保内容从顶部开始 */
+}
+
+/* 默认网格布局（详情面板关闭） */
+.gridContainer.defaultLayout {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+/* 紧凑网格布局（详情面板打开） */
+.gridContainer.compactLayout {
+  @apply grid-cols-1;
+}
+
+/* 列表模式 */
+.listContainer {
+  @apply flex flex-col gap-3;
+  flex: 1 1 auto;
+}
+
+/* ==================== 空状态样式 ==================== */
+
+.emptyContainer {
+  @apply flex items-center justify-center p-6;
+  flex: 1 1 auto;
+  min-height: 400px;
+}
+
+.emptyContent {
+  @apply flex flex-col items-center justify-center text-center max-w-md;
+}
+
+/* ==================== 加载状态样式 ==================== */
+
+.loadingContainer {
+  @apply flex flex-col items-center justify-center p-6;
+  flex: 1 1 auto;
+  min-height: 400px;
+}
+
+.loadingSpinner {
+  @apply w-12 h-12 text-theme-accent animate-spin;
+}
+
+.loadingText {
+  @apply mt-4 text-sm font-medium text-theme-text-secondary;
+}
+
+/* 骨架屏网格布局 */
+.skeletonGrid {
+  @apply grid gap-5;
+}
+
+.skeletonGrid.defaultLayout {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+.skeletonGrid.compactLayout {
+  @apply grid-cols-1;
+}
+
+.skeletonCard {
+  @apply rounded-xl border border-theme-card-border bg-theme-card-bg p-5;
+  @apply animate-pulse;
+  min-height: 14rem;
+}
+
+.skeletonHeader {
+  @apply flex justify-between items-start mb-3;
+}
+
+.skeletonIcon {
+  @apply w-8 h-8 rounded-lg bg-theme-bg-tertiary;
+}
+
+.skeletonActions {
+  @apply flex gap-2;
+}
+
+.skeletonAction {
+  @apply w-6 h-6 rounded-md bg-theme-bg-tertiary;
+}
+
+.skeletonTitle {
+  @apply h-5 w-3/4 rounded bg-theme-bg-tertiary mb-3;
+}
+
+.skeletonDescription {
+  @apply h-4 w-full rounded bg-theme-bg-tertiary mb-2;
+}
+
+.skeletonDescriptionShort {
+  @apply h-4 w-2/3 rounded bg-theme-bg-tertiary;
+}
+
+.skeletonFooter {
+  @apply mt-auto pt-3 flex justify-between items-center;
+}
+
+.skeletonTag {
+  @apply h-5 w-16 rounded-full bg-theme-bg-tertiary;
+}
+
+.skeletonMeta {
+  @apply h-3 w-20 rounded bg-theme-bg-tertiary;
+}
+
+/* ==================== 错误状态样式 ==================== */
+
+.errorContainer {
+  @apply flex flex-col items-center justify-center p-6;
+  flex: 1 1 auto;
+  min-height: 400px;
+}
+
+.errorContent {
+  @apply text-center max-w-md;
+}
+
+.errorIcon {
+  @apply w-16 h-16 mx-auto mb-4 text-red-400 dark:text-red-500;
+}
+
+.errorTitle {
+  @apply text-lg font-semibold text-theme-text-primary mb-2;
+}
+
+.errorMessage {
+  @apply text-sm text-theme-text-secondary mb-6;
+}
+
+.errorActions {
+  @apply flex items-center justify-center gap-3;
+}
+
+/* ==================== 分页样式 ==================== */
+
+.paginationContainer {
+  @apply flex-shrink-0 mt-6 pt-4 pb-4 px-6 -mx-6;
+  @apply border-t border-theme-border;
+  background-color: var(--color-bg-secondary);
+}
+
+.paginationInner {
+  @apply flex items-center justify-between;
+}
+
+.paginationInfo {
+  @apply text-sm text-theme-text-secondary;
+}
+
+.paginationControls {
+  @apply flex items-center gap-2;
+}
+
+.paginationButton {
+  @apply px-3 py-1.5 rounded-md text-sm font-medium transition-all;
+  @apply border border-theme-card-border bg-theme-card-bg;
+  @apply hover:bg-theme-bg-hover hover:border-theme-card-hover-border;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-theme-card-bg;
+}
+
+.paginationButton.active {
+  @apply bg-theme-accent text-white border-theme-accent;
+  @apply hover:bg-theme-accent-hover;
+}
+
+.paginationEllipsis {
+  @apply px-2 text-theme-text-muted;
+}
+
+/* ==================== 动画效果 ==================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animateFadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animateSlideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .container {
+    @apply p-4;
+  }
+
+  .gridContainer,
+  .listContainer {
+    @apply gap-3;
+  }
+
+  .paginationContainer {
+    @apply px-4 -mx-4;
+  }
+
+  .paginationInner {
+    @apply flex-col gap-3;
+  }
+
+  .paginationInfo {
+    @apply w-full text-center;
+  }
+
+  .paginationControls {
+    @apply w-full justify-center;
+  }
+}
+
+/* 平板端优化 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    @apply p-5;
+  }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1920px) {
+  .gridContainer.defaultLayout {
+    @apply xl:grid-cols-5 2xl:grid-cols-6;
+  }
+}
+
+/* ==================== 打印样式 ==================== */
+
+@media print {
+  .container {
+    @apply overflow-visible;
+  }
+
+  .paginationContainer {
+    @apply hidden;
+  }
+
+  .gridContainer {
+    @apply gap-3;
+  }
+}
+
+/* ==================== 减少动画（用户偏好） ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .animateFadeIn,
+  .animateSlideUp,
+  .skeletonCard {
+    animation: none;
+  }
+
+  * {
+    transition: none !important;
+  }
+}

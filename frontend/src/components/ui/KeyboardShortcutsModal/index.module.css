@@ -1,0 +1,96 @@
+/* 文件路径: frontend/src/components/ui/KeyboardShortcutsModal/index.module.css */
+
+/**
+ * KeyboardShortcutsModal 样式
+ * 表现层：使用 Tailwind CSS + CSS Modules
+ * 通过 @apply 封装长类名，保持 HTML 清爽
+ */
+
+/* ==================== 容器样式 ==================== */
+
+.container {
+  @apply space-y-6;
+}
+
+/* ==================== 分类区块样式 ==================== */
+
+.categorySection {
+  @apply space-y-2;
+}
+
+.categoryTitle {
+  @apply text-sm font-semibold text-theme-text-secondary mb-3;
+}
+
+.shortcutList {
+  @apply space-y-2;
+}
+
+/* ==================== 快捷键项样式 ==================== */
+
+.shortcutItem {
+  @apply flex items-center justify-between py-2 px-3
+         rounded-lg hover:bg-theme-bg-tertiary
+         transition-colors duration-200;
+}
+
+.shortcutDescription {
+  @apply text-sm text-theme-text-primary;
+}
+
+.shortcutKeys {
+  @apply flex items-center gap-1;
+}
+
+/* ==================== 键盘按键样式 ==================== */
+
+.key {
+  @apply px-2 py-1 text-xs font-semibold
+         bg-theme-bg-secondary border border-theme-border rounded
+         text-theme-text-secondary shadow-sm
+         transition-colors duration-200;
+}
+
+.keySeparator {
+  @apply text-theme-text-muted text-xs mx-0.5;
+}
+
+/* ==================== 底部提示区域 ==================== */
+
+.footer {
+  @apply pt-4 border-t border-theme-border;
+}
+
+.footerContent {
+  @apply flex items-center gap-2 text-xs text-theme-text-muted;
+}
+
+.footerIcon {
+  @apply w-4 h-4 flex-shrink-0;
+}
+
+.footerText {
+  @apply leading-relaxed;
+}
+
+/* ==================== 响应式适配 ==================== */
+
+@media (max-width: 640px) {
+  .shortcutItem {
+    @apply flex-col items-start gap-2;
+  }
+
+  .shortcutKeys {
+    @apply w-full justify-end;
+  }
+}
+
+/* ==================== 辅助功能优化 ==================== */
+
+.shortcutItem:focus-within {
+  @apply ring-2 ring-theme-accent ring-offset-2 ring-offset-theme-bg-primary;
+}
+
+.key:focus {
+  @apply ring-2 ring-theme-accent;
+}

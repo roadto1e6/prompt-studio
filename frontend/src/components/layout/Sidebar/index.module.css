@@ -1,0 +1,359 @@
+/* 文件路径: frontend/src/components/layout/Sidebar/index.module.css */
+
+/**
+ * Sidebar 样式
+ * 表现层：侧边栏折叠/展开动画、导航菜单样式
+ */
+
+/* ==================== 侧边栏容器 ==================== */
+
+.sidebar {
+  @apply flex-shrink-0 border-r border-theme-border bg-theme-bg-primary flex flex-col;
+  width: 260px;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 折叠状态 */
+.sidebarCollapsed {
+  width: 72px;
+}
+
+/* ==================== Logo 区域 ==================== */
+
+.logoContainer {
+  @apply h-16 flex items-center px-6 border-b border-theme-border;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .logoContainer {
+  @apply px-4 justify-center;
+}
+
+.logoIcon {
+  @apply w-8 h-8 text-theme-accent;
+  transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .logoIcon {
+  @apply mr-0;
+}
+
+.logoText {
+  @apply font-display text-xl tracking-tight font-bold text-theme-text-primary;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out, width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebarCollapsed .logoText {
+  opacity: 0;
+  width: 0;
+}
+
+/* ==================== 搜索区域 ==================== */
+
+.searchContainer {
+  @apply p-4;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .searchContainer {
+  @apply px-3;
+}
+
+.searchWrapper {
+  @apply relative;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .searchIcon {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.searchInput {
+  @apply w-full rounded-lg pl-9 pr-9 py-2 focus:outline-none focus:border-theme-accent transition-colors text-xs font-medium border bg-theme-input-bg border-theme-input-border text-theme-input-text placeholder-theme-input-placeholder;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+}
+
+.sidebarCollapsed .searchInput {
+  @apply pl-3 pr-3;
+  text-align: center;
+}
+
+.clearButton {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-theme-text-muted hover:text-theme-text-primary transition-colors;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebarCollapsed .clearButton {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ==================== 导航区域 ==================== */
+
+.navContainer {
+  @apply flex-1 overflow-y-auto px-3 space-y-6;
+}
+
+
+/* ==================== 导航分组 ==================== */
+
+.navGroup {
+  transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navGroupHeader {
+  @apply px-3 text-xs font-semibold uppercase tracking-wider mb-2 text-theme-text-muted;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out, height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.sidebarCollapsed .navGroupHeader {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+}
+
+.navList {
+  @apply space-y-0.5;
+}
+
+/* ==================== 导航项 ==================== */
+
+.navItem {
+  @apply flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors;
+}
+
+.navItemInactive {
+  @apply text-theme-text-secondary hover:bg-theme-bg-hover hover:text-theme-text-primary;
+}
+
+.navItemActive {
+  @apply bg-primary-muted text-theme-accent;
+}
+
+.navItemContent {
+  @apply flex items-center;
+  min-width: 0;
+  flex: 1;
+}
+
+.navItemIcon {
+  @apply mr-3 w-5 h-5 transition-colors flex-shrink-0;
+}
+
+.sidebarCollapsed .navItemIcon {
+  @apply mr-0;
+}
+
+.navItemIconInactive {
+  @apply text-theme-text-muted;
+}
+
+.navItem:hover .navItemIconInactive {
+  @apply text-theme-text-primary;
+}
+
+.navItemIconActive {
+  @apply text-theme-accent;
+}
+
+.navItemText {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebarCollapsed .navItemText {
+  opacity: 0;
+  width: 0;
+}
+
+.navItemCount {
+  @apply inline-flex items-center min-w-[1.75rem] text-xs tabular-nums font-mono justify-end text-theme-text-muted;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.navItem:hover .navItemCount {
+  @apply text-theme-text-secondary;
+}
+
+.sidebarCollapsed .navItemCount {
+  opacity: 0;
+  width: 0;
+}
+
+/* ==================== 集合标题栏 ==================== */
+
+.collectionsHeader {
+  @apply flex items-center px-3 mb-2 gap-2;
+}
+
+.collectionsTitle {
+  @apply flex-1 text-xs font-semibold uppercase tracking-wider text-theme-text-muted;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebarCollapsed .collectionsTitle {
+  opacity: 0;
+  width: 0;
+}
+
+.addCollectionButton {
+  @apply inline-flex items-center min-w-[1.75rem] justify-end w-[1.75rem] h-[1.75rem] rounded-md transition-colors ml-auto focus:outline-none text-theme-text-muted hover:text-theme-text-primary;
+}
+
+.sidebarCollapsed .addCollectionButton {
+  @apply ml-0;
+}
+
+.addCollectionIcon {
+  @apply font-mono text-sm leading-none font-semibold;
+}
+
+/* ==================== 上下文菜单 ==================== */
+
+.contextMenu {
+  @apply fixed z-50 rounded-lg shadow-xl py-1 min-w-[140px] border bg-theme-card-bg border-theme-card-border;
+  animation: contextMenuFadeIn 0.15s ease-out;
+}
+
+.contextMenuItem {
+  @apply flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors hover:bg-theme-bg-hover;
+}
+
+.contextMenuItemDelete {
+  @apply text-red-500;
+}
+
+@keyframes contextMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ==================== 用户区域 ==================== */
+
+.userContainer {
+  @apply px-3 py-2 border-t border-theme-border flex-shrink-0;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .userContainer {
+  @apply px-2;
+}
+
+.userButton {
+  @apply flex items-center gap-2 w-full p-1.5 rounded-lg transition-colors hover:bg-theme-bg-hover;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarCollapsed .userButton {
+  @apply p-2 justify-center;
+}
+
+.userAvatar {
+  @apply w-8 h-8 rounded-full flex-shrink-0;
+}
+
+.userAvatarImage {
+  @apply w-full h-full object-cover rounded-full;
+}
+
+.userAvatarFallback {
+  @apply w-full h-full rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white;
+}
+
+.userInfo {
+  @apply flex-1 min-w-0 text-left;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out, width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.sidebarCollapsed .userInfo {
+  opacity: 0;
+  width: 0;
+}
+
+.userName {
+  @apply text-sm font-medium truncate text-theme-text-primary;
+}
+
+.userEmail {
+  @apply text-xs truncate text-theme-text-muted;
+}
+
+.settingsIcon {
+  @apply w-4 h-4 text-theme-text-muted;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebarCollapsed .settingsIcon {
+  opacity: 0;
+  width: 0;
+}
+
+/* ==================== 响应式 - 移动端抽屉模式 ==================== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    @apply fixed left-0 top-0 bottom-0 z-40;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .sidebarBackdrop {
+    @apply fixed inset-0 bg-black/50 z-30;
+    animation: backdropFadeIn 0.3s ease-out;
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==================== 折叠按钮（可选） ==================== */
+
+.collapseButton {
+  @apply absolute -right-3 top-20 w-6 h-6 rounded-full bg-theme-bg-primary border border-theme-border shadow-sm flex items-center justify-center text-theme-text-muted hover:text-theme-text-primary transition-colors cursor-pointer z-10;
+}
+
+.collapseButtonIcon {
+  @apply w-3 h-3 transition-transform;
+}
+
+.sidebarCollapsed .collapseButtonIcon {
+  transform: rotate(180deg);
+}

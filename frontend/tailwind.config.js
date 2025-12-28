@@ -6,6 +6,18 @@ export default {
   ],
   theme: {
     extend: {
+      // Set default border color to use theme variable
+      borderColor: {
+        DEFAULT: 'var(--color-border)',
+      },
+      // Set default outline color
+      outlineColor: {
+        DEFAULT: 'var(--color-accent)',
+      },
+      // Set default ring color
+      ringColor: {
+        DEFAULT: 'var(--color-accent)',
+      },
       colors: {
         dark: {
           900: '#0f0f1a',
@@ -93,11 +105,16 @@ export default {
       },
       animation: {
         'float': 'float 3s ease-in-out infinite',
+        'shimmer': 'shimmer 2s ease-in-out infinite',
       },
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-5px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         }
       }
     },

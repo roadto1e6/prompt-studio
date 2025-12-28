@@ -1,0 +1,55 @@
+/* 文件路径: frontend/src/features/collections/components/CreateCollectionModal/index.module.css */
+
+/**
+ * CreateCollectionModal 样式
+ */
+
+.formContainer {
+  @apply flex flex-col gap-5;
+}
+
+/* 表单区块 */
+.formSection {
+  @apply flex flex-col gap-2;
+}
+
+.formSectionLabel {
+  @apply text-sm font-medium;
+  color: var(--color-text-secondary);
+}
+
+/* 操作按钮区域 */
+.actionsContainer {
+  @apply flex items-center justify-end gap-3 pt-4 border-t;
+  border-color: var(--color-border);
+}
+
+/* 错误提示 */
+.errorAlert {
+  @apply flex items-center gap-3 p-3 rounded-lg
+         bg-red-50 dark:bg-red-900/20
+         border border-red-200 dark:border-red-800;
+}
+
+.errorAlertIcon {
+  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0;
+}
+
+.errorAlertMessage {
+  @apply text-sm text-red-700 dark:text-red-400;
+}
+
+.errorText {
+  @apply text-xs text-red-500 dark:text-red-400;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .actionsContainer {
+    @apply flex-col-reverse;
+  }
+
+  .actionsContainer > button {
+    @apply w-full;
+  }
+}

@@ -1,0 +1,73 @@
+/**
+ * Input 组件样式
+ */
+
+.label {
+  @apply block text-xs font-bold text-[var(--color-text-label)] uppercase tracking-wider mb-2;
+}
+
+.requiredMark {
+  @apply text-red-500 ml-1;
+}
+
+.inputWrapper {
+  @apply relative;
+}
+
+.input {
+  @apply w-full rounded-lg transition-all duration-200 text-sm font-normal;
+}
+
+.textarea {
+  @apply w-full rounded-lg transition-all duration-200;
+  @apply font-mono text-sm leading-relaxed resize-none;
+}
+
+.inputWithIcon {
+  @apply pl-10;
+}
+
+.inputWithSuffix {
+  @apply pr-10;
+}
+
+.textareaWithCount {
+  @apply pb-10;
+}
+
+.textareaAutoResize {
+  @apply overflow-hidden;
+}
+
+.iconWrapper {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] pointer-events-none;
+}
+
+.suffixWrapper {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1;
+}
+
+.error {
+  @apply flex items-start gap-1.5 mt-1.5 text-xs text-red-400;
+}
+
+.charCounter {
+  @apply absolute bottom-3 right-3 pointer-events-none;
+}
+
+.charCounterBadge {
+  @apply text-[10px] font-medium px-2 py-1 rounded backdrop-blur-sm;
+  background-color: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
+}
+
+.charCounterNormal {
+  @apply text-[var(--color-text-muted)];
+}
+
+.charCounterWarning {
+  @apply text-yellow-500;
+}
+
+.charCounterError {
+  @apply text-red-500;
+}

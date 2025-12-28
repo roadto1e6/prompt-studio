@@ -1,0 +1,308 @@
+/**
+ * MainLayout Styles
+ * 主布局样式 - 使用 CSS Grid 实现响应式布局
+ */
+
+/* ========================================
+   布局容器
+   ======================================== */
+
+/**
+ * 主布局容器
+ * 使用 Grid 实现三栏布局：Sidebar | Main | DetailPanel
+ */
+.layout {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+}
+
+/**
+ * 全屏模式
+ */
+.layout.fullscreen {
+  grid-template-columns: 1fr;
+}
+
+/* ========================================
+   侧边栏区域
+   ======================================== */
+
+.sidebar {
+  grid-column: 1;
+  grid-row: 1;
+  width: 260px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+}
+
+/* ========================================
+   主内容区域
+   ======================================== */
+
+/**
+ * 主内容区域包装器
+ * 包含 Header 和主内容
+ */
+.mainArea {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0; /* 关键：允许flex子元素收缩 */
+  height: 100%;
+  max-height: 100%;
+  background-color: var(--color-bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.layout.fullscreen .mainArea {
+  grid-column: 1;
+}
+
+/**
+ * 头部区域
+ */
+.header {
+  width: 100%;
+  height: 64px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  z-index: 10;
+}
+
+.header.hidden {
+  display: none;
+}
+
+/**
+ * 内容容器
+ * 包含主内容和详情面板，使用 flex 弹性布局
+ */
+.contentContainer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+/**
+ * 主内容区域（卡片列表）
+ * flex: 1 表示占据剩余空间
+ */
+.content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--color-bg-secondary);
+}
+
+/**
+ * 滚动容器优化 - 使用全局滚动条样式
+ */
+
+/* ========================================
+   详情面板区域
+   ======================================== */
+
+.detailPanel {
+  /* 固定宽度，不参与 flex 伸缩 */
+  flex: none;
+  width: 500px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+.detailPanel.hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.detailPanel.collapsed {
+  width: 0;
+  border-left: none;
+}
+
+/**
+ * 详情面板内容容器
+ */
+.detailPanelContent {
+  height: 100%;
+  overflow: hidden;
+}
+
+
+/* ========================================
+   响应式布局
+   ======================================== */
+
+/**
+ * 大屏幕 (≥1440px)
+ * 详情面板可以更宽
+ */
+@media (min-width: 1440px) {
+  .detailPanel {
+    width: 560px;
+  }
+}
+
+/**
+ * 平板设备 (< 1024px)
+ * 详情面板覆盖在主内容上
+ */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: auto 1fr;
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .detailPanel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    max-width: 90vw;
+    height: 100vh;
+    z-index: 40;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .detailPanel.hidden {
+    transform: translateX(100%);
+  }
+}
+
+/**
+ * 移动设备 (< 768px)
+ * 侧边栏和详情面板都覆盖在主内容上
+ */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 40;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100%);
+  }
+
+  .detailPanel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 移动端减小头部高度 */
+  .header {
+    height: 56px;
+  }
+}
+
+/* ========================================
+   动画与过渡
+   ======================================== */
+
+/**
+ * 区域展开/收起动画
+ */
+.sidebar,
+.detailPanel {
+  will-change: transform, opacity;
+}
+
+/**
+ * 减少动画以提升性能（系统偏好设置）
+ */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .detailPanel,
+  .content::-webkit-scrollbar-thumb {
+    transition: none;
+  }
+}
+
+/* ========================================
+   可访问性
+   ======================================== */
+
+/**
+ * 高对比度模式支持
+ */
+@media (prefers-contrast: high) {
+  .sidebar,
+  .header,
+  .detailPanel {
+    border-color: currentColor;
+  }
+}
+
+/* ========================================
+   打印样式
+   ======================================== */
+
+@media print {
+  .sidebar,
+  .header,
+  .detailPanel {
+    display: none;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    overflow: visible;
+  }
+}

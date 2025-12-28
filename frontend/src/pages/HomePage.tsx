@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { MainLayout } from '@/components/layout';
 import { PromptGrid, PromptDetailPanel, CreatePromptModal, SharePromptModal, ImportPromptModal } from '@/features/prompts/components';
 import { CreateCollectionModal } from '@/features/collections/components';
-import { ConfirmModal } from '@/components/ui';
+import { ConfirmModal, KeyboardShortcutsModal } from '@/components/ui';
 import { SettingsModal } from '@/components/settings';
 import { useUIStore, useAuthStore } from '@/stores';
 import { usePromptStore } from '@/stores/promptStore';
 import { useCollectionStore } from '@/stores/collectionStore';
+import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
 import { getShareCodeFromUrl, decodeShareData, isShareCode } from '@/utils';
 import { SharedPromptData } from '@/types';
 
@@ -17,6 +18,9 @@ export const HomePage: React.FC = () => {
   const initializeCollections = useCollectionStore((state) => state.initialize);
   const lastClipboardContent = useRef<string>('');
   const isProcessing = useRef<boolean>(false);
+
+  // 全局快捷键
+  const { showShortcutsHelp, setShowShortcutsHelp } = useGlobalShortcuts();
 
   // Parse and handle share code
   const handleShareCode = useCallback((code: string) => {
@@ -134,6 +138,10 @@ export const HomePage: React.FC = () => {
       <SettingsModal
         isOpen={modals.settings}
         onClose={() => closeModal('settings')}
+      />
+      <KeyboardShortcutsModal
+        isOpen={showShortcutsHelp}
+        onClose={() => setShowShortcutsHelp(false)}
       />
     </MainLayout>
   );
