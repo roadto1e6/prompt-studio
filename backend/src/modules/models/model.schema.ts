@@ -6,6 +6,12 @@ export const modelCapabilityEnum = z.enum(['text', 'image', 'audio', 'video', 'e
 // Model status enum
 export const modelStatusEnum = z.enum(['active', 'deprecated', 'beta']);
 
+// Model source type enum
+export const modelSourceTypeEnum = z.enum(['system', 'user']);
+
+// User model review status enum
+export const userModelReviewStatusEnum = z.enum(['pending', 'approved', 'rejected']);
+
 // ============================================
 // Provider Schemas
 // ============================================
@@ -89,6 +95,40 @@ export const queryModelsSchema = z.object({
   providerId: z.string().optional(),
   status: modelStatusEnum.optional(),
   search: z.string().optional(),
+  sourceType: modelSourceTypeEnum.optional(),
+  includeUserModels: z.coerce.boolean().optional(), // Include user's own models
+});
+
+// ============================================
+// User Custom Model Schemas
+// ============================================
+
+// Create user custom model schema
+export const createUserModelSchema = z.object({
+  id: z.string().min(1).max(100).regex(/^[a-z0-9-_.]+$/, 'ID must be lowercase alphanumeric with hyphens, underscores, or dots'),
+  name: z.string().min(1, 'Name is required').max(100),
+  providerId: z.string().min(1, 'Provider is required'),
+  capabilities: z.array(modelCapabilityEnum).min(1, 'At least one capability required'),
+  maxTokens: z.number().min(1, 'Max tokens is required'),
+  contextWindow: z.number().min(1).optional(),
+  description: z.string().max(1000).optional(),
+  features: modelFeaturesSchema,
+});
+
+// Update user custom model schema
+export const updateUserModelSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  capabilities: z.array(modelCapabilityEnum).min(1).optional(),
+  maxTokens: z.number().min(1).optional(),
+  contextWindow: z.number().min(1).optional(),
+  description: z.string().max(1000).optional(),
+  features: modelFeaturesSchema,
+});
+
+// Review user model schema (admin only)
+export const reviewUserModelSchema = z.object({
+  status: userModelReviewStatusEnum,
+  reason: z.string().max(500).optional(),
 });
 
 // ============================================
@@ -100,3 +140,6 @@ export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
 export type CreateModelInput = z.infer<typeof createModelSchema>;
 export type UpdateModelInput = z.infer<typeof updateModelSchema>;
 export type QueryModelsInput = z.infer<typeof queryModelsSchema>;
+export type CreateUserModelInput = z.infer<typeof createUserModelSchema>;
+export type UpdateUserModelInput = z.infer<typeof updateUserModelSchema>;
+export type ReviewUserModelInput = z.infer<typeof reviewUserModelSchema>;

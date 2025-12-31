@@ -62,6 +62,7 @@ export const PromptCard = React.memo(
         onDelete,
         onRestore,
         isTrashView = false,
+        compact = false,
       },
       ref
     ) => {
@@ -115,31 +116,24 @@ export const PromptCard = React.memo(
           <div className={styles.listContent}>
             <div className={styles.listContentMain}>
               <h3 className={styles.listTitle}>{prompt.title}</h3>
-              <p className={styles.listDescription}>
-                {prompt.description || card.t.promptCard.noDescription}
-              </p>
+              {!compact && (
+                <p className={styles.listDescription}>
+                  {card.promptPreview || card.t.promptCard.noDescription}
+                </p>
+              )}
             </div>
-
-            {/* 标签区域 */}
-            {prompt.tags.length > 0 && (
-              <div className={styles.listTags} aria-label="Tags">
-                {prompt.tags.slice(0, 2).map((tag) => (
-                  <Badge key={tag} variant="default" size="sm">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* ==================== 元数据区域 ==================== */}
-          <div className={styles.listMeta} aria-label="Metadata">
-            <span className={styles.listModel}>{prompt.model}</span>
-            <span className={styles.listMetaDivider} />
-            <time className={styles.listTime} dateTime={prompt.updatedAt}>
-              {formatRelativeTime(prompt.updatedAt)} {card.t.promptCard?.ago || 'ago'}
-            </time>
-          </div>
+          {/* ==================== 元数据区域 - 紧凑模式下简化 ==================== */}
+          {!compact && (
+            <div className={styles.listMeta} aria-label="Metadata">
+              <span className={styles.listModel}>{prompt.model}</span>
+              <span className={styles.listMetaDivider} />
+              <time className={styles.listTime} dateTime={prompt.updatedAt}>
+                {formatRelativeTime(prompt.updatedAt)} {card.t.promptCard?.ago || 'ago'}
+              </time>
+            </div>
+          )}
 
           {/* ==================== 操作按钮区域 ==================== */}
           <div className={styles.listActions} role="group" aria-label="Actions">
@@ -309,26 +303,13 @@ export const PromptCard = React.memo(
         {/* ==================== 标题 ==================== */}
         <h3 className={styles.gridTitle}>{prompt.title}</h3>
 
-        {/* ==================== 描述 ==================== */}
+        {/* ==================== Prompt 预览 ==================== */}
         <p className={styles.gridDescription}>
-          {prompt.description || card.t.promptCard.noDescription}
+          {card.promptPreview || card.t.promptCard.noDescription}
         </p>
 
-        {/* ==================== 标签和底部区域 ==================== */}
+        {/* ==================== 底部区域 ==================== */}
         <div className={styles.gridFooter}>
-          <div className={styles.gridTags} aria-label="Tags">
-            {prompt.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag} variant="default" size="sm">
-                #{tag}
-              </Badge>
-            ))}
-            {prompt.tags.length > 2 && (
-              <Badge variant="default" size="sm" aria-label={card.t.promptCard?.moreTagsAriaLabel?.replace('{count}', String(prompt.tags.length - 2)) || `${prompt.tags.length - 2} more tags`}>
-                +{prompt.tags.length - 2}
-              </Badge>
-            )}
-          </div>
-
           <div className={styles.gridMeta} aria-label="Metadata">
             <div className={styles.gridModel}>
               <span className={styles.gridModelDot} aria-hidden="true" />
@@ -338,6 +319,21 @@ export const PromptCard = React.memo(
               {formatRelativeTime(prompt.updatedAt)} {card.t.promptCard?.ago || 'ago'}
             </time>
           </div>
+
+          {prompt.tags.length > 0 && (
+            <div className={styles.gridTags} aria-label="Tags">
+              {prompt.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="default" size="sm">
+                  #{tag}
+                </Badge>
+              ))}
+              {prompt.tags.length > 3 && (
+                <Badge variant="default" size="sm" aria-label={card.t.promptCard?.moreTagsAriaLabel?.replace('{count}', String(prompt.tags.length - 3)) || `${prompt.tags.length - 3} more tags`}>
+                  +{prompt.tags.length - 3}
+                </Badge>
+              )}
+            </div>
+          )}
         </div>
       </motion.div>
     );

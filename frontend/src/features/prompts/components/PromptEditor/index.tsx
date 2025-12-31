@@ -6,8 +6,8 @@
  */
 
 import React, { memo } from 'react';
-import { Copy, Check } from 'lucide-react';
-import { Button, Modal, Input } from '@/components/ui';
+import { Copy, Check, Edit3, Eye, Maximize2 } from 'lucide-react';
+import { Button, Modal, Input, MarkdownPreview, FullscreenEditor } from '@/components/ui';
 import { cn } from '@/utils';
 import { usePromptEditor } from './usePromptEditor';
 import styles from './index.module.css';
@@ -19,7 +19,6 @@ const PromptEditorComponent: React.FC = () => {
   const {
     prompt,
     systemPrompt,
-    userTemplate,
     isDirty,
     copied,
     showVersionModal,
@@ -30,8 +29,9 @@ const PromptEditorComponent: React.FC = () => {
     currentVersion,
     t,
     handleSystemPromptChange,
-    handleUserTemplateChange,
+    handleSystemPromptValueChange,
     handleSave,
+    handleFullscreenSave,
     handleCopy,
     handleCreateVersion,
     handleSkipVersion,
@@ -39,6 +39,11 @@ const PromptEditorComponent: React.FC = () => {
     setVersionType,
     getNextVersionNumber,
     getCurrentVersionNumber,
+    isPreviewMode,
+    togglePreviewMode,
+    isFullscreen,
+    openFullscreen,
+    closeFullscreen,
   } = usePromptEditor();
 
   if (!prompt) {
@@ -70,7 +75,32 @@ const PromptEditorComponent: React.FC = () => {
             )}
           </button>
         </div>
-        <div>
+        <div className={styles.labelGroup}>
+          {/* 预览/编辑切换 */}
+          <div className={styles.modeToggle}>
+            <button
+              onClick={togglePreviewMode}
+              className={cn(styles.modeButton, !isPreviewMode && styles.modeButtonActive)}
+            >
+              <Edit3 className={styles.modeIcon} />
+              {t.editor.edit || 'Edit'}
+            </button>
+            <button
+              onClick={togglePreviewMode}
+              className={cn(styles.modeButton, isPreviewMode && styles.modeButtonActive)}
+            >
+              <Eye className={styles.modeIcon} />
+              {t.editor.preview || 'Preview'}
+            </button>
+          </div>
+          {/* 全屏按钮 */}
+          <button
+            onClick={openFullscreen}
+            className={styles.fullscreenButton}
+            title={t.fullscreen?.openFullscreen || 'Fullscreen'}
+          >
+            <Maximize2 className={styles.fullscreenIcon} />
+          </button>
           {currentVersion && (
             <span className={styles.versionBadge}>
               v{currentVersion.versionNumber} ({t.editor.currentVersion})
@@ -79,31 +109,24 @@ const PromptEditorComponent: React.FC = () => {
         </div>
       </div>
 
-      {/* System Prompt Textarea */}
-      <div className={styles.textareaWrapper}>
-        <textarea
-          value={systemPrompt}
-          onChange={handleSystemPromptChange}
-          className={styles.textarea}
-          placeholder={t.editor.systemPromptPlaceholder}
-        />
-        <div className={styles.statsOverlay}>
-          {t.editor.charsAndTokens.replace('{chars}', String(charCount)).replace('{tokens}', String(tokenCount))}
+      {/* System Prompt Textarea / Preview */}
+      {isPreviewMode ? (
+        <div className={styles.previewContainer}>
+          <MarkdownPreview content={systemPrompt} />
         </div>
-      </div>
-
-      {/* User Template */}
-      <div className={styles.userTemplateSection}>
-        <label className={styles.userTemplateLabel}>
-          {t.editor.userTemplateOptional}
-        </label>
-        <textarea
-          value={userTemplate}
-          onChange={handleUserTemplateChange}
-          className={styles.textareaSmall}
-          placeholder={t.editor.userTemplatePlaceholder}
-        />
-      </div>
+      ) : (
+        <div className={styles.textareaWrapper}>
+          <textarea
+            value={systemPrompt}
+            onChange={handleSystemPromptChange}
+            className={styles.textarea}
+            placeholder={t.editor.systemPromptPlaceholder}
+          />
+          <div className={styles.statsOverlay}>
+            {t.editor.charsAndTokens.replace('{chars}', String(charCount)).replace('{tokens}', String(tokenCount))}
+          </div>
+        </div>
+      )}
 
       {/* Save Button */}
       <div className={styles.saveSection}>
@@ -207,6 +230,18 @@ const PromptEditorComponent: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* 全屏编辑器 */}
+      <FullscreenEditor
+        isOpen={isFullscreen}
+        onClose={closeFullscreen}
+        value={systemPrompt}
+        onChange={handleSystemPromptValueChange}
+        title={t.editor?.systemPrompt || 'System Prompt'}
+        placeholder={t.editor?.systemPromptPlaceholder}
+        onSave={handleFullscreenSave}
+        isDirty={isDirty}
+      />
     </div>
   );
 };

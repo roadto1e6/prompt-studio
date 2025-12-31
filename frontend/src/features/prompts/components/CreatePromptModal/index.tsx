@@ -2,24 +2,20 @@
 
 /**
  * CreatePromptModal 视图层
- * 纯声明式 UI，零业务逻辑
+ * 左右分栏布局，系统提示词支持 Markdown 预览
  */
 
-import React, { useMemo } from 'react';
-import { FileText, Image, AudioLines, Video, AlertCircle, Loader2 } from 'lucide-react';
+import React, { useMemo, useState, useCallback } from 'react';
+import { FileText, Image, AudioLines, Video, AlertCircle, Loader2, Edit3, Eye, Maximize2 } from 'lucide-react';
 import { useUIStore, useI18nStore, useCollectionStore, useModelStore } from '@/stores';
-import { Modal, Input, Textarea, Button } from '@/components/ui';
+import { Modal, Input, Button, Badge, Select, MarkdownPreview, FullscreenEditor } from '@/components/ui';
 import { CATEGORIES } from '@/constants';
 import { cn } from '@/utils';
 import type { Category } from '@/types';
 import { useCreatePromptModal } from './useCreatePromptModal';
-import { ModelPicker } from '../ModelPicker';
 import type { CreatePromptModalProps } from './types';
 import styles from './index.module.css';
 
-/**
- * 分类图标映射
- */
 const categoryIcons: Record<Category, React.FC<{ className?: string }>> = {
   text: FileText,
   image: Image,
@@ -27,195 +23,235 @@ const categoryIcons: Record<Category, React.FC<{ className?: string }>> = {
   video: Video,
 };
 
-/**
- * CreatePromptModal - 创建 Prompt 弹窗主组件
- *
- * @description
- * 采用 Headless UI 模式的生产级组件。
- * 视图层仅负责声明式 UI 结构，所有业务逻辑封装在 useCreatePromptModal Hook 中。
- *
- * @architecture
- * - 契约层：types.ts（类型定义）
- * - 表现层：index.module.css（样式封装）
- * - 逻辑层：useCreatePromptModal.ts（Headless Hook）
- * - 视图层：index.tsx（本文件）
- *
- * @performance
- * - 使用 React.memo 防止不必要的重渲染
- * - 所有 handlers 已在 Hook 中使用 useCallback 优化
- * - 派生状态使用 useMemo 缓存
- *
- * @example
- * ```tsx
- * // 通过 useUIStore 控制显示
- * const { openModal } = useUIStore();
- * openModal('createPrompt');
- * ```
- */
 export const CreatePromptModal = React.memo<CreatePromptModalProps>(() => {
-  // ==================== Store 状态 ====================
   const { modals } = useUIStore();
   const { t } = useI18nStore();
   const { collections } = useCollectionStore();
-  const { getModelOptions } = useModelStore();
-
-  // ==================== Hook 状态和方法 ====================
+  const { getModelOptions, initialized, providers } = useModelStore();
   const modal = useCreatePromptModal();
+  const [newTag, setNewTag] = useState('');
 
-  // ==================== 派生状态（缓存计算） ====================
-
-  /**
-   * 是否禁用表单（提交中状态）
-   */
   const isFormDisabled = modal.isSubmitting;
 
-  /**
-   * 准备模型选项（基于选中的分类）
-   */
   const modelGroups = useMemo(() => {
-    return getModelOptions(modal.values.category);
-  }, [modal.values.category, getModelOptions]);
+    if (!initialized) return [];
+    const options = getModelOptions(modal.values.category);
+    // Transform GroupedModelOptions to SelectGroup format
+    return options.map(group => ({
+      label: group.providerName,
+      options: group.options.map(opt => ({ value: opt.value, label: opt.label })),
+    }));
+  }, [modal.values.category, getModelOptions, initialized, providers]);
 
-  /**
-   * 准备集合选项
-   */
   const collectionOptions = useMemo(() => [
     { value: '', label: t.metadata?.noCollection || 'No collection' },
     ...collections.map(c => ({ value: c.id, label: c.name })),
   ], [collections, t.metadata]);
 
-  // ==================== 视图渲染 ====================
+  const handleAddTag = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const value = newTag.trim();
+      if (value && !modal.values.tags.includes(value)) {
+        modal.handleTagsChange([...modal.values.tags, value]);
+        setNewTag('');
+      }
+    }
+  }, [newTag, modal]);
+
+  const handleRemoveTag = useCallback((tagToRemove: string) => {
+    modal.handleTagsChange(modal.values.tags.filter(tag => tag !== tagToRemove));
+  }, [modal]);
 
   return (
     <Modal
       isOpen={modals.createPrompt}
       onClose={modal.handleClose}
-      title={t.createPrompt?.title || 'Create Prompt'}
-      size="xl"
+      title={t.createPrompt?.title || 'Create New Prompt'}
+      size="4xl"
     >
-      <form onSubmit={modal.handleSubmit} className={styles.formContainer}>
-        {/* ==================== 全局错误提示 ==================== */}
+      <form onSubmit={modal.handleSubmit} className={styles.form}>
+        {/* 错误提示 */}
         {modal.errorMessage && (
-          <div className={styles.errorAlert} role="alert">
-            <AlertCircle className={styles.errorAlertIcon} aria-hidden="true" />
-            <div className={styles.errorAlertContent}>
-              <h4 className={styles.errorAlertTitle}>{t.common?.submitFailed || 'Submit Failed'}</h4>
-              <p className={styles.errorAlertMessage}>{modal.errorMessage}</p>
-            </div>
+          <div className={styles.errorAlert}>
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{modal.errorMessage}</span>
           </div>
         )}
 
-        {/* ==================== 标题 ==================== */}
-        <div className={styles.formSection}>
-          <Input
-            label={t.createPrompt?.titleLabel || 'Title'}
-            value={modal.values.title}
-            onChange={(e) => modal.handleTitleChange(e.target.value)}
-            placeholder={t.createPrompt?.titlePlaceholder || 'Give your prompt a name...'}
-            error={modal.errors.title}
-            disabled={isFormDisabled}
-            maxLength={100}
-            autoFocus
-          />
-        </div>
+        {/* 主体区域：左右分栏 */}
+        <div className={styles.mainContent}>
+          {/* 左侧：基本信息 */}
+          <div className={styles.leftPanel}>
+            {/* 标题 */}
+            <Input
+              label={t.createPrompt?.titleLabel || 'Title'}
+              value={modal.values.title}
+              onChange={(e) => modal.handleTitleChange(e.target.value)}
+              placeholder={t.createPrompt?.titlePlaceholder || 'Give your prompt a name...'}
+              error={modal.errors.title}
+              disabled={isFormDisabled}
+              autoFocus
+            />
 
-        {/* ==================== 系统提示词 ==================== */}
-        <div className={styles.formSection}>
-          <Textarea
-            label={t.editor?.systemPrompt || 'System Prompt'}
-            value={modal.values.systemPrompt}
-            onChange={(e) => modal.handleSystemPromptChange(e.target.value)}
-            placeholder={t.editor?.systemPromptPlaceholder || 'Enter system instructions...'}
-            error={modal.errors.systemPrompt}
-            className={styles.systemPromptTextarea}
-            disabled={isFormDisabled}
-            maxLength={5000}
-          />
-        </div>
+            {/* 分类 */}
+            <div className={styles.field}>
+              <label className={styles.label}>{t.createPrompt?.categoryLabel || 'Category'}</label>
+              <div className={styles.categoryGrid}>
+                {CATEGORIES.map((cat) => {
+                  const Icon = categoryIcons[cat.id as Category];
+                  const isSelected = modal.values.category === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => modal.handleCategoryChange(cat.id as Category)}
+                      disabled={isFormDisabled}
+                      className={cn(styles.categoryBtn, isSelected && styles.categoryBtnActive)}
+                    >
+                      <Icon className={cn('w-3.5 h-3.5', cat.color)} />
+                      <span>{t.categories?.[cat.id as keyof typeof t.categories] || cat.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-        {/* ==================== 分类选择 ==================== */}
-        <div className={styles.formSection}>
-          <label className={styles.formSectionLabel}>
-            {t.createPrompt?.categoryLabel || 'Category'}
-          </label>
-          <div className={styles.categoryGrid}>
-            {CATEGORIES.map((cat) => {
-              const Icon = categoryIcons[cat.id as Category];
-              const isSelected = modal.values.category === cat.id;
+            {/* 模型 & 集合 */}
+            <div className={styles.row}>
+              <Select
+                label={t.editor?.model || 'Model'}
+                value={modal.values.model}
+                onValueChange={modal.handleModelChange}
+                groups={modelGroups}
+                disabled={isFormDisabled}
+                searchable
+                searchPlaceholder={t.metadata?.searchModels || 'Search...'}
+              />
+              <Select
+                label={t.createPrompt?.collectionLabel || 'Collection'}
+                value={modal.values.collectionId}
+                onValueChange={modal.handleCollectionIdChange}
+                options={collectionOptions}
+                disabled={isFormDisabled}
+              />
+            </div>
 
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => modal.handleCategoryChange(cat.id as Category)}
-                  disabled={isFormDisabled}
-                  className={cn(
-                    styles.categoryButton,
-                    isSelected ? styles.categoryButtonSelected : styles.categoryButtonUnselected
-                  )}
-                  aria-pressed={isSelected}
-                  aria-label={t.createPrompt?.selectCategoryAriaLabel?.replace('{category}', cat.id) || `Select ${cat.id} category`}
-                >
-                  <Icon className={cn(styles.categoryIcon, cat.color)} />
-                  <span className={cn(
-                    styles.categoryLabel,
-                    isSelected ? styles.categoryLabelSelected : styles.categoryLabelUnselected
-                  )}>
-                    {t.categories?.[cat.id as keyof typeof t.categories] || cat.label}
-                  </span>
-                </button>
-              );
-            })}
+            {/* 标签 */}
+            <div className={styles.field}>
+              <label className={styles.label}>{t.metadata?.tags || 'Tags'}</label>
+              {modal.values.tags.length > 0 && (
+                <div className={styles.tags}>
+                  {modal.values.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="primary"
+                      size="sm"
+                      removable
+                      onRemove={() => handleRemoveTag(tag)}
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <Input
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                onKeyDown={handleAddTag}
+                placeholder={t.metadata?.addTag || 'Press Enter to add tag...'}
+                disabled={isFormDisabled}
+              />
+            </div>
+          </div>
+
+          {/* 右侧：系统提示词 */}
+          <div className={styles.rightPanel}>
+            <div className={styles.promptSection}>
+              {/* 头部：标签和切换按钮 */}
+              <div className={styles.promptHeader}>
+                <label className={styles.promptLabel}>
+                  {t.editor?.systemPrompt || 'System Prompt'}
+                </label>
+                <div className={styles.headerActions}>
+                  <div className={styles.modeToggle}>
+                    <button
+                      type="button"
+                      onClick={modal.togglePreviewMode}
+                      className={cn(styles.modeButton, !modal.isPreviewMode && styles.modeButtonActive)}
+                    >
+                      <Edit3 className={styles.modeIcon} />
+                      {t.editor?.edit || 'Edit'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={modal.togglePreviewMode}
+                      className={cn(styles.modeButton, modal.isPreviewMode && styles.modeButtonActive)}
+                    >
+                      <Eye className={styles.modeIcon} />
+                      {t.editor?.preview || 'Preview'}
+                    </button>
+                  </div>
+                  {/* 全屏按钮 */}
+                  <button
+                    type="button"
+                    onClick={modal.openFullscreen}
+                    className={styles.fullscreenButton}
+                    title={t.fullscreen?.openFullscreen || 'Fullscreen'}
+                  >
+                    <Maximize2 className={styles.fullscreenIcon} />
+                  </button>
+                </div>
+              </div>
+
+              {/* 编辑器/预览 */}
+              <div className={styles.editorContainer}>
+                {modal.isPreviewMode ? (
+                  <div className={styles.previewContainer}>
+                    <MarkdownPreview content={modal.values.systemPrompt} />
+                  </div>
+                ) : (
+                  <textarea
+                    value={modal.values.systemPrompt}
+                    onChange={(e) => modal.handleSystemPromptChange(e.target.value)}
+                    placeholder={t.editor?.systemPromptPlaceholder || 'Define how the AI should behave...'}
+                    disabled={isFormDisabled}
+                    className={styles.promptTextarea}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* ==================== 模型和集合选择（两列） ==================== */}
-        <div className={styles.twoColumnGrid}>
-          <ModelPicker
-            label={t.editor?.model || 'Model'}
-            value={modal.values.model}
-            onChange={modal.handleModelChange}
-            groups={modelGroups}
-            disabled={isFormDisabled}
-          />
-          <ModelPicker
-            label={t.createPrompt?.collectionLabel || 'Collection'}
-            value={modal.values.collectionId}
-            onChange={modal.handleCollectionIdChange}
-            options={collectionOptions}
-            disabled={isFormDisabled}
-            placeholder={t.metadata?.noCollection || 'No collection'}
-          />
-        </div>
-
-        {/* ==================== 操作按钮区域 ==================== */}
-        <div className={styles.actionsContainer}>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={modal.handleClose}
-            disabled={isFormDisabled}
-            aria-label={t.createPrompt?.cancelAriaLabel || 'Cancel and close modal'}
-          >
+        {/* 操作按钮 */}
+        <div className={styles.actions}>
+          <Button type="button" variant="ghost" onClick={modal.handleClose} disabled={isFormDisabled}>
             {t.common?.cancel || 'Cancel'}
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isFormDisabled || modal.submissionState === 'submitting'}
-            aria-label={t.createPrompt?.createAriaLabel || 'Create new prompt'}
-          >
+          <Button type="submit" variant="primary" disabled={isFormDisabled}>
             {modal.isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" />
-                <span>{t.createPrompt?.creating || 'Creating...'}</span>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {t.createPrompt?.creating || 'Creating...'}
               </>
             ) : (
-              t.createPrompt?.createButton || 'Create Prompt'
+              t.createPrompt?.createButton || 'Create'
             )}
           </Button>
         </div>
       </form>
+
+      {/* 全屏编辑器 */}
+      <FullscreenEditor
+        isOpen={modal.isFullscreen}
+        onClose={modal.closeFullscreen}
+        value={modal.values.systemPrompt}
+        onChange={modal.handleSystemPromptChange}
+        title={t.editor?.systemPrompt || 'System Prompt'}
+        placeholder={t.editor?.systemPromptPlaceholder}
+        disabled={isFormDisabled}
+      />
     </Modal>
   );
 });

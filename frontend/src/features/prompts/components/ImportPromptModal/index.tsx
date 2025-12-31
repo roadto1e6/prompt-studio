@@ -6,9 +6,7 @@
  */
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
-  X,
   Download,
   FileText,
   Image,
@@ -16,12 +14,11 @@ import {
   Video,
   AlertTriangle,
   Loader2,
-  ArrowLeft,
   User,
+  AlertCircle,
 } from 'lucide-react';
 import { useUIStore, useI18nStore } from '@/stores';
-import { Button, Badge } from '@/components/ui';
-import { cn } from '@/utils';
+import { Modal, Button, MarkdownPreview } from '@/components/ui';
 import type { Category } from '@/types';
 import { useImportPromptModal } from './useImportPromptModal';
 import type { ImportPromptModalProps } from './types';
@@ -29,48 +26,35 @@ import styles from './index.module.css';
 
 /**
  * 分类配置
- * 定义每个分类的图标、颜色和背景
  */
 const categoryConfig: Record<
   Category,
-  { icon: React.FC<{ className?: string }>; color: string; bg: string }
+  { icon: React.FC<{ className?: string }>; color: string; bgColor: string }
 > = {
-  text: { icon: FileText, color: 'text-theme-accent', bg: 'bg-theme-accent/20' },
-  image: { icon: Image, color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
-  audio: { icon: AudioLines, color: 'text-amber-400', bg: 'bg-amber-500/20' },
-  video: { icon: Video, color: 'text-rose-400', bg: 'bg-rose-500/20' },
+  text: {
+    icon: FileText,
+    color: 'text-theme-accent',
+    bgColor: 'rgba(99, 102, 241, 0.1)',
+  },
+  image: {
+    icon: Image,
+    color: 'text-emerald-400',
+    bgColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  audio: {
+    icon: AudioLines,
+    color: 'text-amber-400',
+    bgColor: 'rgba(245, 158, 11, 0.1)',
+  },
+  video: {
+    icon: Video,
+    color: 'text-rose-400',
+    bgColor: 'rgba(244, 63, 94, 0.1)',
+  },
 };
 
 /**
  * ImportPromptModal - 导入提示词弹窗主组件
- *
- * @description
- * 采用 Headless UI 模式的生产级组件。
- * 视图层仅负责声明式 UI 结构，所有业务逻辑封装在 useImportPromptModal Hook 中。
- *
- * @architecture
- * - 契约层：types.ts（类型定义）
- * - 表现层：index.module.css（样式封装）
- * - 逻辑层：useImportPromptModal.ts（Headless Hook）
- * - 视图层：index.tsx（本文件）
- *
- * @features
- * 1. 分享码导入：支持 URL 或纯短码
- * 2. 导入前预览：完整显示提示词信息
- * 3. 重复检测：警告已存在的提示词
- * 4. 异步导入：带 Loading/Error/Success 状态
- *
- * @performance
- * - 使用 React.memo 防止不必要的重渲染
- * - 所有 handlers 已在 Hook 中使用 useCallback 优化
- * - 派生状态使用 useMemo 缓存
- *
- * @example
- * ```tsx
- * // 通过 useUIStore 控制显示
- * const { openModal } = useUIStore();
- * openModal('importPrompt');
- * ```
  */
 export const ImportPromptModal = React.memo<ImportPromptModalProps>(() => {
   // ==================== Store 状态 ====================
@@ -80,228 +64,209 @@ export const ImportPromptModal = React.memo<ImportPromptModalProps>(() => {
   // ==================== Hook 状态和方法 ====================
   const modal = useImportPromptModal();
 
-  // ==================== 早期返回（模态框未打开） ====================
+  // ==================== 早期返回 ====================
   if (!modals.importPrompt) return null;
 
-  // ==================== 分类样式配置 ====================
-  const CategoryIcon = modal.displayData
-    ? categoryConfig[modal.displayData.category]?.icon
-    : null;
+  // ==================== 分类样式 ====================
   const categoryStyle = modal.displayData
     ? categoryConfig[modal.displayData.category]
     : null;
+  const CategoryIcon = categoryStyle?.icon || FileText;
 
   // ==================== 视图渲染 ====================
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        onClick={modal.handleClose}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-theme-card-bg border border-theme-border rounded-xl shadow-2xl w-full max-w-sm overflow-hidden m-4"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* ==================== Header ==================== */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-theme-border">
-            <div className="flex items-center gap-2.5">
-              {modal.viewState === 'preview' ? (
-                <button
-                  onClick={modal.handleBack}
-                  className="p-1.5 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
-                  aria-label={t.import?.backToInput || 'Back to input'}
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-              ) : (
-                <div className="p-1.5 bg-emerald-500/20 rounded-lg">
-                  <Download className="w-4 h-4 text-emerald-400" />
-                </div>
-              )}
-              <h3 className="text-theme-text-primary font-medium">
+    <Modal
+      isOpen={modals.importPrompt}
+      onClose={modal.handleClose}
+      title={t.import?.title || 'Import Prompt'}
+      size="sm"
+      showBackButton={modal.viewState === 'preview'}
+      onBack={modal.handleBack}
+    >
+      <div className={styles.contentContainer}>
+        {/* ==================== 输入视图 ==================== */}
+        {modal.viewState === 'input' && (
+          <div className={styles.inputSection}>
+            {/* 头部图标和标题 */}
+            <div className={styles.inputHeader}>
+              <div className={styles.inputIconWrapper}>
+                <Download className={styles.inputIcon} aria-hidden="true" />
+              </div>
+              <p className={styles.inputTitle}>
                 {t.import?.title || 'Import Prompt'}
-              </h3>
+              </p>
+              <p className={styles.inputSubtitle}>
+                {t.import?.subtitle || 'Import a shared prompt to your library'}
+              </p>
             </div>
-            <button
-              onClick={modal.handleClose}
-              className="p-1.5 text-theme-text-secondary hover:text-theme-text-primary rounded-lg hover:bg-theme-overlay transition-colors"
-              aria-label={t.import?.closeModal || 'Close modal'}
+
+            {/* 输入框 */}
+            <div className={styles.inputFieldWrapper}>
+              <label className={styles.inputLabel}>
+                {t.import?.pasteLabel || 'Paste Share Link or Code'}
+              </label>
+              <input
+                type="text"
+                value={modal.formState.inputCode}
+                onChange={(e) => modal.handleInputChange(e.target.value)}
+                placeholder={t.import?.pastePlaceholder || 'e.g., ABC12345 or https://...?s=ABC12345'}
+                autoFocus
+                className={`${styles.inputField} ${modal.hasError ? styles.inputFieldError : ''}`}
+                disabled={modal.isLoading}
+                aria-label={t.import?.shareCodeInput || 'Share code input'}
+                aria-invalid={modal.hasError}
+              />
+              {modal.hasError && (
+                <p className={styles.inputError} role="alert">
+                  <AlertCircle className={styles.inputErrorIcon} aria-hidden="true" />
+                  {modal.formState.errorMessage}
+                </p>
+              )}
+            </div>
+
+            {/* 获取按钮 */}
+            <Button
+              variant="primary"
+              onClick={modal.handleFetchShare}
+              disabled={!modal.formState.inputCode.trim() || modal.isLoading}
+              className={styles.fetchButton}
             >
-              <X className="w-4 h-4" />
-            </button>
+              {modal.isFetching ? (
+                <>
+                  <Loader2 className={`${styles.buttonIcon} mr-2 animate-spin`} aria-hidden="true" />
+                  <span>{t.import?.fetching || 'Fetching...'}</span>
+                </>
+              ) : (
+                <>
+                  <Download className={`${styles.buttonIcon} mr-2`} aria-hidden="true" />
+                  <span>{t.import?.parseButton || 'Fetch Share'}</span>
+                </>
+              )}
+            </Button>
+
+            {/* 提示文字 */}
+            <p className={styles.inputHint}>
+              {t.import?.hint || 'Enter 8-character code or full share URL'}
+            </p>
           </div>
+        )}
 
-          {/* ==================== Content ==================== */}
-          <div className="p-5">
-            <div className={styles.container}>
-              {/* ==================== 输入视图 ==================== */}
-              {modal.viewState === 'input' && (
-                <div className={styles.inputSection}>
-                  {/* 输入字段 */}
-                  <div>
-                    <label className={styles.inputLabel}>
-                      {t.import?.pasteLabel || 'Paste share code or link'}
-                    </label>
-                    <input
-                      type="text"
-                      value={modal.formState.inputCode}
-                      onChange={(e) => modal.handleInputChange(e.target.value)}
-                      placeholder={t.import?.pastePlaceholder || 'e.g., ABC12345 or https://...?s=ABC12345'}
-                      autoFocus
-                      className={styles.inputField}
-                      disabled={modal.isLoading}
-                      aria-label={t.import?.shareCodeInput || 'Share code input'}
-                      aria-invalid={modal.hasError}
-                      aria-describedby={modal.hasError ? 'input-error' : undefined}
-                    />
-                    {modal.hasError && (
-                      <p id="input-error" className={styles.inputError} role="alert">
-                        {modal.formState.errorMessage}
-                      </p>
-                    )}
-                  </div>
+        {/* ==================== 预览视图 ==================== */}
+        {modal.viewState === 'preview' && modal.displayData && (
+          <div className={styles.previewSection}>
+            {/* 重复警告 */}
+            {modal.isDuplicate && modal.duplicatePrompt && (
+              <div className={styles.warningAlert}>
+                <AlertTriangle className={styles.warningIcon} aria-hidden="true" />
+                <div className={styles.warningContent}>
+                  <p className={styles.warningTitle}>
+                    {t.import?.duplicateTitle || 'Duplicate Detected'}
+                  </p>
+                  <p className={styles.warningMessage}>
+                    {t.import?.duplicateMessage || 'A similar prompt already exists in your library.'}
+                  </p>
+                </div>
+              </div>
+            )}
 
-                  {/* 获取按钮 */}
-                  <Button
-                    variant="primary"
-                    onClick={modal.handleFetchShare}
-                    disabled={!modal.formState.inputCode.trim() || modal.isLoading}
-                    className="w-full"
-                  >
-                    {modal.isFetching ? (
-                      <>
-                        <Loader2 className={cn(styles.buttonIcon, 'mr-2 animate-spin')} />
-                        <span>{t.import?.fetching || 'Fetching...'}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className={cn(styles.buttonIcon, 'mr-2')} />
-                        <span>{t.import?.parseButton || 'Parse & Preview'}</span>
-                      </>
-                    )}
-                  </Button>
+            {/* 预览卡片 */}
+            <div className={styles.previewCard}>
+              {/* 头部 */}
+              <div className={styles.cardHeader}>
+                <div
+                  className={styles.categoryIconWrapper}
+                  style={{ backgroundColor: categoryStyle?.bgColor }}
+                >
+                  <CategoryIcon className={`${styles.categoryIcon} ${categoryStyle?.color || ''}`} />
+                </div>
+                <div className={styles.cardInfo}>
+                  <h4 className={styles.cardTitle}>{modal.displayData.title}</h4>
+                  <p className={styles.cardDescription}>
+                    {modal.displayData.description || t.promptCard?.noDescription || 'No description'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Meta 信息 */}
+              <div className={styles.cardMeta}>
+                <span className={styles.metaBadge}>{modal.displayData.model}</span>
+                <span className={styles.metaDot} />
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>{t.import?.preview?.temp || 'Temp'}:</span>
+                  <span className={styles.metaValue}>{modal.displayData.temperature}</span>
+                </div>
+                <span className={styles.metaDot} />
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>{t.import?.preview?.maxTokens || 'Max'}:</span>
+                  <span className={styles.metaValue}>{modal.displayData.maxTokens}</span>
+                </div>
+              </div>
+
+              {/* 标签 */}
+              {modal.displayData.tags && modal.displayData.tags.length > 0 && (
+                <div className={styles.tagsSection}>
+                  {modal.displayData.tags.slice(0, 5).map((tag) => (
+                    <span key={tag} className={styles.tag}>#{tag}</span>
+                  ))}
+                  {modal.displayData.tags.length > 5 && (
+                    <span className={styles.tagsMore}>+{modal.displayData.tags.length - 5}</span>
+                  )}
                 </div>
               )}
 
-              {/* ==================== 预览视图 ==================== */}
-              {modal.viewState === 'preview' && modal.displayData && (
-                <div className={cn(styles.container, styles.animateFadeIn)}>
-                  {/* 重复警告 */}
-                  {modal.isDuplicate && modal.duplicatePrompt && (
-                    <div className={styles.warningAlert}>
-                      <AlertTriangle className={styles.warningIcon} />
-                      <div className={styles.warningContent}>
-                        <p className={styles.warningTitle}>
-                          {t.import?.duplicateTitle || 'Duplicate Detected'}
-                        </p>
-                        <p className={styles.warningMessage}>
-                          {t.import?.duplicateMessage ||
-                            'A similar prompt already exists in your library.'}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 预览卡片 */}
-                  <div className={styles.previewCard}>
-                    {/* Header with category */}
-                    <div className={styles.previewHeader}>
-                      {CategoryIcon && categoryStyle && (
-                        <div className={cn(styles.categoryIconWrapper, categoryStyle.bg)}>
-                          <CategoryIcon className={cn(styles.categoryIcon, categoryStyle.color)} />
-                        </div>
-                      )}
-                      <div className={styles.previewContent}>
-                        <h4 className={styles.previewTitle}>{modal.displayData.title}</h4>
-                        <p className={styles.previewDescription}>
-                          {modal.displayData.description ||
-                            t.promptCard?.noDescription ||
-                            'No description'}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Meta info */}
-                    <div className={styles.previewMeta}>
-                      <span className={styles.metaBadge}>{modal.displayData.model}</span>
-                      <span className={styles.metaText}>T: {modal.displayData.temperature}</span>
-                      <span className={styles.metaText}>
-                        Max: {modal.displayData.maxTokens}
-                      </span>
-                    </div>
-
-                    {/* Tags */}
-                    {modal.displayData.tags.length > 0 && (
-                      <div className={styles.tagsContainer}>
-                        {modal.displayData.tags.slice(0, 5).map((tag) => (
-                          <Badge key={tag} variant="default" size="sm">
-                            #{tag}
-                          </Badge>
-                        ))}
-                        {modal.displayData.tags.length > 5 && (
-                          <span className={styles.tagsOverflow}>
-                            +{modal.displayData.tags.length - 5}
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* System Prompt Preview */}
-                    {modal.displayData.systemPrompt && (
-                      <div className={styles.systemPromptSection}>
-                        <p className={styles.systemPromptLabel}>
-                          {t.import?.preview?.systemPrompt || 'System Prompt'}
-                        </p>
-                        <p className={styles.systemPromptContent}>
-                          {modal.displayData.systemPrompt}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Shared by */}
-                    <div className={styles.sharedBySection}>
-                      <User className={styles.sharedByIcon} />
-                      <span>{modal.displayData.sharedBy}</span>
-                    </div>
+              {/* 系统提示词预览 */}
+              {modal.displayData.systemPrompt && (
+                <div className={styles.systemPromptSection}>
+                  <p className={styles.systemPromptLabel}>
+                    {t.import?.preview?.systemPrompt || 'System Prompt'}
+                  </p>
+                  <div className={styles.systemPromptContent}>
+                    <MarkdownPreview
+                      content={modal.displayData.systemPrompt}
+                      compact
+                      maxHeight="200px"
+                    />
                   </div>
+                </div>
+              )}
 
-                  {/* 导入按钮 */}
-                  <Button
-                    variant={modal.isDuplicate ? 'secondary' : 'primary'}
-                    onClick={modal.handleImport}
-                    disabled={modal.isLoading}
-                    className="w-full"
-                  >
-                    {modal.isImporting ? (
-                      <>
-                        <Loader2 className={cn(styles.buttonIcon, 'mr-2 animate-spin')} />
-                        <span>{t.import?.importing || 'Importing...'}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className={cn(styles.buttonIcon, 'mr-2')} />
-                        <span>
-                          {modal.isDuplicate
-                            ? t.import?.importAnyway || 'Import Anyway'
-                            : t.import?.importButton || 'Import to Library'}
-                        </span>
-                      </>
-                    )}
-                  </Button>
+              {/* 分享者 */}
+              {modal.displayData.sharedBy && (
+                <div className={styles.sharedBySection}>
+                  <User className={styles.sharedByIcon} aria-hidden="true" />
+                  <span>{t.import?.preview?.sharedBy || 'Shared by'}: {modal.displayData.sharedBy}</span>
                 </div>
               )}
             </div>
+
+            {/* 导入按钮 */}
+            <Button
+              variant={modal.isDuplicate ? 'secondary' : 'primary'}
+              onClick={modal.handleImport}
+              disabled={modal.isLoading}
+              className={styles.importButton}
+            >
+              {modal.isImporting ? (
+                <>
+                  <Loader2 className={`${styles.buttonIcon} mr-2 animate-spin`} aria-hidden="true" />
+                  <span>{t.import?.importing || 'Importing...'}</span>
+                </>
+              ) : (
+                <>
+                  <Download className={`${styles.buttonIcon} mr-2`} aria-hidden="true" />
+                  <span>
+                    {modal.isDuplicate
+                      ? t.import?.importAnyway || 'Import Anyway'
+                      : t.import?.importButton || 'Import to Library'}
+                  </span>
+                </>
+              )}
+            </Button>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        )}
+      </div>
+    </Modal>
   );
 });
 

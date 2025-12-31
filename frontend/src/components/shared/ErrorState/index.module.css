@@ -17,13 +17,15 @@
   @apply w-24 h-24 rounded-full flex items-center justify-center mb-6 border-2;
 }
 
-/* 错误变体样式 */
+/* 错误变体样式 - 使用主题适配 */
 .iconContainer.error {
-  @apply bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .iconContainer.warning {
-  @apply bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-800;
+  background-color: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
 }
 
 .iconContainer.offline {
@@ -38,11 +40,11 @@
 }
 
 .icon.error {
-  @apply text-red-500 dark:text-red-400;
+  color: #f87171;
 }
 
 .icon.warning {
-  @apply text-yellow-500 dark:text-yellow-400;
+  color: #fbbf24;
 }
 
 .icon.offline {
@@ -73,4 +75,24 @@
 
 .buttonIcon {
   @apply w-4 h-4;
+}
+
+/* ==================== 亮色主题适配 ==================== */
+
+:global([data-theme="light"]) .iconContainer.error {
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+:global([data-theme="light"]) .iconContainer.warning {
+  background-color: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+:global([data-theme="light"]) .icon.error {
+  color: #ef4444;
+}
+
+:global([data-theme="light"]) .icon.warning {
+  color: #f59e0b;
 }

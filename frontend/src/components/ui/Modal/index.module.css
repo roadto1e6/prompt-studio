@@ -56,11 +56,47 @@
   );
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .title {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.backButton:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+}
+
+.backButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.backIcon {
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .closeButton {

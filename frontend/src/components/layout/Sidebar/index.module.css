@@ -227,30 +227,30 @@
   @apply font-mono text-sm leading-none font-semibold;
 }
 
-/* ==================== 上下文菜单 ==================== */
+/* ==================== 集合项（带 Hover 删除按钮） ==================== */
 
-.contextMenu {
-  @apply fixed z-50 rounded-lg shadow-xl py-1 min-w-[140px] border bg-theme-card-bg border-theme-card-border;
-  animation: contextMenuFadeIn 0.15s ease-out;
+.collectionItem {
+  @apply relative flex items-center;
 }
 
-.contextMenuItem {
-  @apply flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors hover:bg-theme-bg-hover;
+.collectionButton {
+  @apply flex-1;
 }
 
-.contextMenuItemDelete {
-  @apply text-red-500;
+.collectionDeleteButton {
+  @apply absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md opacity-0 transition-all duration-150;
+  @apply text-theme-text-muted hover:text-red-500 hover:bg-red-500/10;
+  pointer-events: none;
 }
 
-@keyframes contextMenuFadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+.collectionItem:hover .collectionDeleteButton {
+  @apply opacity-100;
+  pointer-events: auto;
+}
+
+/* Hover 时隐藏计数 */
+.collectionItem:hover .navItemCount {
+  @apply opacity-0;
 }
 
 /* ==================== 用户区域 ==================== */

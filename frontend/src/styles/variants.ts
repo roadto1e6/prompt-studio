@@ -9,18 +9,19 @@
 /**
  * Button 按钮变体
  * 包含所有按钮样式的配置
+ * 使用 Tailwind 主题类以确保亮/暗模式正确切换
  */
 export const buttonVariants = {
   // 主要按钮
   primary: {
     base: `
-      bg-[var(--color-accent)]
+      bg-theme-accent
       text-white
-      hover:bg-[var(--color-accent-hover)]
+      hover:bg-theme-accent-hover
       active:scale-95
       disabled:opacity-50
       disabled:cursor-not-allowed
-      disabled:hover:bg-[var(--color-accent)]
+      disabled:hover:bg-theme-accent
     `,
     className: 'btn-primary',
   },
@@ -28,11 +29,11 @@ export const buttonVariants = {
   // 次要按钮
   secondary: {
     base: `
-      bg-[var(--button-secondary-bg)]
-      text-[var(--button-secondary-text)]
+      bg-theme-button-secondary
+      text-theme-button-secondary-text
       border
-      border-[var(--button-secondary-border)]
-      hover:bg-[var(--button-secondary-hover)]
+      border-theme-button-secondary-border
+      hover:bg-theme-button-secondary-hover
       active:scale-95
       disabled:opacity-50
       disabled:cursor-not-allowed
@@ -44,9 +45,9 @@ export const buttonVariants = {
   ghost: {
     base: `
       bg-transparent
-      text-[var(--color-text-secondary)]
-      hover:bg-[var(--button-ghost-hover)]
-      hover:text-[var(--color-text-primary)]
+      text-theme-text-secondary
+      hover:bg-theme-button-ghost-hover
+      hover:text-theme-text-primary
       active:scale-95
       disabled:opacity-50
       disabled:cursor-not-allowed
@@ -58,10 +59,10 @@ export const buttonVariants = {
   outline: {
     base: `
       bg-transparent
-      text-[var(--color-text-primary)]
+      text-theme-text-primary
       border
-      border-[var(--button-outline-border)]
-      hover:bg-[var(--overlay-bg)]
+      border-theme-button-outline-border
+      hover:bg-theme-overlay-bg
       active:scale-95
       disabled:opacity-50
       disabled:cursor-not-allowed
@@ -86,8 +87,8 @@ export const buttonVariants = {
   link: {
     base: `
       bg-transparent
-      text-[var(--color-accent)]
-      hover:text-[var(--color-accent-hover)]
+      text-theme-accent
+      hover:text-theme-accent-hover
       hover:underline
       disabled:opacity-50
       disabled:cursor-not-allowed
@@ -208,6 +209,7 @@ export const inputVariants = {
 
 /**
  * Badge/Tag 徽章变体
+ * 使用 CSS 变量确保亮/暗模式正确切换
  */
 export const badgeVariants = {
   // 信息
@@ -220,10 +222,7 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-blue-100
-      text-blue-800
-      dark:bg-blue-900
-      dark:text-blue-200
+      badge-info
     `,
     className: 'badge-info',
   },
@@ -238,11 +237,7 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-emerald-500/20
-      text-emerald-600
-      border
-      border-emerald-500/30
-      dark:text-emerald-400
+      badge-success
     `,
     className: 'badge-success',
   },
@@ -257,11 +252,7 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-amber-500/20
-      text-amber-600
-      border
-      border-amber-500/30
-      dark:text-amber-400
+      badge-warning
     `,
     className: 'badge-warning',
   },
@@ -276,10 +267,7 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-red-100
-      text-red-800
-      dark:bg-red-900
-      dark:text-red-200
+      badge-error
     `,
     className: 'badge-error',
   },
@@ -294,11 +282,7 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-red-500/20
-      text-red-600
-      border
-      border-red-500/30
-      dark:text-red-400
+      badge-danger
     `,
     className: 'badge-danger',
   },
@@ -313,10 +297,10 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-[var(--color-bg-secondary)]
-      text-[var(--color-text-secondary)]
+      bg-[var(--badge-default-bg)]
+      text-[var(--badge-default-text)]
       border
-      border-[var(--color-border)]
+      border-[var(--badge-default-border)]
     `,
     className: 'badge-default',
   },
@@ -331,10 +315,10 @@ export const badgeVariants = {
       rounded-full
       text-xs
       font-medium
-      bg-[var(--color-accent)]/20
+      bg-[var(--theme-accent-bg)]
       text-[var(--color-accent)]
       border
-      border-[var(--color-accent)]/30
+      border-[var(--theme-accent-border)]
     `,
     className: 'badge-primary',
   },
@@ -360,6 +344,7 @@ export const badgeSizes = {
 
 /**
  * Alert 提示框变体
+ * 使用 CSS 类名实现主题适配
  */
 export const alertVariants = {
   // 信息提示
@@ -367,15 +352,9 @@ export const alertVariants = {
     base: `
       p-4
       rounded-lg
-      bg-blue-50
-      border
-      border-blue-200
-      text-blue-800
-      dark:bg-blue-900/20
-      dark:border-blue-800
-      dark:text-blue-200
+      alert-info
     `,
-    icon: 'text-blue-500',
+    icon: 'alert-icon-info',
     className: 'alert-info',
   },
 
@@ -384,15 +363,9 @@ export const alertVariants = {
     base: `
       p-4
       rounded-lg
-      bg-green-50
-      border
-      border-green-200
-      text-green-800
-      dark:bg-green-900/20
-      dark:border-green-800
-      dark:text-green-200
+      alert-success
     `,
-    icon: 'text-green-500',
+    icon: 'alert-icon-success',
     className: 'alert-success',
   },
 
@@ -401,15 +374,9 @@ export const alertVariants = {
     base: `
       p-4
       rounded-lg
-      bg-yellow-50
-      border
-      border-yellow-200
-      text-yellow-800
-      dark:bg-yellow-900/20
-      dark:border-yellow-800
-      dark:text-yellow-200
+      alert-warning
     `,
-    icon: 'text-yellow-500',
+    icon: 'alert-icon-warning',
     className: 'alert-warning',
   },
 
@@ -418,60 +385,55 @@ export const alertVariants = {
     base: `
       p-4
       rounded-lg
-      bg-red-50
-      border
-      border-red-200
-      text-red-800
-      dark:bg-red-900/20
-      dark:border-red-800
-      dark:text-red-200
+      alert-error
     `,
-    icon: 'text-red-500',
+    icon: 'alert-icon-error',
     className: 'alert-error',
   },
 } as const;
 
 /**
  * Toast 通知变体
+ * 使用 CSS 类名实现主题适配
  */
 export const toastVariants = {
   // 成功通知
   success: {
-    container: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
-    icon: 'text-green-600 dark:text-green-400',
-    text: 'text-green-900 dark:text-green-100',
-    description: 'text-green-700 dark:text-green-300',
-    progress: 'bg-green-500 dark:bg-green-400',
+    container: 'toast-success-container',
+    icon: 'toast-success-icon',
+    text: 'toast-success-text',
+    description: 'toast-success-description',
+    progress: 'toast-success-progress',
     className: 'toast-success',
   },
 
   // 错误通知
   error: {
-    container: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
-    icon: 'text-red-600 dark:text-red-400',
-    text: 'text-red-900 dark:text-red-100',
-    description: 'text-red-700 dark:text-red-300',
-    progress: 'bg-red-500 dark:bg-red-400',
+    container: 'toast-error-container',
+    icon: 'toast-error-icon',
+    text: 'toast-error-text',
+    description: 'toast-error-description',
+    progress: 'toast-error-progress',
     className: 'toast-error',
   },
 
   // 警告通知
   warning: {
-    container: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
-    icon: 'text-yellow-600 dark:text-yellow-400',
-    text: 'text-yellow-900 dark:text-yellow-100',
-    description: 'text-yellow-700 dark:text-yellow-300',
-    progress: 'bg-yellow-500 dark:bg-yellow-400',
+    container: 'toast-warning-container',
+    icon: 'toast-warning-icon',
+    text: 'toast-warning-text',
+    description: 'toast-warning-description',
+    progress: 'toast-warning-progress',
     className: 'toast-warning',
   },
 
   // 信息通知
   info: {
-    container: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
-    icon: 'text-blue-600 dark:text-blue-400',
-    text: 'text-blue-900 dark:text-blue-100',
-    description: 'text-blue-700 dark:text-blue-300',
-    progress: 'bg-blue-500 dark:bg-blue-400',
+    container: 'toast-info-container',
+    icon: 'toast-info-icon',
+    text: 'toast-info-text',
+    description: 'toast-info-description',
+    progress: 'toast-info-progress',
     className: 'toast-info',
   },
 } as const;
@@ -883,6 +845,7 @@ export const tabVariants = {
 
 /**
  * Tooltip 提示框变体
+ * 使用 CSS 类名实现主题适配
  */
 export const tooltipVariants = {
   // 默认提示框
@@ -891,15 +854,13 @@ export const tooltipVariants = {
       px-2
       py-1
       text-xs
-      bg-gray-900
-      text-white
+      tooltip-default-base
       rounded
       shadow-lg
       z-[1070]
       max-w-xs
-      dark:bg-gray-700
     `,
-    arrow: 'fill-gray-900 dark:fill-gray-700',
+    arrow: 'tooltip-default-arrow',
     className: 'tooltip-default',
   },
 
@@ -909,8 +870,7 @@ export const tooltipVariants = {
       px-2
       py-1
       text-xs
-      bg-white
-      text-gray-900
+      tooltip-light-base
       border
       border-[var(--color-border)]
       rounded
@@ -918,7 +878,7 @@ export const tooltipVariants = {
       z-[1070]
       max-w-xs
     `,
-    arrow: 'fill-white',
+    arrow: 'tooltip-light-arrow',
     className: 'tooltip-light',
   },
 } as const;

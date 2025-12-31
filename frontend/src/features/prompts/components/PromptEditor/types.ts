@@ -25,7 +25,6 @@ export interface UsePromptEditorReturn {
   // 状态
   prompt: Prompt | null;
   systemPrompt: string;
-  userTemplate: string;
   isDirty: boolean;
   copied: boolean;
   showVersionModal: boolean;
@@ -34,18 +33,24 @@ export interface UsePromptEditorReturn {
   charCount: number;
   tokenCount: number;
   currentVersion: { versionNumber: string } | null;
+  isPreviewMode: boolean;
+  isFullscreen: boolean;
   t: any;
 
   // 处理器
   handleSystemPromptChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleUserTemplateChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSystemPromptValueChange: (value: string) => void;
   handleSave: () => void;
+  handleFullscreenSave: () => void;
   handleCopy: () => Promise<void>;
   handleCreateVersion: () => Promise<void>;
   handleSkipVersion: () => void;
   setChangeNote: (note: string) => void;
   setVersionType: (type: VersionType) => void;
   setShowVersionModal: (show: boolean) => void;
+  togglePreviewMode: () => void;
+  openFullscreen: () => void;
+  closeFullscreen: () => void;
 
   // 版本号计算
   getNextVersionNumber: (type: VersionType) => string;

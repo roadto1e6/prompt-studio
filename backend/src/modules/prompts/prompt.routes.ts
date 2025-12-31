@@ -164,6 +164,40 @@ export async function promptRoutes(fastify: FastifyInstance) {
     }
   });
 
+  // GET /prompts/:id/share - Get share link for prompt
+  fastify.get('/:id/share', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { id } = request.params as { id: string };
+      const result = await promptService.getShareLink(request.userId!, id);
+      success(reply, result);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'Prompt not found') {
+        return errors.notFound(reply, err.message);
+      }
+      return errors.internal(reply);
+    }
+  });
+
+  // POST /prompts/import - Import prompt from share code
+  fastify.post('/import', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { shareCode } = request.body as { shareCode: string };
+      if (!shareCode) {
+        return errors.badRequest(reply, 'shareCode is required');
+      }
+      const prompt = await promptService.importFromShare(request.userId!, shareCode);
+      success(reply, prompt, 201);
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message === 'Share not found' || err.message === 'Share link has expired') {
+          return errors.notFound(reply, err.message);
+        }
+        return errors.badRequest(reply, err.message);
+      }
+      return errors.internal(reply);
+    }
+  });
+
   // ============================================
   // Batch operations
   // ============================================

@@ -5,7 +5,7 @@
  * Headless UI Hook：封装状态和处理器
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useCollectionStore, useUIStore } from '@/stores';
 import { getColorConfig, COLLECTION_COLOR_KEYS, type CollectionColorKey } from '../../styles/collectionStyles';
 import type { FormValues, FormErrors, UseCreateCollectionModalReturn } from './types';
@@ -32,14 +32,6 @@ export function useCreateCollectionModal(): UseCreateCollectionModalReturn {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const isMountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
 
   const validateField = useCallback((field: 'name' | 'description', value: string): string | undefined => {
     const rule = VALIDATION_RULES[field];
@@ -89,23 +81,13 @@ export function useCreateCollectionModal(): UseCreateCollectionModalReturn {
           color: colorConfig.textClass,
         });
 
-        if (isMountedRef.current) {
-          setTimeout(() => {
-            if (isMountedRef.current) {
-              closeModal('createCollection');
-              setValues(DEFAULT_VALUES);
-              setErrors({});
-              setIsSubmitting(false);
-            }
-          }, 200);
-        }
+        // 成功后直接关闭模态框，不依赖组件挂载状态
+        closeModal('createCollection');
       } catch (error) {
-        if (isMountedRef.current) {
-          setIsSubmitting(false);
-          setErrorMessage(
-            error instanceof Error ? error.message : '创建失败，请重试'
-          );
-        }
+        setIsSubmitting(false);
+        setErrorMessage(
+          error instanceof Error ? error.message : '创建失败，请重试'
+        );
       }
     },
     [values, validateField, createCollection, closeModal]

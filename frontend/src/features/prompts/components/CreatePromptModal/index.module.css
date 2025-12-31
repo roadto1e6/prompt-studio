@@ -1,163 +1,323 @@
-/* 文件路径: frontend/src/features/prompts/components/CreatePromptModal/index.module.css */
+/* CreatePromptModal 样式 - 优化布局对齐 */
 
-/**
- * CreatePromptModal 样式
- * 表现层：使用 Tailwind CSS + CSS Modules
- * 通过 @apply 封装长类名，保持 HTML 清爽
- */
-
-/* ==================== 容器样式 ==================== */
-
-.formContainer {
-  @apply flex flex-col gap-5;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-/* ==================== 表单区块样式 ==================== */
-
-.formSection {
-  @apply flex flex-col gap-1.5;
+/* 主体区域：左右分栏 */
+.mainContent {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: start;
 }
 
-.formSectionLabel {
-  @apply text-xs font-bold text-theme-text-label uppercase tracking-wider;
+/* ==================== 左侧面板 ==================== */
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.formSectionError {
-  @apply text-xs text-red-500 dark:text-red-400 mt-1 flex items-center gap-1;
+/* 字段容器 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-/* ==================== 分类选择器样式 ==================== */
+/* 统一标签样式 */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
 
+/* 分类选择 - 2x2 网格 */
 .categoryGrid {
-  @apply grid grid-cols-4 gap-2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
 }
 
-.categoryButton {
-  @apply flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border transition-all duration-200;
+.categoryBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
 }
 
-.categoryButtonSelected {
-  @apply shadow-sm;
+.categoryBtn:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+  background: var(--color-bg-hover);
+}
+
+.categoryBtnActive {
   border-color: var(--color-accent);
-  background-color: var(--theme-accent-bg);
-}
-
-.categoryButtonUnselected {
-  border-color: var(--color-border);
-  background-color: var(--card-bg);
-}
-
-.categoryButtonUnselected:hover {
-  border-color: var(--card-hover-border);
-  background-color: var(--color-bg-hover);
-}
-
-.categoryIcon {
-  @apply w-4 h-4;
-}
-
-.categoryLabel {
-  @apply text-sm font-medium;
-}
-
-.categoryLabelSelected {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
   color: var(--color-accent);
 }
 
-.categoryLabelUnselected {
+/* 模型和集合 - 垂直堆叠 */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* 标签区域 */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ==================== 右侧面板 ==================== */
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 450px;
+}
+
+/* 系统提示词区域 */
+.promptSection {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* 头部：标签和切换按钮 */
+.promptHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+}
+
+.promptLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+/* 头部操作区域 */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 全屏按钮 */
+.fullscreenButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fullscreenButton:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-accent);
+}
+
+.fullscreenIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* 编辑/预览切换 */
+.modeToggle {
+  display: flex;
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+  padding: 0.125rem;
+  border: 1px solid var(--color-border);
+}
+
+.modeButton {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: none;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.modeButton:hover:not(.modeButtonActive) {
   color: var(--color-text-secondary);
 }
 
-/* ==================== 两列布局样式 ==================== */
-
-.twoColumnGrid {
-  @apply grid grid-cols-2 gap-4;
+.modeButtonActive {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* ==================== 系统提示词区域 ==================== */
-
-.systemPromptTextarea {
-  @apply h-32 resize-none;
+.modeIcon {
+  width: 0.875rem;
+  height: 0.875rem;
 }
 
-/* ==================== 操作按钮区域 ==================== */
+/* 编辑器容器 */
+.editorContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-.actionsContainer {
-  @apply flex justify-end gap-3 pt-4 mt-1;
+/* 文本编辑区 */
+.promptTextarea {
+  flex: 1;
+  width: 100%;
+  min-height: 420px;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-input-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  resize: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.promptTextarea::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.promptTextarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
+/* 预览容器 */
+.previewContainer {
+  flex: 1;
+  min-height: 420px;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  overflow-y: auto;
+}
+
+.previewContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.previewContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.previewContainer::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar);
+  border-radius: 3px;
+}
+
+/* ==================== 底部操作栏 ==================== */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--color-border);
 }
 
-/* ==================== 错误提示样式 ==================== */
-
+/* 错误提示 */
 .errorAlert {
-  @apply flex items-start gap-3 p-4 rounded-lg
-         bg-red-50 dark:bg-red-900/20
-         border border-red-200 dark:border-red-800;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.errorAlertIcon {
-  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5;
-}
-
-.errorAlertContent {
-  @apply flex-1 min-w-0;
-}
-
-.errorAlertTitle {
-  @apply text-sm font-medium text-red-800 dark:text-red-300;
-}
-
-.errorAlertMessage {
-  @apply text-sm text-red-700 dark:text-red-400 mt-1;
-}
-
-/* ==================== 加载状态样式 ==================== */
-
-.loadingOverlay {
-  @apply absolute inset-0 backdrop-blur-sm
-         flex items-center justify-center rounded-lg z-10;
-  background-color: var(--overlay-backdrop);
-}
-
-.loadingSpinner {
-  @apply w-6 h-6 border-2 rounded-full animate-spin;
-  border-color: var(--color-border);
-  border-top-color: var(--color-accent);
-}
-
-/* ==================== 动画效果 ==================== */
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* ==================== 响应式 ==================== */
+@media (max-width: 900px) {
+  .mainContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .leftPanel {
+    order: 1;
+  }
+
+  .rightPanel {
+    order: 2;
+    min-height: 300px;
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .row > * {
+    flex: 1;
+  }
+
+  .promptTextarea,
+  .previewContainer {
+    min-height: 280px;
   }
 }
-
-.animateSlideIn {
-  animation: slideInUp 0.3s ease-out;
-}
-
-/* ==================== 响应式适配 ==================== */
 
 @media (max-width: 640px) {
   .categoryGrid {
-    @apply grid-cols-2;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .twoColumnGrid {
-    @apply grid-cols-1;
+  .row {
+    flex-direction: column;
   }
 
-  .actionsContainer {
-    @apply flex-col-reverse;
+  .actions {
+    flex-direction: column-reverse;
   }
 
-  .actionsContainer > button {
-    @apply w-full;
+  .actions > button {
+    width: 100%;
   }
 }

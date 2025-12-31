@@ -170,10 +170,22 @@ export const en = {
     deletePermanently: 'Delete permanently',
   },
 
+  // Fullscreen Editor
+  fullscreen: {
+    openFullscreen: 'Open fullscreen editor',
+    closeFullscreen: 'Close fullscreen editor',
+    chars: 'chars',
+    tokens: 'tokens',
+    toClose: 'to close',
+    togglePreview: 'toggle preview',
+  },
+
   // Prompt Editor
   editor: {
     selectPrompt: 'Select a prompt to edit',
     systemPrompt: 'System Prompt',
+    edit: 'Edit',
+    preview: 'Preview',
     systemPromptPlaceholder: 'Enter your system prompt here... Use {{variable}} for dynamic inputs.',
     copyToClipboard: 'Copy to clipboard',
     currentVersion: 'Current',
@@ -353,9 +365,11 @@ export const en = {
     retry: 'Retry',
     viewCount: 'views',
     retryAriaLabel: 'Retry generating share link',
-    closeAriaLabel: 'Close share modal',
     copyCodeAriaLabel: 'Copy share code: {code}',
     copyUrlAriaLabel: 'Copy share URL: {url}',
+    readyTitle: 'Ready to share!',
+    readySubtitle: 'Anyone with this code can view your prompt',
+    clickToCopy: 'Click to copy',
   },
 
   // Import Modal
@@ -364,6 +378,7 @@ export const en = {
     subtitle: 'Import a shared prompt to your library',
     pasteLabel: 'Paste Share Link or Code',
     pastePlaceholder: 'Paste share link or 8-char code here...',
+    hint: 'Enter 8-character code or full share URL',
     parseButton: 'Fetch Share',
     fetching: 'Fetching...',
     invalidCode: 'Invalid share link or code',

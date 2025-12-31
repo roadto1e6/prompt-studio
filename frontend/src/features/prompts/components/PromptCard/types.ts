@@ -45,6 +45,8 @@ export interface PromptCardProps {
   onRestore?: (id: string) => void;
   /** 是否为回收站视图 */
   isTrashView?: boolean;
+  /** 紧凑模式（详情面板打开时） */
+  compact?: boolean;
 }
 
 /**
@@ -71,6 +73,9 @@ export interface UsePromptCardReturn {
   shouldShowDelete: boolean;
   /** 是否显示恢复按钮 */
   shouldShowRestore: boolean;
+
+  /** systemPrompt 预览文本（截断后） */
+  promptPreview: string;
 }
 
 /**

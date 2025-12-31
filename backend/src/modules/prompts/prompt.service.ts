@@ -1,5 +1,6 @@
 import prisma from '../../config/database.js';
-import { generateVersionNumber } from '../../utils/token.js';
+import { generateVersionNumber, generateShareCode } from '../../utils/token.js';
+import config from '../../config/index.js';
 import type {
   CreatePromptInput,
   UpdatePromptInput,
@@ -113,10 +114,8 @@ export class PromptService {
         data: {
           userId,
           title: input.title,
-          description: input.description || '',
           category: input.category,
           systemPrompt: input.systemPrompt || '',
-          userTemplate: input.userTemplate || '',
           model: input.model,
           temperature: input.temperature,
           maxTokens: input.maxTokens,
@@ -126,7 +125,7 @@ export class PromptService {
             create: {
               versionNumber: '1.0',
               systemPrompt: input.systemPrompt || '',
-              userTemplate: input.userTemplate || '',
+              userTemplate: '',
               model: input.model,
               temperature: input.temperature,
               maxTokens: input.maxTokens,
@@ -591,5 +590,147 @@ export class PromptService {
     });
 
     return { deleted: ids.length };
+  }
+
+  // ============================================
+  // Share related methods
+  // ============================================
+
+  // Get or create share link for a prompt
+  async getShareLink(userId: string, promptId: string) {
+    // Verify ownership
+    const prompt = await prisma.prompt.findFirst({
+      where: { id: promptId, userId },
+      include: promptInclude,
+    });
+
+    if (!prompt) {
+      throw new Error('Prompt not found');
+    }
+
+    // Check if share already exists
+    let share = await prisma.share.findFirst({
+      where: {
+        userId,
+        data: {
+          path: ['type'],
+          equals: 'prompt',
+        },
+      },
+    });
+
+    // Find share that matches this prompt
+    const shares = await prisma.share.findMany({
+      where: { userId },
+    });
+
+    for (const s of shares) {
+      const data = s.data as { type: string; prompt?: { id: string } };
+      if (data.type === 'prompt' && data.prompt?.id === promptId) {
+        share = s;
+        break;
+      }
+    }
+
+    if (!share) {
+      // Create new share
+      const code = generateShareCode();
+      share = await prisma.share.create({
+        data: {
+          code,
+          userId,
+          data: {
+            type: 'prompt',
+            prompt: {
+              id: prompt.id,
+              title: prompt.title,
+              description: prompt.description,
+              category: prompt.category,
+              systemPrompt: prompt.systemPrompt,
+              userTemplate: prompt.userTemplate,
+              model: prompt.model,
+              temperature: prompt.temperature,
+              maxTokens: prompt.maxTokens,
+              tags: prompt.tags,
+            },
+          },
+        },
+      });
+    }
+
+    return {
+      shareCode: share.code,
+      shareUrl: `${config.frontendUrl}?s=${share.code}`,
+    };
+  }
+
+  // Import prompt from share code
+  async importFromShare(userId: string, shareCode: string) {
+    // Find the share
+    const share = await prisma.share.findUnique({
+      where: { code: shareCode },
+    });
+
+    if (!share) {
+      throw new Error('Share not found');
+    }
+
+    // Check if expired
+    if (share.expiresAt && share.expiresAt < new Date()) {
+      throw new Error('Share link has expired');
+    }
+
+    // Get prompt data from share
+    const shareData = share.data as { type: string; prompt?: Record<string, unknown> };
+    if (shareData.type !== 'prompt' || !shareData.prompt) {
+      throw new Error('Invalid share type');
+    }
+
+    const promptData = shareData.prompt;
+
+    // Create new prompt for the user
+    const prompt = await prisma.prompt.create({
+      data: {
+        userId,
+        title: `${promptData.title} (Imported)`,
+        description: (promptData.description as string) || '',
+        category: (promptData.category as string) || 'text',
+        systemPrompt: (promptData.systemPrompt as string) || '',
+        userTemplate: (promptData.userTemplate as string) || '',
+        model: (promptData.model as string) || 'gpt-4-turbo',
+        temperature: (promptData.temperature as number) || 0.7,
+        maxTokens: (promptData.maxTokens as number) || 2048,
+        tags: (promptData.tags as string[]) || [],
+        versions: {
+          create: {
+            versionNumber: '1.0',
+            systemPrompt: (promptData.systemPrompt as string) || '',
+            userTemplate: (promptData.userTemplate as string) || '',
+            model: (promptData.model as string) || 'gpt-4-turbo',
+            temperature: (promptData.temperature as number) || 0.7,
+            maxTokens: (promptData.maxTokens as number) || 2048,
+            changeNote: 'Imported from share',
+            createdBy: userId,
+          },
+        },
+      },
+      include: promptInclude,
+    });
+
+    // Set current version ID
+    const currentVersion = prompt.versions[0];
+    const updatedPrompt = await prisma.prompt.update({
+      where: { id: prompt.id },
+      data: { currentVersionId: currentVersion.id },
+      include: promptInclude,
+    });
+
+    // Increment view count on share
+    await prisma.share.update({
+      where: { code: shareCode },
+      data: { viewCount: { increment: 1 } },
+    });
+
+    return updatedPrompt;
   }
 }

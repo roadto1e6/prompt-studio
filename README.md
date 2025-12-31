@@ -1,544 +1,413 @@
 # Prompt Studio
 
-A modern, full-stack prompt management system with version control, collections, and sharing capabilities. Built with React, TypeScript, Fastify, and PostgreSQL.
+现代化的 AI 提示词管理平台，支持版本控制、集合管理和分享功能。基于 React + TypeScript + Fastify + PostgreSQL 构建。
 
-## Features
+## 功能特性
 
-### Core Functionality
-- **Prompt Management**: Create, edit, organize and version your AI prompts
-- **Version Control**: Track changes with detailed version history and diff viewing
-- **Collections**: Organize prompts into collections with custom colors and icons
-- **Sharing**: Share prompts with others using short codes, passwords, and expiration
-- **Multi-language**: English and Chinese (Simplified) interface
-- **Theme Support**: Seamless dark/light mode switching
-- **Model Management**: Support for multiple AI providers (OpenAI, Anthropic, etc.)
+### 核心功能
+- **提示词管理**: 创建、编辑、组织和版本控制 AI 提示词
+- **版本控制**: 详细的版本历史和差异对比
+- **集合管理**: 自定义颜色和图标的集合分类
+- **分享功能**: 短码分享、密码保护、过期时间设置
+- **多语言支持**: 中英文界面切换
+- **主题切换**: 深色/浅色模式无缝切换
+- **模型管理**: 支持多家 AI 提供商 (OpenAI, Anthropic, Google, DeepSeek 等)
 
-### User Experience
-- **Keyboard Shortcuts**: Quick actions with intuitive shortcuts
-- **Responsive Design**: Beautiful on desktop and mobile
-- **Real-time Search**: Instant filtering across all prompts
-- **Drag & Drop**: Intuitive organization
-- **Import/Export**: Easy backup and migration
+### 用户体验
+- **快捷键**: 高效的键盘快捷操作
+- **响应式设计**: 桌面端和移动端适配
+- **实时搜索**: 即时过滤搜索
+- **导入导出**: 便捷的备份和迁移
+- **Markdown 预览**: 系统提示词支持 Markdown 渲染
+- **全屏编辑**: 沉浸式编辑体验
 
-### Authentication
-- **Email/Password**: Secure traditional authentication
-- **OAuth**: Google and GitHub login
-- **Password Reset**: Secure recovery flow
-- **Session Management**: Automatic token refresh
+### 认证系统
+- **邮箱密码**: 安全的传统认证
+- **OAuth**: Google 和 GitHub 登录
+- **密码重置**: 安全的找回流程
+- **会话管理**: 自动 Token 刷新
 
-## Tech Stack
+## 技术栈
 
-### Frontend
+### 前端
 - **React 18** + **TypeScript** + **Vite**
-- **Tailwind CSS** for styling
-- **Zustand** for state management
-- **Framer Motion** for animations
-- **Lucide React** for icons
+- **Tailwind CSS** + **CSS Modules** 样式方案
+- **Zustand** 状态管理
+- **Lucide React** 图标库
+- **date-fns** 日期处理
 
-### Backend
-- **Fastify** - High-performance Node.js framework
-- **PostgreSQL 16** - Primary database with full-text search
-- **Redis 7** - Caching and session management
-- **Prisma** - Type-safe database ORM
-- **JWT** - Stateless authentication
-- **Zod** - Runtime validation
+### 后端
+- **Fastify 4** 高性能 Node.js 框架
+- **PostgreSQL 16** 主数据库
+- **Redis 7** 缓存和会话管理
+- **Prisma 5** 类型安全 ORM
+- **JWT** 无状态认证
+- **Zod** 运行时验证
 
-### DevOps
-- **Docker** + **Docker Compose** - Complete containerization
-- **Nginx** - Reverse proxy and static file serving
-- **Multi-stage Builds** - Optimized image sizes
+### 部署
+- **Docker** + **Docker Compose** 容器化部署
+- **Nginx** 反向代理和静态文件服务
+- **多阶段构建** 优化镜像体积
 
-## Project Structure
+## 项目结构
 
 ```
 prompt-studio/
-├── frontend/           # React frontend application
-│   ├── src/           # Source code
-│   │   ├── components/  # React components
-│   │   ├── features/    # Feature modules
-│   │   ├── services/    # API services
-│   │   ├── stores/      # Zustand stores
-│   │   └── types/       # TypeScript types
-│   ├── public/        # Static assets
-│   ├── Dockerfile     # Frontend container
-│   └── nginx.conf     # Nginx configuration
+├── frontend/              # React 前端应用
+│   ├── src/
+│   │   ├── components/    # 通用组件 (ui, layout, shared)
+│   │   ├── features/      # 业务功能模块
+│   │   ├── services/      # API 服务层
+│   │   ├── stores/        # Zustand 状态管理
+│   │   ├── hooks/         # 自定义 Hooks
+│   │   ├── i18n/          # 国际化
+│   │   └── types/         # TypeScript 类型
+│   ├── .env.example       # 环境变量模板
+│   └── .dockerignore      # Docker 忽略文件
 │
-├── backend/           # Fastify backend API
-│   ├── src/          # Source code
-│   │   ├── modules/    # Feature modules
-│   │   ├── middlewares/  # Middleware
-│   │   ├── config/     # Configuration
-│   │   └── utils/      # Utilities
-│   ├── prisma/       # Database schema
-│   ├── Dockerfile    # Backend container
-│   └── .env.example  # Environment template
+├── backend/               # Fastify 后端 API
+│   ├── src/
+│   │   ├── modules/       # 功能模块 (auth, prompts, collections, shares, models)
+│   │   ├── middlewares/   # 中间件
+│   │   ├── config/        # 配置
+│   │   └── utils/         # 工具函数
+│   ├── prisma/            # 数据库 Schema
+│   ├── entrypoint.sh      # Docker 启动脚本
+│   ├── .env.example       # 环境变量模板
+│   └── .dockerignore      # Docker 忽略文件
 │
-├── docker/           # Docker configurations
-│   ├── nginx.conf    # Reverse proxy config
-│   └── init-db.sql   # Database initialization
+├── docker/                # Docker 配置
+│   ├── Dockerfile.backend   # 后端镜像
+│   ├── Dockerfile.frontend  # 前端镜像
+│   ├── nginx.conf           # Nginx 配置
+│   └── init-db.sql          # 数据库初始化
 │
-├── scripts/          # Utility scripts
-│   ├── start.bat     # Windows startup
-│   └── start.sh      # Linux/Mac startup
+├── scripts/               # 部署脚本
+│   ├── start.sh           # Linux/Mac 启动脚本
+│   └── start.bat          # Windows 启动脚本
 │
-├── docker-compose.yml # Service orchestration
-├── .env              # Environment variables
-├── .env.example      # Environment template
-└── README.md         # This file
+├── docker-compose.yml     # 生产环境编排
+├── docker-compose.dev.yml # 开发环境编排
+├── .env.example           # 环境变量模板
+└── CLAUDE.md              # 开发规范
 ```
 
-## Quick Start
+## 快速开始
 
-### Prerequisites
+### 前置要求
 
-- **Docker** and **Docker Compose** installed
-- **Git** (optional, for cloning)
+- **Docker** 和 **Docker Compose** 已安装
+- **Git** (可选，用于克隆仓库)
 
-### One-Click Deployment
+### 一键部署
 
 #### Windows
 
 ```batch
-# 1. Configure environment variables
+# 1. 配置环境变量
 copy .env.example .env
 notepad .env
 
-# 2. Run the startup script
+# 2. 运行启动脚本
 scripts\start.bat
 ```
 
-#### Linux/Mac
+#### Linux / Mac
 
 ```bash
-# 1. Configure environment variables
+# 1. 配置环境变量
 cp .env.example .env
-nano .env  # or vim, code, etc.
+nano .env  # 或 vim, code 等
 
-# 2. Run the startup script
+# 2. 运行启动脚本
 chmod +x scripts/start.sh
 ./scripts/start.sh
 ```
 
-#### Manual Deployment
+#### 手动部署
 
 ```bash
-# 1. Configure environment
+# 1. 配置环境变量
 cp .env.example .env
-# Edit .env and set your configuration
+# 编辑 .env 设置必要的配置项
 
-# 2. Start all services
-docker-compose up -d
+# 2. 构建并启动所有服务
+docker compose up -d --build
 
-# 3. View logs to monitor startup
-docker-compose logs -f
-
-# 4. Run database migrations (if needed)
-docker-compose exec backend npx prisma migrate deploy
+# 3. 查看日志
+docker compose logs -f
 ```
 
-### Access the Application
+> 注意: 数据库迁移会在后端容器启动时自动执行，无需手动操作。
 
-Once deployed, access at:
+### 访问应用
 
-- **Frontend**: http://localhost
-- **Backend API**: http://localhost/api
-- **Health Check**: http://localhost/health
-- **API Health**: http://localhost/api-health
+部署完成后访问:
 
-## Environment Configuration
+| 服务 | 地址 |
+|------|------|
+| 前端 | http://localhost |
+| API | http://localhost/api |
+| 健康检查 | http://localhost/health |
+| API 健康检查 | http://localhost/api-health |
 
-Create a `.env` file from `.env.example` and configure:
+## 环境配置
 
-### Required Settings
+从 `.env.example` 创建 `.env` 文件:
+
+### 必填配置
 
 ```env
-# JWT Secret (IMPORTANT: Change in production!)
-# Generate with: openssl rand -hex 32
+# JWT 密钥 (生产环境必须修改!)
+# 生成方式: openssl rand -hex 32
 JWT_SECRET=your-secure-random-string-min-32-characters
 
-# Database Password
+# 数据库密码
 DB_PASSWORD=your-database-password
 
-# Redis Password
+# Redis 密码
 REDIS_PASSWORD=your-redis-password
 ```
 
-### Optional Settings
+### 可选配置
 
 ```env
-# Service Ports
+# 服务端口
 FRONTEND_PORT=80
 
-# CORS (change for production)
+# CORS (生产环境需修改)
 CORS_ORIGIN=http://localhost
 FRONTEND_URL=http://localhost
 
-# OAuth (Google)
+# OAuth - Google
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-# OAuth (GitHub)
+# OAuth - GitHub
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
 ```
 
-## Development
-
-### Local Development (Hot Reload)
-
-For development with hot reload:
+### 生成安全密钥
 
 ```bash
-# 1. Start only database services
-docker-compose up -d postgres redis
-
-# 2. Start backend (Terminal 1)
-cd backend
-npm install
-npx prisma generate
-npx prisma migrate dev
-npm run dev  # Runs on http://localhost:3001
-
-# 3. Start frontend (Terminal 2)
-cd frontend
-npm install
-npm run dev  # Runs on http://localhost:5173
-```
-
-**Note**: For local development, create `frontend/.env`:
-```env
-VITE_API_BASE_URL=http://localhost:3001/api
-```
-
-### Building for Production
-
-```bash
-# Build all images
-docker-compose build
-
-# Start production stack
-docker-compose up -d
-```
-
-## Docker Commands
-
-### Basic Operations
-
-```bash
-# Start all services
-docker-compose up -d
-
-# Stop all services
-docker-compose down
-
-# View logs (all services)
-docker-compose logs -f
-
-# View specific service logs
-docker-compose logs -f frontend
-docker-compose logs -f backend
-docker-compose logs -f postgres
-
-# Restart services
-docker-compose restart
-
-# Rebuild and restart
-docker-compose up -d --build
-```
-
-### Container Management
-
-```bash
-# Check service status
-docker-compose ps
-
-# Execute command in container
-docker-compose exec backend sh
-docker-compose exec postgres psql -U postgres prompt_studio
-
-# Remove everything (including volumes)
-docker-compose down -v
-
-# Remove images too
-docker-compose down -v --rmi all
-```
-
-## Database Management
-
-### Backup
-
-```bash
-# Backup database
-docker-compose exec postgres pg_dump -U postgres prompt_studio > backup.sql
-
-# Backup with timestamp
-docker-compose exec postgres pg_dump -U postgres prompt_studio > backup-$(date +%Y%m%d-%H%M%S).sql
-
-# Backup volumes
-docker run --rm -v prompt-studio-postgres-data:/data -v $(pwd):/backup alpine tar czf /backup/postgres-backup.tar.gz -C /data .
-```
-
-### Restore
-
-```bash
-# Restore from SQL dump
-docker-compose exec -T postgres psql -U postgres prompt_studio < backup.sql
-
-# Restore volumes
-docker run --rm -v prompt-studio-postgres-data:/data -v $(pwd):/backup alpine tar xzf /backup/postgres-backup.tar.gz -C /data
-```
-
-### Migrations
-
-```bash
-# Run migrations
-docker-compose exec backend npx prisma migrate deploy
-
-# Create new migration (development)
-cd backend
-npx prisma migrate dev --name your_migration_name
-
-# Reset database (WARNING: Deletes all data)
-docker-compose exec backend npx prisma migrate reset
-
-# Open Prisma Studio (Database GUI)
-docker-compose exec backend npx prisma studio
-```
-
-## Troubleshooting
-
-### Port Already in Use
-
-If port 80 is already in use:
-
-```env
-# In .env file
-FRONTEND_PORT=8080
-```
-
-Then restart:
-```bash
-docker-compose down && docker-compose up -d
-```
-
-### Database Connection Failed
-
-1. Check if PostgreSQL is healthy:
-   ```bash
-   docker-compose ps postgres
-   docker-compose logs postgres
-   ```
-
-2. Verify connection string in .env:
-   ```env
-   DB_USER=postgres
-   DB_PASSWORD=postgres123
-   DB_NAME=prompt_studio
-   ```
-
-3. Restart PostgreSQL:
-   ```bash
-   docker-compose restart postgres
-   ```
-
-### Frontend Can't Connect to Backend
-
-1. Check Nginx proxy configuration:
-   ```bash
-   docker-compose exec frontend cat /etc/nginx/conf.d/default.conf
-   ```
-
-2. Test backend directly:
-   ```bash
-   curl http://localhost/api-health
-   ```
-
-3. Check backend logs:
-   ```bash
-   docker-compose logs backend | tail -50
-   ```
-
-### CORS Errors
-
-Ensure `CORS_ORIGIN` in `.env` matches your frontend URL:
-
-```env
-# For local Docker deployment
-CORS_ORIGIN=http://localhost
-
-# For production
-CORS_ORIGIN=https://yourdomain.com
-```
-
-### Clear Everything and Start Fresh
-
-```bash
-# Stop and remove all containers, volumes, and images
-docker-compose down -v --rmi all
-
-# Remove orphaned volumes
-docker volume prune
-
-# Rebuild and start
-docker-compose up -d --build
-```
-
-## Architecture
-
-### Network Flow
-
-```
-External Request (localhost:80)
-         ↓
-  [Nginx Container]
-         ├─→ /api/*      → [Backend:3001]
-         │                      ↓
-         │                  [PostgreSQL:5432]
-         │                      ↓
-         │                  [Redis:6379]
-         │
-         └─→ /* (other)  → Static Files (React SPA)
-```
-
-### Service Dependencies
-
-```
-1. PostgreSQL starts → Health check passes
-         ↓
-2. Redis starts → Health check passes
-         ↓
-3. Backend starts → Connects to DB/Redis → Health check passes
-         ↓
-4. Frontend starts → Nginx serves static files → Proxies /api to backend
-```
-
-### Security Features
-
-- **JWT Authentication**: Stateless, secure tokens
-- **Password Hashing**: bcrypt with salt rounds
-- **CORS Protection**: Configurable origins
-- **SQL Injection Prevention**: Prisma ORM parameterized queries
-- **XSS Protection**: Security headers in Nginx
-- **Rate Limiting**: Configurable rate limits on sensitive endpoints
-- **Non-root Containers**: All containers run as non-root users
-
-## Security Considerations
-
-### Production Checklist
-
-- [ ] Change `JWT_SECRET` to a strong random string (min 32 chars)
-- [ ] Use strong passwords for `DB_PASSWORD` and `REDIS_PASSWORD`
-- [ ] Update `CORS_ORIGIN` to your production domain
-- [ ] Set up HTTPS with SSL/TLS certificates (use nginx-proxy + Let's Encrypt)
-- [ ] Configure firewall rules (only expose ports 80/443)
-- [ ] Enable Docker security scanning
-- [ ] Regular security updates (`docker-compose pull`)
-- [ ] Set up backup automation
-- [ ] Configure logging and monitoring
-- [ ] Review and restrict OAuth redirect URIs
-
-### Generate Secure Secrets
-
-```bash
-# Generate JWT secret (64 characters)
+# 生成 JWT 密钥 (64 字符)
 openssl rand -hex 32
 
-# Generate strong passwords (32 characters)
+# 生成强密码 (32 字符)
 openssl rand -base64 24
 
-# Generate all secrets at once
+# 一次性生成所有密钥
 echo "JWT_SECRET=$(openssl rand -hex 32)"
 echo "DB_PASSWORD=$(openssl rand -base64 24)"
 echo "REDIS_PASSWORD=$(openssl rand -base64 24)"
 ```
 
-## Performance Optimization
+## 本地开发
 
-- **Redis Caching**: 256MB memory with LRU eviction policy
-- **Nginx Gzip**: Enabled for all text-based responses
-- **Static Asset Caching**: 1-year cache for immutable assets (JS, CSS, images)
-- **HTML No-Cache**: Ensures SPA always gets latest index.html
-- **PostgreSQL Connection Pooling**: Prisma connection pooling enabled
-- **Multi-stage Docker Builds**: Minimal production images
-- **Alpine Base Images**: Smaller image sizes (~5-50MB vs 100+MB)
-
-## Monitoring
-
-### Check Service Health
+### 热重载开发模式
 
 ```bash
-# All services
-docker-compose ps
+# 1. 仅启动数据库服务
+docker compose -f docker-compose.dev.yml up -d
 
-# Frontend health
-curl http://localhost/health
+# 2. 启动后端 (终端 1)
+cd backend
+npm install
+npm run db:generate
+npm run db:push
+npm run dev  # 运行在 http://localhost:3001
 
-# Backend health
-curl http://localhost/api-health
-
-# PostgreSQL
-docker-compose exec postgres pg_isready -U postgres
-
-# Redis
-docker-compose exec redis redis-cli -a redis123 ping
+# 3. 启动前端 (终端 2)
+cd frontend
+npm install
+npm run dev  # 运行在 http://localhost:5173
 ```
 
-### View Resource Usage
+前端 `.env` 配置:
+```env
+VITE_API_BASE_URL=http://localhost:3001/api
+VITE_ENABLE_MOCK_DATA=false
+```
+
+## Docker 命令
+
+### 基本操作
 
 ```bash
-# Container stats
-docker stats
+# 启动所有服务
+docker compose up -d
 
-# Disk usage
-docker system df
+# 停止所有服务
+docker compose down
 
-# Logs size
-docker-compose logs --tail=100 | wc -l
+# 查看日志
+docker compose logs -f
+
+# 查看特定服务日志
+docker compose logs -f backend
+
+# 重启服务
+docker compose restart
+
+# 重新构建并启动
+docker compose up -d --build
 ```
 
-## Contributing
+### 容器管理
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Test thoroughly (both frontend and backend)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+```bash
+# 查看服务状态
+docker compose ps
 
-## License
+# 进入容器
+docker compose exec backend sh
+docker compose exec postgres psql -U postgres prompt_studio
 
-MIT License - see LICENSE file for details
+# 删除所有 (包括数据卷)
+docker compose down -v
 
-## Support
+# 删除所有 (包括镜像)
+docker compose down -v --rmi all
+```
 
-For issues and questions:
+## 数据库管理
 
-1. Check the [Troubleshooting](#troubleshooting) section
-2. Review logs: `docker-compose logs`
-3. Check existing GitHub issues
-4. Create a new issue with:
-   - Description of the problem
-   - Steps to reproduce
-   - Docker logs
-   - Environment details
+### 备份
 
-## Roadmap
+```bash
+# 备份数据库
+docker compose exec postgres pg_dump -U postgres prompt_studio > backup.sql
 
-- [ ] Real-time collaboration
-- [ ] Advanced search with filters
-- [ ] Prompt templates marketplace
-- [ ] API usage analytics
-- [ ] Webhook integrations
-- [ ] Team workspaces
-- [ ] Advanced permissions
+# 带时间戳的备份
+docker compose exec postgres pg_dump -U postgres prompt_studio > backup-$(date +%Y%m%d-%H%M%S).sql
+```
 
-## Credits
+### 恢复
 
-Built with modern web technologies and best practices for production-ready deployments.
+```bash
+# 从 SQL 文件恢复
+docker compose exec -T postgres psql -U postgres prompt_studio < backup.sql
+```
+
+### 迁移
+
+```bash
+# 运行迁移 (通常自动执行)
+docker compose exec backend npx prisma db push
+
+# 打开 Prisma Studio (数据库 GUI)
+docker compose exec backend npx prisma studio
+```
+
+## 架构说明
+
+### 网络流程
+
+```
+外部请求 (localhost:80)
+         ↓
+    [Nginx 容器]
+         ├─→ /api/*     → [Backend:3001]
+         │                     ↓
+         │                 [PostgreSQL:5432]
+         │                     ↓
+         │                 [Redis:6379]
+         │
+         └─→ /* (其他)   → 静态文件 (React SPA)
+```
+
+### 服务依赖
+
+```
+1. PostgreSQL 启动 → 健康检查通过
+         ↓
+2. Redis 启动 → 健康检查通过
+         ↓
+3. Backend 启动 → 数据库迁移 → 连接 DB/Redis → 健康检查通过
+         ↓
+4. Frontend 启动 → Nginx 提供静态文件 → 代理 /api 到后端
+```
+
+## 故障排除
+
+### 端口被占用
+
+修改 `.env`:
+```env
+FRONTEND_PORT=8080
+```
+
+重启服务:
+```bash
+docker compose down && docker compose up -d
+```
+
+### 数据库连接失败
+
+1. 检查 PostgreSQL 状态:
+   ```bash
+   docker compose ps postgres
+   docker compose logs postgres
+   ```
+
+2. 重启 PostgreSQL:
+   ```bash
+   docker compose restart postgres
+   ```
+
+### 前端无法连接后端
+
+1. 测试后端:
+   ```bash
+   curl http://localhost/api-health
+   ```
+
+2. 检查后端日志:
+   ```bash
+   docker compose logs backend | tail -50
+   ```
+
+### 完全重置
+
+```bash
+# 停止并删除所有容器、卷和镜像
+docker compose down -v --rmi all
+
+# 清理孤立卷
+docker volume prune
+
+# 重新构建启动
+docker compose up -d --build
+```
+
+## 安全检查清单
+
+生产环境部署前请确认:
+
+- [ ] 修改 `JWT_SECRET` 为强随机字符串 (至少 32 字符)
+- [ ] 设置强密码 `DB_PASSWORD` 和 `REDIS_PASSWORD`
+- [ ] 更新 `CORS_ORIGIN` 为生产域名
+- [ ] 配置 HTTPS (SSL/TLS 证书)
+- [ ] 配置防火墙 (仅开放 80/443 端口)
+- [ ] 设置自动备份
+- [ ] 配置日志和监控
+- [ ] 审查 OAuth 回调 URI
+
+## 性能优化
+
+- **Redis 缓存**: 256MB 内存，LRU 淘汰策略
+- **Nginx Gzip**: 所有文本响应启用压缩
+- **静态资源缓存**: JS/CSS/图片 1 年缓存
+- **HTML 无缓存**: 确保 SPA 始终获取最新版本
+- **数据库连接池**: Prisma 连接池管理
+- **多阶段 Docker 构建**: 最小化生产镜像
+- **Alpine 基础镜像**: 更小的镜像体积
+
+## 许可证
+
+MIT License
 
 ---
 
-**Enjoy using Prompt Studio!** 🚀
-
-For detailed Chinese documentation, see `frontend/README.zh-CN.md`
+**Enjoy using Prompt Studio!**

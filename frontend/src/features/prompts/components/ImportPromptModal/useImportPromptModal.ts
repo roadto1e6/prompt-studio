@@ -5,7 +5,7 @@
  * Headless UI Hook：封装所有状态、副作用和处理器
  */
 
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { usePromptStore, useUIStore } from '@/stores';
 import { shareService } from '@/services';
 import type {
@@ -60,15 +60,6 @@ export function useImportPromptModal(): UseImportModalReturn {
 
   // ==================== Client State ====================
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-
-  // ==================== Refs ====================
-  // 用于防止组件卸载后的状态更新
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
 
   // ==================== 派生状态 ====================
 
@@ -211,24 +202,20 @@ export function useImportPromptModal(): UseImportModalReturn {
       const result = await shareService.get(code);
 
       // 获取成功
-      if (isMountedRef.current) {
-        setFormState((prev) => ({
-          ...prev,
-          parsedData: result.prompt,
-          asyncState: 'idle',
-          errorMessage: '',
-        }));
-      }
+      setFormState((prev) => ({
+        ...prev,
+        parsedData: result.prompt,
+        asyncState: 'idle',
+        errorMessage: '',
+      }));
     } catch (error) {
       // 获取失败
-      if (isMountedRef.current) {
-        setFormState((prev) => ({
-          ...prev,
-          parsedData: null,
-          asyncState: 'error',
-          errorMessage: error instanceof Error ? error.message : '获取失败，请重试',
-        }));
-      }
+      setFormState((prev) => ({
+        ...prev,
+        parsedData: null,
+        asyncState: 'error',
+        errorMessage: error instanceof Error ? error.message : '获取失败，请重试',
+      }));
     }
   }, [formState.inputCode, extractCode]);
 
@@ -264,31 +251,25 @@ export function useImportPromptModal(): UseImportModalReturn {
       });
 
       // 导入成功
-      if (isMountedRef.current) {
-        setFormState((prev) => ({
-          ...prev,
-          asyncState: 'success',
-        }));
+      setFormState((prev) => ({
+        ...prev,
+        asyncState: 'success',
+      }));
 
-        // 延迟关闭，让用户看到成功状态
-        setTimeout(() => {
-          if (isMountedRef.current) {
-            closeModal('importPrompt');
-            // 重置状态
-            setFormState(DEFAULT_FORM_STATE);
-            setPendingImportData(null);
-          }
-        }, 300);
-      }
+      // 延迟关闭，让用户看到成功状态
+      setTimeout(() => {
+        closeModal('importPrompt');
+        // 重置状态
+        setFormState(DEFAULT_FORM_STATE);
+        setPendingImportData(null);
+      }, 300);
     } catch (error) {
       // 导入失败
-      if (isMountedRef.current) {
-        setFormState((prev) => ({
-          ...prev,
-          asyncState: 'error',
-          errorMessage: error instanceof Error ? error.message : '导入失败，请重试',
-        }));
-      }
+      setFormState((prev) => ({
+        ...prev,
+        asyncState: 'error',
+        errorMessage: error instanceof Error ? error.message : '导入失败，请重试',
+      }));
     }
   }, [displayData, createPrompt, closeModal, setPendingImportData]);
 

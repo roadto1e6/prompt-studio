@@ -1,0 +1,36 @@
+# Frontend Dockerfile - Multi-stage build
+
+# Stage 1: Build
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# 构建参数
+ARG VITE_API_BASE_URL=/api
+ARG VITE_APP_NAME="Prompt Studio"
+
+# 设置环境变量供 Vite 使用
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_APP_NAME=$VITE_APP_NAME
+
+# 安装依赖
+COPY package*.json ./
+RUN npm ci
+
+# 复制源码并构建
+COPY . .
+RUN npm run build
+
+# Stage 2: Production
+FROM nginx:alpine
+
+# 复制构建产物
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

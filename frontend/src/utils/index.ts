@@ -106,14 +106,12 @@ export function generateVersionNumber(
 export function hasPromptChanged(
   current: {
     systemPrompt: string;
-    userTemplate: string;
     model: string;
     temperature: number;
     maxTokens: number;
   },
   version: {
     systemPrompt: string;
-    userTemplate: string;
     model: string;
     temperature: number;
     maxTokens: number;
@@ -121,7 +119,6 @@ export function hasPromptChanged(
 ): boolean {
   return (
     current.systemPrompt !== version.systemPrompt ||
-    current.userTemplate !== version.userTemplate ||
     current.model !== version.model ||
     current.temperature !== version.temperature ||
     current.maxTokens !== version.maxTokens
@@ -132,6 +129,56 @@ export function hasPromptChanged(
 export function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength - 3) + '...';
+}
+
+/**
+ * 清理 Markdown 语法，返回纯文本
+ * 用于卡片预览等需要显示纯文本的场景
+ */
+export function stripMarkdown(text: string): string {
+  if (!text) return '';
+
+  return text
+    // 移除代码块 ```code```
+    .replace(/```[\s\S]*?```/g, ' ')
+    // 移除行内代码 `code`
+    .replace(/`([^`]+)`/g, '$1')
+    // 移除图片 ![alt](url)
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    // 移除链接 [text](url) 保留文本
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // 移除标题 # ## ### 等
+    .replace(/^#{1,6}\s+/gm, '')
+    // 移除粗体 **text** 或 __text__
+    .replace(/(\*\*|__)(.*?)\1/g, '$2')
+    // 移除斜体 *text* 或 _text_
+    .replace(/(\*|_)(.*?)\1/g, '$2')
+    // 移除删除线 ~~text~~
+    .replace(/~~(.*?)~~/g, '$1')
+    // 移除引用 >
+    .replace(/^>\s+/gm, '')
+    // 移除无序列表 - * +
+    .replace(/^[\s]*[-*+]\s+/gm, '')
+    // 移除有序列表 1. 2. 等
+    .replace(/^[\s]*\d+\.\s+/gm, '')
+    // 移除水平线 --- *** ___
+    .replace(/^[-*_]{3,}$/gm, '')
+    // 移除 HTML 标签
+    .replace(/<[^>]+>/g, '')
+    // 压缩多个空白为单个空格
+    .replace(/\s+/g, ' ')
+    // 去除首尾空白
+    .trim();
+}
+
+/**
+ * 获取 Markdown 文本的预览（清理后截取）
+ * @param text 原始 Markdown 文本
+ * @param maxLength 最大字符数，默认 150
+ */
+export function getMarkdownPreview(text: string, maxLength: number = 150): string {
+  const cleaned = stripMarkdown(text);
+  return truncate(cleaned, maxLength);
 }
 
 // Extract variables from prompt template ({{variable}})

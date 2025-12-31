@@ -24,23 +24,41 @@
   border-color: var(--color-border);
 }
 
-/* 错误提示 */
+/* 错误提示 - 使用主题适配 */
 .errorAlert {
-  @apply flex items-center gap-3 p-3 rounded-lg
-         bg-red-50 dark:bg-red-900/20
-         border border-red-200 dark:border-red-800;
+  @apply flex items-center gap-3 p-3 rounded-lg;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .errorAlertIcon {
-  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0;
+  @apply w-5 h-5 flex-shrink-0;
+  color: #f87171;
 }
 
 .errorAlertMessage {
-  @apply text-sm text-red-700 dark:text-red-400;
+  @apply text-sm;
+  color: #fca5a5;
 }
 
 .errorText {
-  @apply text-xs text-red-500 dark:text-red-400;
+  @apply text-xs;
+  color: #fca5a5;
+}
+
+/* 亮色主题错误样式 */
+:global([data-theme="light"]) .errorAlert {
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+:global([data-theme="light"]) .errorAlertIcon {
+  color: #ef4444;
+}
+
+:global([data-theme="light"]) .errorAlertMessage,
+:global([data-theme="light"]) .errorText {
+  color: #dc2626;
 }
 
 /* 响应式 */

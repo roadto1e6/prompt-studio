@@ -206,6 +206,7 @@ export const PromptGrid = React.memo<PromptGridProps>((props) => {
               onDelete={grid.handleDelete}
               onRestore={grid.handleRestore}
               isTrashView={filter === 'trash'}
+              compact={viewMode === 'list' && grid.gridLayoutConfig.isDetailPanelOpen}
             />
           ))}
         </AnimatePresence>

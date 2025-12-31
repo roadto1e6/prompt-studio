@@ -20,11 +20,11 @@ import type {
  */
 const getDefaultFormValues = (getDefaultModelId: (category: Category) => string): FormValues => ({
   title: '',
-  description: '',
   category: 'text' as Category,
   model: getDefaultModelId('text'),
   collectionId: '',
   systemPrompt: '',
+  tags: [],
 });
 
 /**
@@ -32,14 +32,8 @@ const getDefaultFormValues = (getDefaultModelId: (category: Category) => string)
  */
 const VALIDATION_RULES = {
   title: {
-    maxLength: 100,
+    maxLength: 200,
     minLength: 0,
-  },
-  description: {
-    maxLength: 500,
-  },
-  systemPrompt: {
-    maxLength: 5000,
   },
 } as const;
 
@@ -62,7 +56,7 @@ const VALIDATION_RULES = {
  */
 export function useCreatePromptModal(): UseCreatePromptModalReturn {
   // ==================== Store 依赖 ====================
-  const { createPrompt, setActivePrompt } = usePromptStore();
+  const { createPrompt } = usePromptStore();
   const { modals, closeModal, openDetailPanel } = useUIStore();
   const { getDefaultModelId, initialized, initialize } = useModelStore();
 
@@ -78,18 +72,25 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // ==================== Refs ====================
-  // 用于防止组件卸载后的状态更新
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // ==================== 派生状态 ====================
   const isSubmitting = submissionState === 'submitting';
+
+  // ==================== 预览模式切换 ====================
+  const togglePreviewMode = useCallback(() => {
+    setIsPreviewMode(prev => !prev);
+  }, []);
+
+  // ==================== 全屏模式 ====================
+  const openFullscreen = useCallback(() => {
+    setIsFullscreen(true);
+  }, []);
+
+  const closeFullscreen = useCallback(() => {
+    setIsFullscreen(false);
+  }, []);
 
   // ==================== 验证逻辑 ====================
 
@@ -108,20 +109,6 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
         return undefined;
       }
 
-      case 'description': {
-        if (value.length > VALIDATION_RULES.description.maxLength) {
-          return `描述不能超过 ${VALIDATION_RULES.description.maxLength} 个字符`;
-        }
-        return undefined;
-      }
-
-      case 'systemPrompt': {
-        if (value.length > VALIDATION_RULES.systemPrompt.maxLength) {
-          return `系统提示词不能超过 ${VALIDATION_RULES.systemPrompt.maxLength} 个字符`;
-        }
-        return undefined;
-      }
-
       default:
         return undefined;
     }
@@ -134,17 +121,14 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
   const validateAllFields = useCallback((): FormErrors => {
     const newErrors: FormErrors = {};
 
-    // 验证文本字段
-    const textFields: Array<keyof FormValues> = ['title', 'description', 'systemPrompt'];
-    textFields.forEach((field) => {
-      const error = validateField(field, values[field] as string);
-      if (error) {
-        newErrors[field] = error;
-      }
-    });
+    // 验证标题字段
+    const titleError = validateField('title', values.title);
+    if (titleError) {
+      newErrors.title = titleError;
+    }
 
     return newErrors;
-  }, [values, validateField]);
+  }, [values.title, validateField]);
 
   // ==================== 字段更新 Handlers ====================
 
@@ -158,18 +142,6 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
     // 实时验证
     const error = validateField('title', value);
     setErrors((prev) => ({ ...prev, title: error }));
-  }, [validateField]);
-
-  /**
-   * 更新描述字段
-   * 包含实时验证
-   */
-  const handleDescriptionChange = useCallback((value: string) => {
-    setValues((prev) => ({ ...prev, description: value }));
-
-    // 实时验证
-    const error = validateField('description', value);
-    setErrors((prev) => ({ ...prev, description: error }));
   }, [validateField]);
 
   /**
@@ -200,15 +172,17 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
 
   /**
    * 更新系统提示词字段
-   * 包含实时验证
    */
   const handleSystemPromptChange = useCallback((value: string) => {
     setValues((prev) => ({ ...prev, systemPrompt: value }));
+  }, []);
 
-    // 实时验证
-    const error = validateField('systemPrompt', value);
-    setErrors((prev) => ({ ...prev, systemPrompt: error }));
-  }, [validateField]);
+  /**
+   * 更新标签字段
+   */
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setValues((prev) => ({ ...prev, tags }));
+  }, []);
 
   // ==================== 表单提交 ====================
 
@@ -233,52 +207,33 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
 
       try {
         // 调用 Store 的创建方法
-        const newPrompt = await createPrompt({
+        await createPrompt({
           title: values.title.trim() || 'Untitled Prompt',
-          description: values.description.trim(),
           category: values.category,
           model: values.model,
-          collectionId: values.collectionId || null,
+          collectionId: values.collectionId || undefined,
           systemPrompt: values.systemPrompt.trim(),
+          tags: values.tags,
         });
 
-        // 提交成功
-        if (isMountedRef.current) {
-          setSubmissionState('success');
-
-          // 选中新创建的 Prompt 并打开详情面板
-          setActivePrompt(newPrompt.id);
-          openDetailPanel();
-
-          // 延迟关闭，让用户看到成功状态
-          setTimeout(() => {
-            if (isMountedRef.current) {
-              closeModal('createPrompt');
-              // 重置表单状态
-              setValues(getDefaultFormValues(getDefaultModelId));
-              setErrors({});
-              setSubmissionState('idle');
-            }
-          }, 300);
-        }
+        // 提交成功 - 直接关闭模态框，不依赖组件挂载状态
+        // Store 已经更新了 activePromptId，所以不需要再调用 setActivePrompt
+        openDetailPanel();
+        closeModal('createPrompt');
       } catch (error) {
         // 提交失败
-        if (isMountedRef.current) {
-          setSubmissionState('error');
-          setErrorMessage(
-            error instanceof Error ? error.message : '创建失败，请重试'
-          );
-        }
+        setSubmissionState('error');
+        setErrorMessage(
+          error instanceof Error ? error.message : '创建失败，请重试'
+        );
       }
     },
     [
       values,
       validateAllFields,
       createPrompt,
-      setActivePrompt,
       openDetailPanel,
       closeModal,
-      getDefaultModelId,
     ]
   );
 
@@ -309,6 +264,8 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
     setErrors({});
     setSubmissionState('idle');
     setErrorMessage(null);
+    setIsPreviewMode(false);
+    setIsFullscreen(false);
   }, [getDefaultModelId]);
 
   // ==================== 副作用：监听模态框开关 ====================
@@ -316,11 +273,15 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
   /**
    * 当模态框打开时，自动重置表单
    * 确保每次打开都是干净的状态
+   * 注意：只在 modal 从 false 变为 true 时重置，避免提交过程中被重置
    */
+  const prevOpenRef = useRef(false);
   useEffect(() => {
-    if (modals.createPrompt) {
+    // 只有当 modal 从关闭变为打开时才重置
+    if (modals.createPrompt && !prevOpenRef.current) {
       reset();
     }
+    prevOpenRef.current = modals.createPrompt;
   }, [modals.createPrompt, reset]);
 
   // ==================== 返回值 ====================
@@ -332,16 +293,21 @@ export function useCreatePromptModal(): UseCreatePromptModalReturn {
     submissionState,
     isSubmitting,
     errorMessage,
+    isPreviewMode,
+    isFullscreen,
 
     // 处理器（全部使用 useCallback 优化）
     handleTitleChange,
-    handleDescriptionChange,
     handleCategoryChange,
     handleModelChange,
     handleCollectionIdChange,
     handleSystemPromptChange,
+    handleTagsChange,
     handleSubmit,
     handleClose,
     reset,
+    togglePreviewMode,
+    openFullscreen,
+    closeFullscreen,
   };
 }

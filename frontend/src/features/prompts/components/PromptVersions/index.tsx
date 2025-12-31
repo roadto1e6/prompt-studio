@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Copy, Check, RotateCcw, Eye, GitCompare, Trash2, ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { formatRelativeTime, cn } from '@/utils';
-import { Badge, Button } from '@/components/ui';
+import { Badge, Button, MarkdownPreview } from '@/components/ui';
 import { usePromptVersions, calculateDaysUntilExpiration, computeDiff } from './usePromptVersions';
 import type { VersionModalProps } from './types';
 import styles from './index.module.css';
@@ -257,7 +257,9 @@ const VersionModal: React.FC<VersionModalProps> = memo(({
                 </div>
               ) : (
                 <div className={styles.contentDisplay}>
-                  {viewingVersion.systemPrompt || (
+                  {viewingVersion.systemPrompt ? (
+                    <MarkdownPreview content={viewingVersion.systemPrompt} />
+                  ) : (
                     <span className={styles.contentDisplayEmpty}>{t.versions.modal.noSystemPrompt}</span>
                   )}
                 </div>
@@ -311,7 +313,11 @@ const VersionModal: React.FC<VersionModalProps> = memo(({
                     </div>
                   </div>
                 ) : (
-                  <div className={styles.contentDisplay}>{viewingVersion.userTemplate}</div>
+                  <div className={styles.contentDisplay}>
+                    {viewingVersion.userTemplate ? (
+                      <MarkdownPreview content={viewingVersion.userTemplate} />
+                    ) : null}
+                  </div>
                 )}
               </div>
             )}

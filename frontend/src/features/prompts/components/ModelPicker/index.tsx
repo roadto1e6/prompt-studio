@@ -192,26 +192,30 @@ const ModelPickerComponent: React.FC<ModelPickerProps> = ({
                 )
               ) : (
                 // 简单选项模式
-                <div className={styles.optionsWrapper}>
-                  {filteredOptions.map((option) => {
-                    const isSelected = option.value === value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => handleSelect(option.value)}
-                        className={cn(
-                          styles.option,
-                          styles.optionSimple,
-                          isSelected ? styles.optionSelected : styles.optionDefault
-                        )}
-                      >
-                        <span className={styles.optionLabel}>{option.label}</span>
-                        {isSelected && <Check className={styles.optionCheck} />}
-                      </button>
-                    );
-                  })}
-                </div>
+                filteredOptions.length === 0 ? (
+                  <div className={styles.emptyState}>No options available</div>
+                ) : (
+                  <div className={styles.optionsWrapper}>
+                    {filteredOptions.map((option) => {
+                      const isSelected = option.value === value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => handleSelect(option.value)}
+                          className={cn(
+                            styles.option,
+                            styles.optionSimple,
+                            isSelected ? styles.optionSelected : styles.optionDefault
+                          )}
+                        >
+                          <span className={styles.optionLabel}>{option.label}</span>
+                          {isSelected && <Check className={styles.optionCheck} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )
               )}
             </div>
           </div>

@@ -4,6 +4,7 @@ import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage } from '
 import { AuthGuard } from '@/components/auth';
 import { ToastContainer } from '@/components/ui';
 import { useThemeStore, useAuthStore, useModelStore } from '@/stores';
+import { tokenManager } from '@/services/api';
 
 type AuthView = 'login' | 'register' | 'forgotPassword' | 'resetPassword';
 
@@ -13,7 +14,19 @@ function getResetTokenFromUrl(): string | null {
   return params.get('reset_token');
 }
 
-// 从 URL 获取 OAuth 回调参数
+// 从 URL 获取 OAuth 回调的 tokens（后端重定向流程）
+function getOAuthTokensFromUrl(): { accessToken: string; refreshToken: string } | null {
+  const params = new URLSearchParams(window.location.search);
+  const accessToken = params.get('access_token');
+  const refreshToken = params.get('refresh_token');
+
+  if (accessToken && refreshToken) {
+    return { accessToken, refreshToken };
+  }
+  return null;
+}
+
+// 从 URL 获取 OAuth 回调参数（code 流程 - 备用）
 function getOAuthCallbackParams(): { provider: 'google' | 'github'; code: string } | null {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
@@ -29,6 +42,12 @@ function getOAuthCallbackParams(): { provider: 'google' | 'github'; code: string
     }
   }
   return null;
+}
+
+// 检查 URL 中的错误参数
+function getOAuthErrorFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('error');
 }
 
 function App() {
@@ -56,7 +75,27 @@ function App() {
       return;
     }
 
-    // 检查 OAuth 回调
+    // 检查 OAuth 错误
+    const oauthError = getOAuthErrorFromUrl();
+    if (oauthError) {
+      console.error('OAuth error:', oauthError);
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    // 检查 OAuth 回调 - 后端重定向流程（tokens 直接在 URL 中）
+    const oauthTokens = getOAuthTokensFromUrl();
+    if (oauthTokens) {
+      // 设置 tokens 并初始化用户状态
+      tokenManager.setTokens(oauthTokens.accessToken, oauthTokens.refreshToken);
+      // 清理 URL
+      window.history.replaceState({}, '', window.location.pathname);
+      // 重新初始化以获取用户信息
+      initialize();
+      return;
+    }
+
+    // 检查 OAuth 回调 - code 流程（备用）
     const oauthParams = getOAuthCallbackParams();
     if (oauthParams) {
       handleOAuthCallback(oauthParams.provider, oauthParams.code)
@@ -69,17 +108,18 @@ function App() {
           window.history.replaceState({}, '', window.location.pathname);
         });
     }
-  }, [handleOAuthCallback]);
+  }, [handleOAuthCallback, initialize]);
 
-  // 应用主题
+  // 应用主题 - 带平滑过渡
   useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-theme', theme);
     root.classList.add('theme-transition');
 
+    // 过渡完成后移除 class（匹配 CSS 中最长的过渡时间 450ms + 缓冲）
     const transitionTimeout = window.setTimeout(() => {
       root.classList.remove('theme-transition');
-    }, 250);
+    }, 500);
 
     return () => {
       window.clearTimeout(transitionTimeout);

@@ -41,7 +41,7 @@ export function usePromptMetadata(): UsePromptMetadataReturn {
   // ==================== Store 状态 ====================
   const { getActivePrompt, updatePrompt } = usePromptStore();
   const { collections } = useCollectionStore();
-  const { getModelOptions, initialized, initialize } = useModelStore();
+  const { getModelOptions, initialized, initialize, providers } = useModelStore();
   const { t } = useI18nStore();
 
   const prompt = getActivePrompt();
@@ -106,16 +106,17 @@ export function usePromptMetadata(): UsePromptMetadataReturn {
   /**
    * 模型选项组
    * 根据当前 prompt 的类别获取可用模型
+   * 依赖 providers 以确保在数据加载后重新计算
    */
   const modelGroups = useMemo<ModelOptionGroup[]>(() => {
-    if (!prompt) return [];
+    if (!prompt || !initialized) return [];
 
     const modelOptions = getModelOptions(prompt.category);
     return modelOptions.map(group => ({
       label: group.providerName,
       options: group.options.map(m => ({ value: m.value, label: m.label })),
     }));
-  }, [prompt?.category, getModelOptions]);
+  }, [prompt?.category, getModelOptions, initialized, providers]);
 
   /**
    * 集合选项列表

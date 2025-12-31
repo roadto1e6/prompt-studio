@@ -1,13 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Collection } from '@/types';
-import { mockCollections } from '@/data/mockData';
-import { generateId } from '@/utils';
-import { COLLECTION_COLORS } from '@/constants';
 import { collectionService } from '@/services/collectionService';
-
-// 是否使用 Mock 数据
-const USE_MOCK = import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
 
 interface CollectionState {
   collections: Collection[];
@@ -35,24 +29,15 @@ export const useCollectionStore = create<CollectionState>()(
       isLoading: false,
       error: null,
 
-      // Initialize - 加载用户数据
-      initialize: async (_userId?: string) => {
+      // Initialize
+      initialize: async () => {
         if (get().initialized) return;
 
         set({ isLoading: true, error: null });
 
         try {
-          if (USE_MOCK) {
-            // Mock 模式：使用本地数据或初始化 mock 数据
-            const storedCollections = get().collections;
-            if (storedCollections.length === 0) {
-              set({ collections: mockCollections });
-            }
-          } else {
-            // 真实模式：从 API 加载
-            const collections = await collectionService.getAllCollections();
-            set({ collections });
-          }
+          const collections = await collectionService.getAllCollections();
+          set({ collections });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Failed to load collections';
           set({ error: message });
@@ -61,7 +46,7 @@ export const useCollectionStore = create<CollectionState>()(
         }
       },
 
-      // Reset - 用户登出时清理数据
+      // Reset
       reset: () => {
         set({
           collections: [],
@@ -71,68 +56,35 @@ export const useCollectionStore = create<CollectionState>()(
         });
       },
 
+      // Create
       createCollection: async (data) => {
-        const now = new Date().toISOString();
-        const id = generateId();
-        const colorIndex = get().collections.length % COLLECTION_COLORS.length;
-
-        const newCollection: Collection = {
-          id,
-          name: data.name || 'New Collection',
-          description: data.description || '',
-          color: data.color || COLLECTION_COLORS[colorIndex],
-          icon: data.icon || 'Folder',
-          promptCount: 0,
-          createdAt: now,
-          updatedAt: now,
-        };
-
         try {
-          if (USE_MOCK) {
-            // Mock 模式：本地创建
-            set((state) => ({
-              collections: [...state.collections, newCollection],
-            }));
-          } else {
-            // 真实模式：调用 API
-            const created = await collectionService.createCollection({
-              name: newCollection.name,
-              description: newCollection.description,
-              color: newCollection.color,
-              icon: newCollection.icon,
-            });
-            set((state) => ({
-              collections: [...state.collections, created],
-            }));
-            return created;
-          }
+          const result = await collectionService.createCollection({
+            name: data.name || 'New Collection',
+            description: data.description || '',
+            color: data.color,
+            icon: data.icon,
+          });
+
+          set((state) => ({
+            collections: [...state.collections, result],
+          }));
+
+          return result;
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Failed to create collection';
           set({ error: message });
           throw err;
         }
-
-        return newCollection;
       },
 
+      // Update
       updateCollection: async (id, data) => {
         try {
-          if (USE_MOCK) {
-            // Mock 模式：本地更新
-            set((state) => ({
-              collections: state.collections.map((c) =>
-                c.id === id
-                  ? { ...c, ...data, updatedAt: new Date().toISOString() }
-                  : c
-              ),
-            }));
-          } else {
-            // 真实模式：调用 API
-            const updated = await collectionService.updateCollection(id, data);
-            set((state) => ({
-              collections: state.collections.map((c) => (c.id === id ? updated : c)),
-            }));
-          }
+          const updated = await collectionService.updateCollection(id, data);
+          set((state) => ({
+            collections: state.collections.map((c) => (c.id === id ? updated : c)),
+          }));
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Failed to update collection';
           set({ error: message });
@@ -140,11 +92,10 @@ export const useCollectionStore = create<CollectionState>()(
         }
       },
 
+      // Delete
       deleteCollection: async (id) => {
         try {
-          if (!USE_MOCK) {
-            await collectionService.deleteCollection(id);
-          }
+          await collectionService.deleteCollection(id);
           set((state) => ({
             collections: state.collections.filter((c) => c.id !== id),
           }));
@@ -155,6 +106,7 @@ export const useCollectionStore = create<CollectionState>()(
         }
       },
 
+      // Update prompt count (local only)
       updatePromptCount: (id, delta) => {
         set((state) => ({
           collections: state.collections.map((c) =>
@@ -165,6 +117,7 @@ export const useCollectionStore = create<CollectionState>()(
         }));
       },
 
+      // Get by ID
       getCollectionById: (id) => {
         return get().collections.find((c) => c.id === id) || null;
       },

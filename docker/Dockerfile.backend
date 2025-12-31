@@ -1,0 +1,45 @@
+# Backend Dockerfile - Multi-stage build
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# 安装依赖（包括 devDependencies 用于构建）
+COPY package*.json ./
+RUN npm ci
+
+# 复制 Prisma schema 并生成客户端
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# 复制源码并构建
+COPY tsconfig.json ./
+COPY src ./src/
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# 只安装生产依赖
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# 复制 Prisma schema 并生成客户端
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# 复制构建产物
+COPY --from=builder /app/dist ./dist/
+
+# 复制启动脚本 (从 backend 目录)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENV NODE_ENV=production
+ENV PORT=3001
+
+EXPOSE 3001
+
+# 使用 entrypoint 脚本自动运行数据库迁移
+ENTRYPOINT ["/entrypoint.sh"]

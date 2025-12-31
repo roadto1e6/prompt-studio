@@ -12,7 +12,31 @@
       "Bash(ping:*)",
       "Bash(rm:*)",
       "Bash(npx:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor: 采用 Headless UI 四文件架构重构所有组件\n\n主要变更：\n- 将所有组件重构为四文件架构（types.ts, index.module.css, useXXX.ts, index.tsx）\n- 完善 mock 数据（20个 prompts，5个 collections，分享记录等）\n- 修复 usePromptGrid 中 useMemo 内调用 setState 的反模式问题\n- 修复侧边栏过滤器与内容区数据联动问题\n- 新增 i18n 翻译支持（快捷键、过滤器、空状态等）\n- 新增多个通用 hooks（useAsync, useClickOutside, useForm 等）\n- 新增 UI 组件（Tooltip, Ripple, LoadingSpinner, KeyboardShortcutsModal）\n- 优化 CSS 样式，使用 CSS Modules 封装\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(docker info:*)",
+      "Bash(docker run:*)",
+      "Bash(docker start:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill //F //PID 76944)",
+      "Bash(curl:*)",
+      "Bash(findstr:*)",
+      "Bash(docker ps:*)",
+      "Bash(taskkill //F //PID 78416)",
+      "Bash(taskkill //F //PID 62340)",
+      "Bash(taskkill //F //PID 47148)",
+      "Bash(taskkill //F //PID 58684)",
+      "Bash(taskkill //F //PID 53796)",
+      "Bash(taskkill:*)",
+      "Bash(taskkill //F //PID 61672 //T)",
+      "WebSearch",
+      "WebFetch(domain:www.vellum.ai)",
+      "WebFetch(domain:lmarena.ai)",
+      "WebFetch(domain:openlm.ai)"
     ]
   }
 }

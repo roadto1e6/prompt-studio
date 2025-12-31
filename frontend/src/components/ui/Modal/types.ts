@@ -11,6 +11,8 @@ export interface ModalProps {
   children: React.ReactNode;
   size?: ModalSize;
   showClose?: boolean;
+  showBackButton?: boolean;
+  onBack?: () => void;
   className?: string;
   onEnterPress?: () => void;
   preventClose?: boolean;

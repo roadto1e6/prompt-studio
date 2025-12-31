@@ -21,12 +21,13 @@ export function usePromptEditor(): UsePromptEditorReturn {
 
   // 本地状态
   const [systemPrompt, setSystemPrompt] = useState('');
-  const [userTemplate, setUserTemplate] = useState('');
   const [isDirty, setIsDirty] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showVersionModal, setShowVersionModal] = useState(false);
   const [changeNote, setChangeNote] = useState('');
   const [versionType, setVersionType] = useState<VersionType>('minor');
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // 定时器引用
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
@@ -44,7 +45,6 @@ export function usePromptEditor(): UsePromptEditorReturn {
   useEffect(() => {
     if (prompt) {
       setSystemPrompt(prompt.systemPrompt);
-      setUserTemplate(prompt.userTemplate);
       setIsDirty(false);
     }
   }, [prompt?.id]);
@@ -82,25 +82,19 @@ export function usePromptEditor(): UsePromptEditorReturn {
     setIsDirty(true);
   }, []);
 
-  const handleUserTemplateChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserTemplate(e.target.value);
-    setIsDirty(true);
-  }, []);
-
   const handleSave = useCallback(() => {
     if (!prompt) return;
 
     // 检查内容是否变化
     const currentVersionData = prompt.versions.find(v => v.id === prompt.currentVersionId);
     const hasChanged = currentVersionData && hasPromptChanged(
-      { systemPrompt, userTemplate, model: prompt.model, temperature: prompt.temperature, maxTokens: prompt.maxTokens },
+      { systemPrompt, model: prompt.model, temperature: prompt.temperature, maxTokens: prompt.maxTokens },
       currentVersionData
     );
 
     // 更新 prompt
     updatePrompt(prompt.id, {
       systemPrompt,
-      userTemplate,
     });
 
     // 如果有变化，显示版本创建模态框
@@ -109,7 +103,7 @@ export function usePromptEditor(): UsePromptEditorReturn {
     } else {
       setIsDirty(false);
     }
-  }, [prompt, systemPrompt, userTemplate, updatePrompt]);
+  }, [prompt, systemPrompt, updatePrompt]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -150,10 +144,55 @@ export function usePromptEditor(): UsePromptEditorReturn {
     setIsDirty(false);
   }, []);
 
+  const togglePreviewMode = useCallback(() => {
+    setIsPreviewMode(prev => !prev);
+  }, []);
+
+  // 全屏模式处理器
+  const openFullscreen = useCallback(() => {
+    setIsFullscreen(true);
+  }, []);
+
+  const closeFullscreen = useCallback(() => {
+    setIsFullscreen(false);
+  }, []);
+
+  // 全屏编辑器保存处理器（保存后自动关闭全屏）
+  const handleFullscreenSave = useCallback(() => {
+    if (!prompt) return;
+
+    // 检查内容是否变化
+    const currentVersionData = prompt.versions.find(v => v.id === prompt.currentVersionId);
+    const hasChanged = currentVersionData && hasPromptChanged(
+      { systemPrompt, model: prompt.model, temperature: prompt.temperature, maxTokens: prompt.maxTokens },
+      currentVersionData
+    );
+
+    // 更新 prompt
+    updatePrompt(prompt.id, {
+      systemPrompt,
+    });
+
+    // 关闭全屏编辑器
+    setIsFullscreen(false);
+
+    // 如果有变化，显示版本创建模态框
+    if (hasChanged) {
+      setShowVersionModal(true);
+    } else {
+      setIsDirty(false);
+    }
+  }, [prompt, systemPrompt, updatePrompt]);
+
+  // 直接设置系统提示词值（用于全屏编辑器）
+  const handleSystemPromptValueChange = useCallback((value: string) => {
+    setSystemPrompt(value);
+    setIsDirty(true);
+  }, []);
+
   return {
     prompt,
     systemPrompt,
-    userTemplate,
     isDirty,
     copied,
     showVersionModal,
@@ -164,8 +203,9 @@ export function usePromptEditor(): UsePromptEditorReturn {
     currentVersion,
     t,
     handleSystemPromptChange,
-    handleUserTemplateChange,
+    handleSystemPromptValueChange,
     handleSave,
+    handleFullscreenSave,
     handleCopy,
     handleCreateVersion,
     handleSkipVersion,
@@ -174,5 +214,10 @@ export function usePromptEditor(): UsePromptEditorReturn {
     setShowVersionModal,
     getNextVersionNumber,
     getCurrentVersionNumber,
+    isPreviewMode,
+    togglePreviewMode,
+    isFullscreen,
+    openFullscreen,
+    closeFullscreen,
   };
 }

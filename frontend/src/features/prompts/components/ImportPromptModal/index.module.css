@@ -3,117 +3,203 @@
 /**
  * ImportPromptModal 样式
  * 表现层：使用 Tailwind CSS + CSS Modules
- * 通过 @apply 封装长类名，保持 HTML 清爽
  */
 
 /* ==================== 容器样式 ==================== */
 
-.container {
-  @apply flex flex-col gap-4;
+.contentContainer {
+  @apply py-6 px-6;
 }
 
-/* ==================== 输入区域样式 ==================== */
+/* ==================== 输入视图 ==================== */
 
 .inputSection {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-5;
+}
+
+.inputHeader {
+  @apply flex flex-col items-center text-center;
+}
+
+.inputIconWrapper {
+  @apply w-14 h-14 rounded-full flex items-center justify-center mb-3;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.inputIcon {
+  @apply w-7 h-7 text-emerald-400;
+}
+
+.inputTitle {
+  @apply text-base font-medium text-theme-text-primary;
+}
+
+.inputSubtitle {
+  @apply text-xs text-theme-text-muted mt-1;
+}
+
+.inputFieldWrapper {
+  @apply mt-2;
 }
 
 .inputLabel {
-  @apply text-xs text-theme-text-muted;
+  @apply block text-xs text-theme-text-muted mb-2;
 }
 
 .inputField {
-  @apply w-full bg-theme-input-bg border border-theme-input-border rounded-lg
-         px-3 py-2.5 font-mono text-sm text-theme-input-text
-         focus:outline-none focus:border-theme-accent
-         transition-colors;
-  --tw-placeholder-opacity: 1;
-  color: var(--color-text-primary);
+  @apply w-full rounded-lg px-4 py-3 text-sm font-mono
+         transition-all duration-200
+         bg-theme-input-bg border border-theme-input-border text-theme-input-text
+         focus:outline-none focus:border-theme-accent;
+}
+
+.inputField:focus {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
 }
 
 .inputField::placeholder {
-  color: var(--color-text-muted);
-}
-
-.inputError {
-  @apply text-xs text-red-400 mt-2;
-}
-
-/* ==================== 预览卡片样式 ==================== */
-
-.previewCard {
-  @apply bg-theme-bg-secondary border border-theme-border rounded-lg overflow-hidden;
-}
-
-.previewHeader {
-  @apply flex items-center gap-3 p-3 border-b border-theme-border;
-}
-
-.categoryIconWrapper {
-  @apply p-2 rounded-lg;
-}
-
-.categoryIcon {
-  @apply w-4 h-4;
-}
-
-.previewContent {
-  @apply flex-1 min-w-0;
-}
-
-.previewTitle {
-  @apply text-theme-text-primary font-medium text-sm truncate;
-}
-
-.previewDescription {
-  @apply text-xs text-theme-text-muted truncate;
-}
-
-.previewMeta {
-  @apply px-3 py-2 flex flex-wrap items-center gap-2 text-xs border-b border-theme-border;
-}
-
-.metaBadge {
-  @apply bg-theme-bg-secondary text-theme-text-secondary px-2 py-0.5 rounded;
-}
-
-.metaText {
   @apply text-theme-text-muted;
 }
 
-.tagsContainer {
-  @apply px-3 py-2 flex flex-wrap gap-1.5 border-b border-theme-border;
+.inputFieldError {
+  @apply border-red-400 focus:border-red-400;
 }
 
-.tagsOverflow {
+.inputFieldError:focus {
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2);
+}
+
+.inputError {
+  @apply flex items-center gap-2 mt-2 text-xs text-red-400;
+}
+
+.inputErrorIcon {
+  @apply w-3.5 h-3.5 flex-shrink-0;
+}
+
+.inputHint {
+  @apply text-[11px] text-theme-text-muted text-center;
+}
+
+/* ==================== 预览视图 ==================== */
+
+.previewSection {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.previewHeader {
+  @apply flex flex-col items-center mb-5;
+}
+
+.previewIconWrapper {
+  @apply w-14 h-14 rounded-full flex items-center justify-center mb-3;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.previewIcon {
+  @apply w-7 h-7;
+}
+
+/* ==================== 预览卡片 ==================== */
+
+.previewCard {
+  @apply rounded-lg overflow-hidden mb-5;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.cardHeader {
+  @apply flex items-center gap-3 p-4 border-b border-theme-border;
+}
+
+.categoryIconWrapper {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0;
+}
+
+.categoryIcon {
+  @apply w-5 h-5;
+}
+
+.cardInfo {
+  @apply flex-1 min-w-0;
+}
+
+.cardTitle {
+  @apply text-sm font-medium text-theme-text-primary truncate;
+}
+
+.cardDescription {
+  @apply text-xs text-theme-text-muted truncate mt-0.5;
+}
+
+/* Meta 信息 */
+.cardMeta {
+  @apply px-4 py-2.5 flex flex-wrap items-center gap-2 border-b border-theme-border;
+}
+
+.metaItem {
+  @apply inline-flex items-center gap-1.5 text-xs;
+}
+
+.metaLabel {
+  @apply text-theme-text-muted;
+}
+
+.metaValue {
+  @apply text-theme-text-secondary font-medium;
+}
+
+.metaBadge {
+  @apply px-2 py-0.5 rounded text-xs font-medium;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--color-accent);
+}
+
+.metaDot {
+  @apply w-1 h-1 rounded-full bg-theme-text-muted;
+}
+
+/* 标签 */
+.tagsSection {
+  @apply px-4 py-2.5 flex flex-wrap gap-1.5 border-b border-theme-border;
+}
+
+.tag {
+  @apply px-2 py-0.5 rounded text-xs bg-theme-bg-hover text-theme-text-secondary;
+}
+
+.tagsMore {
   @apply text-xs text-theme-text-muted;
 }
 
+/* 系统提示词预览 */
 .systemPromptSection {
-  @apply p-3 border-b border-theme-border;
+  @apply p-4 border-b border-theme-border;
 }
 
 .systemPromptLabel {
-  @apply text-[10px] font-medium text-theme-text-muted uppercase mb-1;
+  @apply text-[10px] font-semibold text-theme-text-muted uppercase tracking-wider mb-2;
 }
 
 .systemPromptContent {
-  @apply text-xs text-theme-text-secondary line-clamp-2 font-mono leading-relaxed;
+  @apply text-xs text-theme-text-secondary font-mono leading-relaxed line-clamp-3;
 }
 
+/* 分享者信息 */
 .sharedBySection {
-  @apply px-3 py-2 flex items-center gap-2 text-xs text-theme-text-muted;
+  @apply px-4 py-2.5 flex items-center gap-2 text-xs text-theme-text-muted;
 }
 
 .sharedByIcon {
-  @apply w-3 h-3;
+  @apply w-3.5 h-3.5;
 }
 
-/* ==================== 警告提示样式 ==================== */
+/* ==================== 警告提示 ==================== */
 
 .warningAlert {
-  @apply flex items-start gap-2.5 p-3
-         bg-amber-500/10 border border-amber-500/30 rounded-lg;
+  @apply flex items-start gap-3 p-3 rounded-lg mb-5;
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .warningIcon {
@@ -121,64 +207,29 @@
 }
 
 .warningContent {
-  @apply text-xs;
+  @apply flex-1;
 }
 
 .warningTitle {
-  @apply text-amber-400 font-medium;
+  @apply text-xs font-medium text-amber-400;
 }
 
 .warningMessage {
-  @apply text-amber-400/70 mt-0.5;
+  @apply text-xs text-amber-400/80 mt-0.5;
 }
 
-/* ==================== 错误提示样式 ==================== */
-
-.errorAlert {
-  @apply flex items-start gap-3 p-4 rounded-lg
-         bg-red-50 dark:bg-red-900/20
-         border border-red-200 dark:border-red-800;
-}
-
-.errorIcon {
-  @apply w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5;
-}
-
-.errorContent {
-  @apply flex-1 min-w-0;
-}
-
-.errorTitle {
-  @apply text-sm font-medium text-red-800 dark:text-red-300;
-}
-
-.errorMessage {
-  @apply text-sm text-red-700 dark:text-red-400 mt-1;
-}
-
-/* ==================== 加载状态样式 ==================== */
-
-.loadingOverlay {
-  @apply absolute inset-0 backdrop-blur-sm flex items-center justify-center rounded-lg z-10;
-  background-color: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
-}
-
-.loadingSpinner {
-  @apply w-6 h-6 animate-spin;
-}
-
-.loadingText {
-  @apply sr-only;
-}
-
-/* ==================== 按钮区域样式 ==================== */
-
-.buttonGroup {
-  @apply flex items-center gap-2;
-}
+/* ==================== 按钮样式 ==================== */
 
 .buttonIcon {
   @apply w-4 h-4;
+}
+
+.fetchButton {
+  @apply w-full;
+}
+
+.importButton {
+  @apply w-full;
 }
 
 /* ==================== 动画效果 ==================== */
@@ -186,7 +237,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -194,35 +245,45 @@
   }
 }
 
-@keyframes shimmer {
-  0%, 100% {
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+    transform: scale(1);
   }
 }
 
-.animateFadeIn {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animateShimmer {
-  animation: shimmer 1.5s ease-in-out infinite;
+.fadeInAnimation {
+  animation: fadeIn 0.3s ease-out;
 }
 
 /* ==================== 响应式适配 ==================== */
 
 @media (max-width: 640px) {
-  .previewHeader {
-    @apply flex-col items-start gap-2;
+  .contentContainer {
+    @apply py-5 px-4;
   }
 
-  .buttonGroup {
-    @apply flex-col w-full;
+  .cardHeader {
+    @apply p-3;
   }
 
-  .buttonGroup > button {
-    @apply w-full;
+  .cardMeta {
+    @apply px-3 py-2;
+  }
+
+  .tagsSection {
+    @apply px-3 py-2;
+  }
+
+  .systemPromptSection {
+    @apply p-3;
+  }
+
+  .sharedBySection {
+    @apply px-3 py-2;
   }
 }

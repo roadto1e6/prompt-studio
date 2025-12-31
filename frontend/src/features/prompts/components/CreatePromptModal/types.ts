@@ -13,8 +13,6 @@ import type { Category } from '@/types';
 export interface FormValues {
   /** Prompt 标题 */
   title: string;
-  /** Prompt 描述 */
-  description: string;
   /** Prompt 分类（text/image/audio/video） */
   category: Category;
   /** 模型 ID */
@@ -23,6 +21,8 @@ export interface FormValues {
   collectionId: string;
   /** 系统提示词 */
   systemPrompt: string;
+  /** 标签 */
+  tags: string[];
 }
 
 /**
@@ -31,8 +31,6 @@ export interface FormValues {
 export interface FormErrors {
   /** 标题字段错误 */
   title?: string;
-  /** 描述字段错误 */
-  description?: string;
   /** 分类字段错误 */
   category?: string;
   /** 模型字段错误 */
@@ -41,6 +39,8 @@ export interface FormErrors {
   collectionId?: string;
   /** 系统提示词字段错误 */
   systemPrompt?: string;
+  /** 标签字段错误 */
+  tags?: string;
 }
 
 /**
@@ -62,11 +62,13 @@ export interface UseCreatePromptModalReturn {
   isSubmitting: boolean;
   /** 错误信息（全局错误） */
   errorMessage: string | null;
+  /** 是否预览模式 */
+  isPreviewMode: boolean;
+  /** 是否全屏编辑模式 */
+  isFullscreen: boolean;
 
   /** 更新标题字段 */
   handleTitleChange: (value: string) => void;
-  /** 更新描述字段 */
-  handleDescriptionChange: (value: string) => void;
   /** 更新分类字段 */
   handleCategoryChange: (value: Category) => void;
   /** 更新模型字段 */
@@ -75,12 +77,20 @@ export interface UseCreatePromptModalReturn {
   handleCollectionIdChange: (value: string) => void;
   /** 更新系统提示词字段 */
   handleSystemPromptChange: (value: string) => void;
+  /** 更新标签字段 */
+  handleTagsChange: (tags: string[]) => void;
   /** 处理表单提交 */
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   /** 处理模态框关闭 */
   handleClose: () => void;
   /** 重置表单 */
   reset: () => void;
+  /** 切换预览模式 */
+  togglePreviewMode: () => void;
+  /** 打开全屏编辑器 */
+  openFullscreen: () => void;
+  /** 关闭全屏编辑器 */
+  closeFullscreen: () => void;
 }
 
 /**

@@ -9,10 +9,8 @@ export const statusEnum = z.enum(['active', 'archived', 'trash']);
 // Create prompt schema
 export const createPromptSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
-  description: z.string().max(1000).optional(),
   category: categoryEnum.default('text'),
   systemPrompt: z.string().optional(),
-  userTemplate: z.string().optional(),
   model: z.string().default('gpt-4-turbo'),
   temperature: z.number().min(0).max(2).default(0.7),
   maxTokens: z.number().min(1).max(128000).default(2048),
@@ -23,10 +21,8 @@ export const createPromptSchema = z.object({
 // Update prompt schema
 export const updatePromptSchema = z.object({
   title: z.string().min(1).max(200).optional(),
-  description: z.string().max(1000).optional(),
   category: categoryEnum.optional(),
   systemPrompt: z.string().optional(),
-  userTemplate: z.string().optional(),
   model: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
   maxTokens: z.number().min(1).max(128000).optional(),

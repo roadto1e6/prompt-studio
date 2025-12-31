@@ -172,10 +172,22 @@ export const zh: TranslationKeys = {
     deletePermanently: '永久删除',
   },
 
+  // Fullscreen Editor
+  fullscreen: {
+    openFullscreen: '打开全屏编辑器',
+    closeFullscreen: '关闭全屏编辑器',
+    chars: '字符',
+    tokens: '令牌',
+    toClose: '关闭',
+    togglePreview: '切换预览',
+  },
+
   // Prompt Editor
   editor: {
     selectPrompt: '选择一个提示词进行编辑',
     systemPrompt: '系统提示词',
+    edit: '编辑',
+    preview: '预览',
     systemPromptPlaceholder: '在此输入系统提示词... 使用 {{变量}} 创建动态输入。',
     copyToClipboard: '复制到剪贴板',
     currentVersion: '当前',
@@ -355,9 +367,11 @@ export const zh: TranslationKeys = {
     retry: '重试',
     viewCount: '次查看',
     retryAriaLabel: '重试生成分享链接',
-    closeAriaLabel: '关闭分享弹窗',
     copyCodeAriaLabel: '复制分享码：{code}',
     copyUrlAriaLabel: '复制分享链接：{url}',
+    readyTitle: '分享已就绪！',
+    readySubtitle: '任何人都可以通过此分享码查看您的提示词',
+    clickToCopy: '点击复制',
   },
 
   // Import Modal
@@ -366,6 +380,7 @@ export const zh: TranslationKeys = {
     subtitle: '将分享的提示词导入到您的库中',
     pasteLabel: '粘贴分享链接或短码',
     pastePlaceholder: '在此粘贴分享链接或 8 位短码...',
+    hint: '输入 8 位短码或完整分享链接',
     parseButton: '获取分享内容',
     fetching: '获取中...',
     invalidCode: '无效的分享链接或短码',

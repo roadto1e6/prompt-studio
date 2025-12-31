@@ -236,7 +236,18 @@ model Model {
   features           Json?    // {streaming, vision, functionCalling, jsonMode}
   sortOrder          Int      @default(0)
 
-  // Crowdsourcing fields
+  // Model source type: 'system' = system preset, 'user' = user custom model
+  sourceType         String   @default("system") // system, user
+
+  // User custom model fields (only for sourceType = 'user')
+  userId             String?  // creator userId (only for user models)
+
+  // Review status for user models (only for sourceType = 'user')
+  reviewStatus       String?  // pending, approved, rejected
+  reviewedAt         DateTime?
+  reviewedBy         String?  // admin userId who reviewed
+
+  // Legacy crowdsourcing field (kept for backward compatibility)
   contributedBy      String?  // userId who added this, null = system preset
   useCount           Int      @default(0) // how many users are using this model
 
@@ -246,6 +257,9 @@ model Model {
 
   @@index([providerId])
   @@index([status])
+  @@index([sourceType])
+  @@index([userId])
+  @@index([reviewStatus])
   @@index([contributedBy])
   @@index([useCount])
   @@map("models")

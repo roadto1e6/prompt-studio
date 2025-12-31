@@ -114,7 +114,7 @@ export const COMPONENT_STYLES = {
     container: 'space-y-6',
     section: 'space-y-2',
     label: 'block text-xs font-bold text-theme-text-label uppercase tracking-wider',
-    error: 'text-xs text-red-500 dark:text-red-400 mt-1 flex items-center gap-1',
+    error: 'text-xs mt-1 flex items-center gap-1 text-[var(--color-error)]',
     actions: 'flex justify-end gap-3 pt-4 border-t border-theme-border',
   },
 } as const;

@@ -4,7 +4,7 @@ import { PromptGrid, PromptDetailPanel, CreatePromptModal, SharePromptModal, Imp
 import { CreateCollectionModal } from '@/features/collections/components';
 import { ConfirmModal, KeyboardShortcutsModal } from '@/components/ui';
 import { SettingsModal } from '@/components/settings';
-import { useUIStore, useAuthStore } from '@/stores';
+import { useUIStore, useAuthStore, useModelStore } from '@/stores';
 import { usePromptStore } from '@/stores/promptStore';
 import { useCollectionStore } from '@/stores/collectionStore';
 import { useGlobalShortcuts } from '@/hooks/useGlobalShortcuts';
@@ -16,6 +16,7 @@ export const HomePage: React.FC = () => {
   const { user } = useAuthStore();
   const initializePrompts = usePromptStore((state) => state.initialize);
   const initializeCollections = useCollectionStore((state) => state.initialize);
+  const initializeModels = useModelStore((state) => state.initialize);
   const lastClipboardContent = useRef<string>('');
   const isProcessing = useRef<boolean>(false);
 
@@ -53,11 +54,14 @@ export const HomePage: React.FC = () => {
 
   // Initialize user data on mount
   useEffect(() => {
+    // 模型数据不依赖用户，可以立即初始化
+    initializeModels();
+
     if (user) {
       initializePrompts(user.id);
       initializeCollections(user.id);
     }
-  }, [user, initializePrompts, initializeCollections]);
+  }, [user, initializePrompts, initializeCollections, initializeModels]);
 
   // Check for share code in URL on mount
   useEffect(() => {

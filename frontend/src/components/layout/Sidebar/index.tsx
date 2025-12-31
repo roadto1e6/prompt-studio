@@ -8,7 +8,7 @@
  * 3. 样式通过 CSS Modules 管理
  */
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Search, X, Settings, Folder, Trash2 } from 'lucide-react';
 import { useSidebar } from './useSidebar';
 import styles from './index.module.css';
@@ -64,7 +64,7 @@ interface CollectionItemButtonProps {
   item: CollectionNavItem;
   isActive: boolean;
   onClick: () => void;
-  onContextMenu: (e: React.MouseEvent) => void;
+  onDelete: () => void;
   collapsed?: boolean;
 }
 
@@ -72,37 +72,57 @@ const CollectionItemButton = memo<CollectionItemButtonProps>(({
   item,
   isActive,
   onClick,
-  onContextMenu,
+  onDelete,
   collapsed = false,
 }) => {
   const isUncategorized = item.id === 'uncategorized';
 
+  /**
+   * 处理删除按钮点击，阻止事件冒泡
+   */
+  const handleDeleteClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete();
+  }, [onDelete]);
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      onContextMenu={onContextMenu}
-      className={`${styles.navItem} ${isActive ? styles.navItemActive : styles.navItemInactive}`}
-      aria-current={isActive ? 'page' : undefined}
-    >
-      <span className={styles.navItemContent}>
-        <Folder
-          className={`${styles.navItemIcon} ${item.color} ${
-            isActive ? styles.navItemIconActive : styles.navItemIconInactive
-          }`}
-        />
-        {!collapsed && (
-          <span className={styles.navItemText}>
-            {isUncategorized ? (
-              <span className="text-theme-text-muted">{item.name}</span>
-            ) : (
-              item.name
-            )}
-          </span>
-        )}
-      </span>
-      {!collapsed && <span className={styles.navItemCount}>{item.count}</span>}
-    </button>
+    <div className={styles.collectionItem}>
+      <button
+        type="button"
+        onClick={onClick}
+        className={`${styles.navItem} ${styles.collectionButton} ${isActive ? styles.navItemActive : styles.navItemInactive}`}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        <span className={styles.navItemContent}>
+          <Folder
+            className={`${styles.navItemIcon} ${item.color} ${
+              isActive ? styles.navItemIconActive : styles.navItemIconInactive
+            }`}
+          />
+          {!collapsed && (
+            <span className={styles.navItemText}>
+              {isUncategorized ? (
+                <span className="text-theme-text-muted">{item.name}</span>
+              ) : (
+                item.name
+              )}
+            </span>
+          )}
+        </span>
+        {!collapsed && <span className={styles.navItemCount}>{item.count}</span>}
+      </button>
+      {/* Hover 时显示删除按钮 */}
+      {!collapsed && !isUncategorized && (
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          className={styles.collectionDeleteButton}
+          aria-label="Delete collection"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
   );
 });
 
@@ -134,10 +154,7 @@ const Sidebar = memo<SidebarProps>(({ collapsed = false, className = '' }) => {
     isCategoryActive,
     isCollectionActive,
 
-    // 上下文菜单相关
-    contextMenu,
-    contextMenuRef,
-    handleCollectionContextMenu,
+    // 删除集合
     handleDeleteCollection,
 
     // UI 操作相关
@@ -285,11 +302,7 @@ const Sidebar = memo<SidebarProps>(({ collapsed = false, className = '' }) => {
                   item={item}
                   isActive={isCollectionActive(item.id)}
                   onClick={() => handleCollectionChange(item.id)}
-                  onContextMenu={(e) => {
-                    if (item.id !== 'uncategorized') {
-                      handleCollectionContextMenu(e, item.id);
-                    }
-                  }}
+                  onDelete={() => handleDeleteCollection(item.id)}
                   collapsed={collapsed}
                 />
               </li>
@@ -297,31 +310,6 @@ const Sidebar = memo<SidebarProps>(({ collapsed = false, className = '' }) => {
           </ul>
         </div>
       </nav>
-
-      {/* 上下文菜单 */}
-      {contextMenu && (
-        <div
-          ref={contextMenuRef}
-          className={styles.contextMenu}
-          style={{
-            left: contextMenu.x,
-            top: contextMenu.y,
-            transform: 'translate(-50%, -50%)',
-          }}
-          role="menu"
-          aria-label={t.sidebar.collectionActions}
-        >
-          <button
-            type="button"
-            onClick={() => handleDeleteCollection(contextMenu.collectionId)}
-            className={`${styles.contextMenuItem} ${styles.contextMenuItemDelete}`}
-            role="menuitem"
-          >
-            <Trash2 className="w-4 h-4" aria-hidden="true" />
-            <span>{t.common?.delete || 'Delete'}</span>
-          </button>
-        </div>
-      )}
 
       {/* 用户区域 */}
       <div className={styles.userContainer}>

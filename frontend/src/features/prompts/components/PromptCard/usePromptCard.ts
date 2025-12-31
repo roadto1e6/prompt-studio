@@ -8,6 +8,7 @@
 import { useCallback, useMemo } from 'react';
 import { FileText, Image, AudioLines, Video } from 'lucide-react';
 import { useI18nStore } from '@/stores';
+import { getMarkdownPreview } from '@/utils';
 import type { Category } from '@/types';
 import type {
   UsePromptCardReturn,
@@ -116,6 +117,14 @@ export function usePromptCard(params: UsePromptCardParams): UsePromptCardReturn 
     return isTrashView && !!onRestore;
   }, [isTrashView, onRestore]);
 
+  /**
+   * systemPrompt 预览文本
+   * 使用 getMarkdownPreview 清理 Markdown 语法并截取
+   */
+  const promptPreview = useMemo(() => {
+    return getMarkdownPreview(prompt.systemPrompt, 120);
+  }, [prompt.systemPrompt]);
+
   // ==================== 事件处理器 ====================
 
   /**
@@ -182,5 +191,6 @@ export function usePromptCard(params: UsePromptCardParams): UsePromptCardReturn 
     shouldShowFavorite,
     shouldShowDelete,
     shouldShowRestore,
+    promptPreview,
   };
 }

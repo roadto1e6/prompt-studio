@@ -11,22 +11,23 @@ import type { ErrorStateVariant, VariantConfig, VariantConfigMap, UseErrorStateR
 /**
  * 变体配置映射表
  * 定义每种错误类型的样式配置
+ * 注意：实际样式由 CSS Module 处理，这里的类名仅用于兼容性
  */
 const VARIANT_CONFIG: VariantConfigMap = {
   error: {
-    iconColor: 'text-red-500 dark:text-red-400',
-    bgColor: 'bg-red-50 dark:bg-red-900/10',
-    borderColor: 'border-red-200 dark:border-red-800',
+    iconColor: '',
+    bgColor: '',
+    borderColor: '',
   },
   warning: {
-    iconColor: 'text-yellow-500 dark:text-yellow-400',
-    bgColor: 'bg-yellow-50 dark:bg-yellow-900/10',
-    borderColor: 'border-yellow-200 dark:border-yellow-800',
+    iconColor: '',
+    bgColor: '',
+    borderColor: '',
   },
   offline: {
-    iconColor: 'text-gray-500 dark:text-gray-400',
-    bgColor: 'bg-gray-50 dark:bg-gray-900/10',
-    borderColor: 'border-gray-200 dark:border-gray-800',
+    iconColor: '',
+    bgColor: '',
+    borderColor: '',
   },
 };
 

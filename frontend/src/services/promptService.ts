@@ -1,12 +1,21 @@
 /**
  * Prompt Service
- * Prompt 相关的 API 调用
+ * 统一的数据访问层，抽象 Mock/API 实现细节
  */
 
 import { api, PaginatedResponse } from './api';
+import { mockPrompts } from '@/data/mockData';
+import { generateId, generateVersionNumber } from '@/utils';
 import type { Prompt, PromptVersion, Category, PromptStatus } from '@/types';
 
-// 查询参数
+// 是否使用 Mock 数据
+const USE_MOCK = import.meta.env.VITE_ENABLE_MOCK_DATA === 'true';
+
+// 内存中的 Mock 数据存储
+let mockData = [...mockPrompts];
+
+// ============ 类型定义 ============
+
 export interface PromptQueryParams {
   page?: number;
   pageSize?: number;
@@ -20,13 +29,10 @@ export interface PromptQueryParams {
   tags?: string[];
 }
 
-// 创建 Prompt 请求
 export interface CreatePromptRequest {
   title: string;
-  description?: string;
   category: Category;
   systemPrompt?: string;
-  userTemplate?: string;
   model?: string;
   temperature?: number;
   maxTokens?: number;
@@ -34,13 +40,10 @@ export interface CreatePromptRequest {
   collectionId?: string | null;
 }
 
-// 更新 Prompt 请求
 export interface UpdatePromptRequest {
   title?: string;
-  description?: string;
   category?: Category;
   systemPrompt?: string;
-  userTemplate?: string;
   model?: string;
   temperature?: number;
   maxTokens?: number;
@@ -50,19 +53,260 @@ export interface UpdatePromptRequest {
   status?: PromptStatus;
 }
 
-// 创建版本请求
 export interface CreateVersionRequest {
   changeNote: string;
   versionType?: 'major' | 'minor';
 }
 
-export const promptService = {
-  /**
-   * 获取 Prompt 列表
-   */
+// ============ Mock 实现 ============
+
+const mockService = {
+  getPrompts: async (params?: PromptQueryParams): Promise<PaginatedResponse<Prompt>> => {
+    await delay(100); // 模拟网络延迟
+
+    let filtered = [...mockData];
+
+    if (params?.search) {
+      const q = params.search.toLowerCase();
+      filtered = filtered.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q)
+      );
+    }
+    if (params?.category) {
+      filtered = filtered.filter(p => p.category === params.category);
+    }
+    if (params?.status) {
+      filtered = filtered.filter(p => p.status === params.status);
+    }
+    if (params?.favorite !== undefined) {
+      filtered = filtered.filter(p => p.favorite === params.favorite);
+    }
+    if (params?.collectionId) {
+      filtered = filtered.filter(p => p.collectionId === params.collectionId);
+    }
+
+    // 排序
+    const sortBy = params?.sortBy || 'updatedAt';
+    const sortOrder = params?.sortOrder || 'desc';
+    filtered.sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === 'title') {
+        cmp = a.title.localeCompare(b.title);
+      } else {
+        cmp = new Date(b[sortBy]).getTime() - new Date(a[sortBy]).getTime();
+      }
+      return sortOrder === 'asc' ? -cmp : cmp;
+    });
+
+    // 分页
+    const page = params?.page || 1;
+    const pageSize = params?.pageSize || 20;
+    const start = (page - 1) * pageSize;
+    const items = filtered.slice(start, start + pageSize);
+
+    return {
+      items,
+      total: filtered.length,
+      page,
+      pageSize,
+      totalPages: Math.ceil(filtered.length / pageSize),
+    };
+  },
+
+  getPrompt: async (id: string): Promise<Prompt> => {
+    await delay(50);
+    const prompt = mockData.find(p => p.id === id);
+    if (!prompt) throw new Error('Prompt not found');
+    return prompt;
+  },
+
+  createPrompt: async (data: CreatePromptRequest): Promise<Prompt> => {
+    await delay(100);
+    const now = new Date().toISOString();
+    const id = generateId();
+    const versionId = generateId();
+
+    const newPrompt: Prompt = {
+      id,
+      title: data.title || 'Untitled Prompt',
+      description: '',
+      category: data.category || 'text',
+      systemPrompt: data.systemPrompt || '',
+      userTemplate: '',
+      model: data.model || 'gpt-4-turbo',
+      temperature: data.temperature ?? 0.7,
+      maxTokens: data.maxTokens ?? 2048,
+      tags: data.tags || [],
+      collectionId: data.collectionId || null,
+      favorite: false,
+      createdAt: now,
+      updatedAt: now,
+      status: 'active',
+      currentVersionId: versionId,
+      versions: [{
+        id: versionId,
+        promptId: id,
+        versionNumber: '1.0',
+        systemPrompt: data.systemPrompt || '',
+        userTemplate: '',
+        model: data.model || 'gpt-4-turbo',
+        temperature: data.temperature ?? 0.7,
+        maxTokens: data.maxTokens ?? 2048,
+        changeNote: 'Initial creation.',
+        createdAt: now,
+        createdBy: 'user-1',
+      }],
+    };
+
+    mockData = [newPrompt, ...mockData];
+    return newPrompt;
+  },
+
+  updatePrompt: async (id: string, data: UpdatePromptRequest): Promise<Prompt> => {
+    await delay(100);
+    const index = mockData.findIndex(p => p.id === id);
+    if (index === -1) throw new Error('Prompt not found');
+
+    const updated = {
+      ...mockData[index],
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+    mockData[index] = updated;
+    return updated;
+  },
+
+  deletePrompt: async (id: string): Promise<void> => {
+    await delay(100);
+    mockData = mockData.filter(p => p.id !== id);
+  },
+
+  toggleFavorite: async (id: string, favorite: boolean): Promise<Prompt> => {
+    return mockService.updatePrompt(id, { favorite });
+  },
+
+  moveToTrash: async (id: string): Promise<Prompt> => {
+    return mockService.updatePrompt(id, { status: 'trash' });
+  },
+
+  restoreFromTrash: async (id: string): Promise<Prompt> => {
+    return mockService.updatePrompt(id, { status: 'active' });
+  },
+
+  createVersion: async (promptId: string, data: CreateVersionRequest): Promise<PromptVersion> => {
+    await delay(100);
+    const prompt = mockData.find(p => p.id === promptId);
+    if (!prompt) throw new Error('Prompt not found');
+
+    const now = new Date().toISOString();
+    const versionId = generateId();
+    const versionNumber = generateVersionNumber(
+      prompt.versions,
+      prompt.currentVersionId,
+      data.versionType || 'minor'
+    );
+
+    const newVersion: PromptVersion = {
+      id: versionId,
+      promptId,
+      versionNumber,
+      systemPrompt: prompt.systemPrompt,
+      userTemplate: '',
+      model: prompt.model,
+      temperature: prompt.temperature,
+      maxTokens: prompt.maxTokens,
+      changeNote: data.changeNote,
+      createdAt: now,
+      createdBy: 'user-1',
+    };
+
+    const index = mockData.findIndex(p => p.id === promptId);
+    mockData[index] = {
+      ...prompt,
+      currentVersionId: versionId,
+      versions: [newVersion, ...prompt.versions],
+      updatedAt: now,
+    };
+
+    return newVersion;
+  },
+
+  restoreVersion: async (promptId: string, versionId: string): Promise<Prompt> => {
+    await delay(100);
+    const prompt = mockData.find(p => p.id === promptId);
+    if (!prompt) throw new Error('Prompt not found');
+
+    const version = prompt.versions.find(v => v.id === versionId);
+    if (!version) throw new Error('Version not found');
+
+    const index = mockData.findIndex(p => p.id === promptId);
+    const updated = {
+      ...prompt,
+      systemPrompt: version.systemPrompt,
+      userTemplate: '',
+      model: version.model,
+      temperature: version.temperature,
+      maxTokens: version.maxTokens,
+      currentVersionId: versionId,
+      updatedAt: new Date().toISOString(),
+    };
+    mockData[index] = updated;
+    return updated;
+  },
+
+  deleteVersion: async (promptId: string, versionId: string): Promise<void> => {
+    await delay(100);
+    const prompt = mockData.find(p => p.id === promptId);
+    if (!prompt) throw new Error('Prompt not found');
+
+    const index = mockData.findIndex(p => p.id === promptId);
+    mockData[index] = {
+      ...prompt,
+      versions: prompt.versions.map(v =>
+        v.id === versionId ? { ...v, deleted: true, deletedAt: new Date().toISOString() } : v
+      ),
+      updatedAt: new Date().toISOString(),
+    };
+  },
+
+  restoreDeletedVersion: async (promptId: string, versionId: string): Promise<PromptVersion> => {
+    await delay(100);
+    const prompt = mockData.find(p => p.id === promptId);
+    if (!prompt) throw new Error('Prompt not found');
+
+    const version = prompt.versions.find(v => v.id === versionId);
+    if (!version) throw new Error('Version not found');
+
+    const index = mockData.findIndex(p => p.id === promptId);
+    const restoredVersion = { ...version, deleted: false, deletedAt: undefined };
+    mockData[index] = {
+      ...prompt,
+      versions: prompt.versions.map(v => v.id === versionId ? restoredVersion : v),
+      updatedAt: new Date().toISOString(),
+    };
+    return restoredVersion;
+  },
+
+  permanentDeleteVersion: async (promptId: string, versionId: string): Promise<void> => {
+    await delay(100);
+    const prompt = mockData.find(p => p.id === promptId);
+    if (!prompt) throw new Error('Prompt not found');
+
+    const index = mockData.findIndex(p => p.id === promptId);
+    mockData[index] = {
+      ...prompt,
+      versions: prompt.versions.filter(v => v.id !== versionId),
+      updatedAt: new Date().toISOString(),
+    };
+  },
+};
+
+// ============ API 实现 ============
+
+const apiService = {
   getPrompts: async (params?: PromptQueryParams): Promise<PaginatedResponse<Prompt>> => {
     const queryParams = new URLSearchParams();
-
     if (params) {
       if (params.page) queryParams.set('page', params.page.toString());
       if (params.pageSize) queryParams.set('pageSize', params.pageSize.toString());
@@ -75,150 +319,67 @@ export const promptService = {
       if (params.sortOrder) queryParams.set('sortOrder', params.sortOrder);
       if (params.tags?.length) queryParams.set('tags', params.tags.join(','));
     }
-
     const query = queryParams.toString();
     return api.get<PaginatedResponse<Prompt>>(`/prompts${query ? `?${query}` : ''}`);
   },
 
-  /**
-   * 获取单个 Prompt
-   */
   getPrompt: async (id: string): Promise<Prompt> => {
     return api.get<Prompt>(`/prompts/${id}`);
   },
 
-  /**
-   * 创建 Prompt
-   */
   createPrompt: async (data: CreatePromptRequest): Promise<Prompt> => {
     return api.post<Prompt>('/prompts', data);
   },
 
-  /**
-   * 更新 Prompt
-   */
   updatePrompt: async (id: string, data: UpdatePromptRequest): Promise<Prompt> => {
     return api.patch<Prompt>(`/prompts/${id}`, data);
   },
 
-  /**
-   * 删除 Prompt（永久删除）
-   */
   deletePrompt: async (id: string): Promise<void> => {
     return api.delete<void>(`/prompts/${id}`);
   },
 
-  /**
-   * 移至回收站
-   */
-  moveToTrash: async (id: string): Promise<Prompt> => {
-    return api.patch<Prompt>(`/prompts/${id}`, { status: 'trash' });
-  },
-
-  /**
-   * 从回收站恢复
-   */
-  restoreFromTrash: async (id: string): Promise<Prompt> => {
-    return api.patch<Prompt>(`/prompts/${id}`, { status: 'active' });
-  },
-
-  /**
-   * 切换收藏状态
-   */
   toggleFavorite: async (id: string, favorite: boolean): Promise<Prompt> => {
     return api.patch<Prompt>(`/prompts/${id}`, { favorite });
   },
 
-  /**
-   * 批量操作
-   */
-  batchUpdate: async (ids: string[], data: UpdatePromptRequest): Promise<Prompt[]> => {
-    return api.patch<Prompt[]>('/prompts/batch', { ids, ...data });
+  moveToTrash: async (id: string): Promise<Prompt> => {
+    return api.patch<Prompt>(`/prompts/${id}`, { status: 'trash' });
   },
 
-  /**
-   * 批量删除
-   */
-  batchDelete: async (ids: string[]): Promise<void> => {
-    return api.delete<void>('/prompts/batch', {
-      body: JSON.stringify({ ids }),
-    });
+  restoreFromTrash: async (id: string): Promise<Prompt> => {
+    return api.patch<Prompt>(`/prompts/${id}`, { status: 'active' });
   },
 
-  // ============ 版本相关 ============
-
-  /**
-   * 获取 Prompt 的所有版本
-   */
-  getVersions: async (promptId: string): Promise<PromptVersion[]> => {
-    return api.get<PromptVersion[]>(`/prompts/${promptId}/versions`);
-  },
-
-  /**
-   * 创建新版本
-   */
   createVersion: async (promptId: string, data: CreateVersionRequest): Promise<PromptVersion> => {
     return api.post<PromptVersion>(`/prompts/${promptId}/versions`, data);
   },
 
-  /**
-   * 恢复到指定版本
-   */
   restoreVersion: async (promptId: string, versionId: string): Promise<Prompt> => {
     return api.post<Prompt>(`/prompts/${promptId}/versions/${versionId}/restore`);
   },
 
-  /**
-   * 删除版本（软删除）
-   */
   deleteVersion: async (promptId: string, versionId: string): Promise<void> => {
     return api.delete<void>(`/prompts/${promptId}/versions/${versionId}`);
   },
 
-  /**
-   * 恢复已删除的版本
-   */
   restoreDeletedVersion: async (promptId: string, versionId: string): Promise<PromptVersion> => {
     return api.post<PromptVersion>(`/prompts/${promptId}/versions/${versionId}/restore-deleted`);
   },
 
-  /**
-   * 永久删除版本
-   */
   permanentDeleteVersion: async (promptId: string, versionId: string): Promise<void> => {
     return api.delete<void>(`/prompts/${promptId}/versions/${versionId}/permanent`);
   },
-
-  // ============ 分享相关 ============
-
-  /**
-   * 获取分享链接
-   */
-  getShareLink: async (id: string): Promise<{ shareCode: string; shareUrl: string }> => {
-    return api.get<{ shareCode: string; shareUrl: string }>(`/prompts/${id}/share`);
-  },
-
-  /**
-   * 通过分享码导入
-   */
-  importFromShare: async (shareCode: string): Promise<Prompt> => {
-    return api.post<Prompt>('/prompts/import', { shareCode });
-  },
-
-  // ============ 统计相关 ============
-
-  /**
-   * 获取用户的 Prompt 统计
-   */
-  getStats: async (): Promise<{
-    total: number;
-    byCategory: Record<Category, number>;
-    byStatus: Record<PromptStatus, number>;
-    favorites: number;
-    recentlyUpdated: number;
-  }> => {
-    return api.get('/prompts/stats');
-  },
 };
+
+// ============ 工具函数 ============
+
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// ============ 导出统一接口 ============
+
+export const promptService = USE_MOCK ? mockService : apiService;
 
 export default promptService;

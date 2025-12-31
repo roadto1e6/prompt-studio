@@ -107,8 +107,8 @@ export class ShareService {
     return {
       id: share.id,
       code: share.code,
-      url: `/share/${share.code}`,
-      expiresAt: share.expiresAt,
+      shareUrl: `/share/${share.code}`,
+      expiresAt: share.expiresAt?.toISOString(),
       hasPassword: !!password,
     };
   }

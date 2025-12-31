@@ -25,14 +25,14 @@
   @apply bg-theme-bg-tertiary;
 }
 
-/* 错误变体 */
+/* 错误变体 - 使用主题适配 */
 .iconContainer.error {
-  @apply bg-red-50 dark:bg-red-900/10;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
-/* 无搜索结果变体 */
+/* 无搜索结果变体 - 使用主题适配 */
 .iconContainer.noResults {
-  @apply bg-blue-50 dark:bg-blue-900/10;
+  background-color: rgba(59, 130, 246, 0.1);
 }
 
 /* 无内容变体 */
@@ -50,11 +50,11 @@
 }
 
 .icon.error {
-  @apply text-red-400 dark:text-red-500;
+  color: #f87171;
 }
 
 .icon.noResults {
-  @apply text-blue-400 dark:text-blue-500;
+  color: #60a5fa;
 }
 
 .icon.noData {
@@ -203,4 +203,22 @@
   .icon {
     @apply transition-none;
   }
+}
+
+/* ==================== 亮色主题适配 ==================== */
+
+:global([data-theme="light"]) .iconContainer.error {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+:global([data-theme="light"]) .iconContainer.noResults {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+:global([data-theme="light"]) .icon.error {
+  color: #ef4444;
+}
+
+:global([data-theme="light"]) .icon.noResults {
+  color: #3b82f6;
 }

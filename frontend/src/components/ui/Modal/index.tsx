@@ -6,7 +6,7 @@
 import React, { memo } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, ArrowLeft } from 'lucide-react';
 import { cn } from '@/utils';
 import { useI18nStore } from '@/stores';
 import { useModal, useModalKeyboard } from './useModal';
@@ -34,15 +34,29 @@ ModalBackdrop.displayName = 'ModalBackdrop';
 const ModalHeader: React.FC<{
   title?: string;
   showClose?: boolean;
+  showBackButton?: boolean;
   onClose?: () => void;
+  onBack?: () => void;
   className?: string;
   closeAriaLabel?: string;
-}> = ({ title, showClose = true, onClose, className, closeAriaLabel }) => {
-  if (!title && !showClose) return null;
+  backAriaLabel?: string;
+}> = ({ title, showClose = true, showBackButton = false, onClose, onBack, className, closeAriaLabel, backAriaLabel }) => {
+  if (!title && !showClose && !showBackButton) return null;
 
   return (
     <div className={cn(styles.header, className)}>
-      {title && <h2 className={styles.title}>{title}</h2>}
+      <div className={styles.headerLeft}>
+        {showBackButton && (
+          <button
+            onClick={onBack}
+            className={styles.backButton}
+            aria-label={backAriaLabel || 'Go back'}
+          >
+            <ArrowLeft className={styles.backIcon} />
+          </button>
+        )}
+        {title && <h2 className={styles.title}>{title}</h2>}
+      </div>
       {showClose && (
         <button
           onClick={onClose}
@@ -75,6 +89,8 @@ export const Modal = memo<ModalProps>(({
   children,
   size = 'md',
   showClose = true,
+  showBackButton = false,
+  onBack,
   className,
   onEnterPress,
   preventClose = false,
@@ -100,7 +116,15 @@ export const Modal = memo<ModalProps>(({
             className={cn(styles.container, sizeClasses, containerClassName)}
           >
             <div className={cn(styles.modal, className)}>
-              <ModalHeader title={title} showClose={showClose} onClose={onClose} className={headerClassName} closeAriaLabel={t.common?.closeModal} />
+              <ModalHeader
+                title={title}
+                showClose={showClose}
+                showBackButton={showBackButton}
+                onClose={onClose}
+                onBack={onBack}
+                className={headerClassName}
+                closeAriaLabel={t.common?.closeModal}
+              />
               <ModalContent className={contentClassName}>{children}</ModalContent>
             </div>
           </motion.div>

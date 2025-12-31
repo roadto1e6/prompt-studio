@@ -8,7 +8,7 @@
 /* ==================== 容器样式 ==================== */
 
 .container {
-  @apply relative flex flex-col p-6;
+  @apply relative flex flex-col p-4;
   height: 100%;
   min-height: 0; /* 关键：允许flex子元素正确收缩 */
   overflow-y: auto;
@@ -23,7 +23,7 @@
  * - 详情面板打开: 1/2 列（为面板留出空间）
  */
 .gridContainer {
-  @apply grid gap-5;
+  @apply grid gap-3;
   flex: 1 1 auto;
   align-content: start; /* 确保内容从顶部开始 */
 }
@@ -74,7 +74,7 @@
 
 /* 骨架屏网格布局 */
 .skeletonGrid {
-  @apply grid gap-5;
+  @apply grid gap-3;
 }
 
 .skeletonGrid.defaultLayout {
@@ -86,9 +86,9 @@
 }
 
 .skeletonCard {
-  @apply rounded-xl border border-theme-card-border bg-theme-card-bg p-5;
+  @apply rounded-lg border border-theme-card-border bg-theme-card-bg p-4;
   @apply animate-pulse;
-  min-height: 14rem;
+  min-height: 11rem;
 }
 
 .skeletonHeader {
@@ -144,7 +144,13 @@
 }
 
 .errorIcon {
-  @apply w-16 h-16 mx-auto mb-4 text-red-400 dark:text-red-500;
+  @apply w-16 h-16 mx-auto mb-4;
+  color: #f87171;
+}
+
+/* 亮色主题错误图标 */
+:global([data-theme="light"]) .errorIcon {
+  color: #ef4444;
 }
 
 .errorTitle {

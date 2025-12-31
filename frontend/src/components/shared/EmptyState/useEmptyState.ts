@@ -16,27 +16,28 @@ import type {
 /**
  * 变体配置映射表
  * 定义每种变体的默认图标、颜色和背景
+ * 注意：实际样式由 CSS Module 处理，这里的类名仅用于兼容性
  */
 const VARIANT_CONFIG_MAP: VariantConfigMap = {
   empty: {
     icon: FolderOpen,
-    iconColor: 'text-theme-text-muted',
-    bgColor: 'bg-theme-bg-tertiary',
+    iconColor: '',
+    bgColor: '',
   },
   error: {
     icon: AlertCircle,
-    iconColor: 'text-red-400 dark:text-red-500',
-    bgColor: 'bg-red-50 dark:bg-red-900/10',
+    iconColor: '',
+    bgColor: '',
   },
   noResults: {
     icon: Search,
-    iconColor: 'text-blue-400 dark:text-blue-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-900/10',
+    iconColor: '',
+    bgColor: '',
   },
   noData: {
     icon: Inbox,
-    iconColor: 'text-gray-400 dark:text-gray-500',
-    bgColor: 'bg-gray-50 dark:bg-gray-900/10',
+    iconColor: '',
+    bgColor: '',
   },
 };
 

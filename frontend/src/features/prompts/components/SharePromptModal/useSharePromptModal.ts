@@ -5,11 +5,11 @@
  * Headless UI Hook：封装分享链接生成、复制逻辑和状态管理
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { usePromptStore, useUIStore, useI18nStore, useAuthStore } from '@/stores';
+import { useState, useCallback, useEffect } from 'react';
+import { usePromptStore, useUIStore, useI18nStore } from '@/stores';
 import { shareService } from '@/services';
 import { useCopyToClipboard } from '@/hooks';
-import type { SharedPromptData, CreateShareResponse } from '@/types';
+import type { CreateShareResponse } from '@/types';
 import type { ShareState, UseSharePromptModalReturn } from './types';
 
 /**
@@ -43,7 +43,6 @@ export function useSharePromptModal(): UseSharePromptModalReturn {
   const { getActivePrompt } = usePromptStore();
   const { modals, closeModal } = useUIStore();
   const { t } = useI18nStore();
-  const { user } = useAuthStore();
 
   // ==================== Client State ====================
   const [shareState, setShareState] = useState<ShareState>('idle');
@@ -61,15 +60,6 @@ export function useSharePromptModal(): UseSharePromptModalReturn {
     copy: copyCode,
   } = useCopyToClipboard(2000);
 
-  // ==================== Refs ====================
-  // 防止组件卸载后的状态更新
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
   // ==================== 派生状态 ====================
   const isLoading = shareState === 'loading';
   const prompt = getActivePrompt();
@@ -82,8 +72,14 @@ export function useSharePromptModal(): UseSharePromptModalReturn {
    * 调用后端 API 创建分享记录
    */
   const generateShare = useCallback(async () => {
-    if (!prompt) {
+    if (!prompt?.id) {
       setError('No prompt selected');
+      setShareState('error');
+      return;
+    }
+
+    // 防止重复请求
+    if (shareState === 'loading') {
       return;
     }
 
@@ -91,40 +87,25 @@ export function useSharePromptModal(): UseSharePromptModalReturn {
     setError(null);
 
     try {
-      // 构建分享数据
-      const shareData: SharedPromptData = {
-        title: prompt.title,
-        description: prompt.description,
-        category: prompt.category,
-        systemPrompt: prompt.systemPrompt,
-        userTemplate: prompt.userTemplate,
-        model: prompt.model,
-        temperature: prompt.temperature,
-        maxTokens: prompt.maxTokens,
-        tags: prompt.tags,
-        sharedAt: new Date().toISOString(),
-        sharedBy: user?.name || 'Anonymous',
-      };
+      const result = await shareService.create({ promptId: prompt.id });
 
-      // 调用分享服务
-      const result = await shareService.create({ prompt: shareData });
+      // 验证响应数据
+      if (!result?.code) {
+        throw new Error('Invalid response: missing share code');
+      }
 
       // 更新状态
-      if (isMountedRef.current) {
-        setShareResult(result);
-        setShareState('success');
-      }
+      setShareResult(result);
+      setShareState('success');
     } catch (err) {
       // 错误处理
-      if (isMountedRef.current) {
-        const errorMessage = err instanceof Error
-          ? err.message
-          : t.share?.generateError || 'Failed to generate share link';
-        setError(errorMessage);
-        setShareState('error');
-      }
+      const errorMessage = err instanceof Error
+        ? err.message
+        : t.share?.generateError || 'Failed to generate share link';
+      setError(errorMessage);
+      setShareState('error');
     }
-  }, [prompt, user, t.share]);
+  }, [prompt?.id, shareState, t.share]);
 
   // ==================== 复制操作 ====================
 
@@ -173,11 +154,9 @@ export function useSharePromptModal(): UseSharePromptModalReturn {
 
     // 延迟重置状态，避免关闭动画时看到状态变化
     setTimeout(() => {
-      if (isMountedRef.current) {
-        setShareResult(null);
-        setError(null);
-        setShareState('idle');
-      }
+      setShareResult(null);
+      setError(null);
+      setShareState('idle');
     }, 300);
   }, [closeModal]);
 

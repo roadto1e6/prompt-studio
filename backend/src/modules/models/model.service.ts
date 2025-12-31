@@ -5,6 +5,9 @@ import type {
   CreateModelInput,
   UpdateModelInput,
   QueryModelsInput,
+  CreateUserModelInput,
+  UpdateUserModelInput,
+  ReviewUserModelInput,
 } from './model.schema.js';
 
 // Default providers data (seeded on first request if empty)
@@ -12,8 +15,11 @@ const defaultProviders = [
   { id: 'openai', name: 'OpenAI', website: 'https://openai.com', apiDocsUrl: 'https://platform.openai.com/docs' },
   { id: 'anthropic', name: 'Anthropic', website: 'https://anthropic.com', apiDocsUrl: 'https://docs.anthropic.com' },
   { id: 'google', name: 'Google', website: 'https://ai.google.dev', apiDocsUrl: 'https://ai.google.dev/docs' },
+  { id: 'deepseek', name: 'DeepSeek', website: 'https://deepseek.com', apiDocsUrl: 'https://platform.deepseek.com/docs' },
   { id: 'meta', name: 'Meta', website: 'https://llama.meta.com', apiDocsUrl: 'https://llama.meta.com/docs' },
+  { id: 'xai', name: 'xAI', website: 'https://x.ai', apiDocsUrl: 'https://docs.x.ai' },
   { id: 'mistral', name: 'Mistral AI', website: 'https://mistral.ai', apiDocsUrl: 'https://docs.mistral.ai' },
+  { id: 'aws', name: 'Amazon Bedrock', website: 'https://aws.amazon.com/bedrock', apiDocsUrl: 'https://docs.aws.amazon.com/bedrock' },
   { id: 'stability', name: 'Stability AI', website: 'https://stability.ai', apiDocsUrl: 'https://platform.stability.ai/docs' },
   { id: 'midjourney', name: 'Midjourney', website: 'https://midjourney.com' },
   { id: 'elevenlabs', name: 'ElevenLabs', website: 'https://elevenlabs.io', apiDocsUrl: 'https://docs.elevenlabs.io' },
@@ -21,69 +27,84 @@ const defaultProviders = [
   { id: 'pika', name: 'Pika', website: 'https://pika.art' },
 ];
 
-// Default models data
+// Default models data (2025年12月 LMArena排行榜)
 const defaultModels = [
-  // OpenAI - Text
-  { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
-  { id: 'gpt-4', name: 'GPT-4', providerId: 'openai', capabilities: ['text'], maxTokens: 8192, contextWindow: 8192, status: 'active', features: { streaming: true, functionCalling: true } },
+  // ==================== OpenAI ====================
+  { id: 'gpt-5.2-high', name: 'GPT-5.2 High', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 400000, contextWindow: 400000, status: 'active', description: 'Arena Elo 1465', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
+  { id: 'gpt-5.2', name: 'GPT-5.2', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 400000, contextWindow: 400000, status: 'active', description: 'Arena Elo 1464', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
+  { id: 'gpt-5.1-high', name: 'GPT-5.1 High', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 256000, contextWindow: 256000, status: 'active', description: 'Arena Elo 1464', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
+  { id: 'gpt-5.1', name: 'GPT-5.1', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 256000, contextWindow: 256000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
+  { id: 'gpt-5', name: 'GPT-5', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
+  { id: 'o3', name: 'o3', providerId: 'openai', capabilities: ['text'], maxTokens: 200000, contextWindow: 200000, status: 'active', description: '高级推理模型', features: { streaming: true, functionCalling: true, jsonMode: true } },
+  { id: 'o4-mini', name: 'o4 Mini', providerId: 'openai', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, functionCalling: true, jsonMode: true } },
+  { id: 'o1', name: 'o1', providerId: 'openai', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
   { id: 'gpt-4o', name: 'GPT-4o', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
   { id: 'gpt-4o-mini', name: 'GPT-4o Mini', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', providerId: 'openai', capabilities: ['text'], maxTokens: 16385, contextWindow: 16385, status: 'active', features: { streaming: true, functionCalling: true } },
-  { id: 'o1-preview', name: 'o1 Preview', providerId: 'openai', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'beta' },
-  { id: 'o1-mini', name: 'o1 Mini', providerId: 'openai', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'beta' },
-
-  // OpenAI - Image
+  { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', providerId: 'openai', capabilities: ['text', 'vision'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, vision: true, functionCalling: true, jsonMode: true } },
   { id: 'dall-e-3', name: 'DALL-E 3', providerId: 'openai', capabilities: ['image'], maxTokens: 4000, status: 'active' },
-  { id: 'dall-e-2', name: 'DALL-E 2', providerId: 'openai', capabilities: ['image'], maxTokens: 4000, status: 'active' },
-
-  // OpenAI - Audio
   { id: 'whisper-1', name: 'Whisper', providerId: 'openai', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
   { id: 'tts-1-hd', name: 'TTS HD', providerId: 'openai', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
-  { id: 'tts-1', name: 'TTS', providerId: 'openai', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
+  { id: 'sora', name: 'Sora', providerId: 'openai', capabilities: ['video'], maxTokens: 4000, status: 'active' },
 
-  // Anthropic
-  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
-  { id: 'claude-3-opus', name: 'Claude 3 Opus', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
-  { id: 'claude-3-sonnet', name: 'Claude 3 Sonnet', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
-  { id: 'claude-3-haiku', name: 'Claude 3 Haiku', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
+  // ==================== Anthropic ====================
+  { id: 'claude-opus-4.5-thinking', name: 'Claude Opus 4.5 Thinking', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', description: 'Arena Elo 1466', features: { streaming: true, vision: true } },
+  { id: 'claude-opus-4.5', name: 'Claude Opus 4.5', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', description: 'Arena Elo 1462', features: { streaming: true, vision: true } },
+  { id: 'claude-4-opus', name: 'Claude 4 Opus', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'claude-4-sonnet', name: 'Claude 4 Sonnet', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 1000000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'claude-4-haiku', name: 'Claude 4 Haiku', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', providerId: 'anthropic', capabilities: ['text', 'vision'], maxTokens: 200000, contextWindow: 200000, status: 'active', features: { streaming: true, vision: true } },
 
-  // Google
-  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 1000000, contextWindow: 1000000, status: 'active', features: { streaming: true, vision: true } },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 1000000, contextWindow: 1000000, status: 'active', features: { streaming: true, vision: true } },
-  { id: 'gemini-pro', name: 'Gemini Pro', providerId: 'google', capabilities: ['text'], maxTokens: 32000, contextWindow: 32000, status: 'active', features: { streaming: true } },
+  // ==================== Google ====================
+  { id: 'gemini-3-pro', name: 'Gemini 3 Pro', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 10000000, contextWindow: 10000000, status: 'active', description: 'Arena Elo 1492，全球第一', features: { streaming: true, vision: true } },
+  { id: 'gemini-3-flash', name: 'Gemini 3 Flash', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 2000000, contextWindow: 2000000, status: 'active', description: 'Arena Elo 1470', features: { streaming: true, vision: true } },
+  { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 2000000, contextWindow: 2000000, status: 'active', description: 'Arena Elo 1460', features: { streaming: true, vision: true } },
+  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', providerId: 'google', capabilities: ['text', 'vision', 'audio'], maxTokens: 1000000, contextWindow: 1000000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', providerId: 'google', capabilities: ['text', 'vision'], maxTokens: 1000000, contextWindow: 1000000, status: 'active', features: { streaming: true, vision: true } },
 
-  // Meta
-  { id: 'llama-3.1-405b', name: 'Llama 3.1 405B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active' },
-  { id: 'llama-3.1-70b', name: 'Llama 3.1 70B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active' },
-  { id: 'llama-3.1-8b', name: 'Llama 3.1 8B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active' },
+  // ==================== DeepSeek ====================
+  { id: 'deepseek-v3.2', name: 'DeepSeek V3.2', providerId: 'deepseek', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, functionCalling: true } },
+  { id: 'deepseek-v3', name: 'DeepSeek V3', providerId: 'deepseek', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, functionCalling: true } },
+  { id: 'deepseek-coder-v2', name: 'DeepSeek Coder V2', providerId: 'deepseek', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
 
-  // Mistral
-  { id: 'mistral-large', name: 'Mistral Large', providerId: 'mistral', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, functionCalling: true } },
+  // ==================== Meta ====================
+  { id: 'llama-4-scout', name: 'Llama 4 Scout', providerId: 'meta', capabilities: ['text'], maxTokens: 10000000, contextWindow: 10000000, status: 'active', features: { streaming: true } },
+  { id: 'llama-3.3-70b', name: 'Llama 3.3 70B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
+  { id: 'llama-3.1-405b', name: 'Llama 3.1 405B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
+  { id: 'llama-3.1-70b', name: 'Llama 3.1 70B', providerId: 'meta', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
+
+  // ==================== xAI ====================
+  { id: 'grok-4.1-thinking', name: 'Grok 4.1 Thinking', providerId: 'xai', capabilities: ['text', 'vision'], maxTokens: 131072, contextWindow: 131072, status: 'active', description: 'Arena Elo 1482', features: { streaming: true, vision: true } },
+  { id: 'grok-4.1', name: 'Grok 4.1', providerId: 'xai', capabilities: ['text', 'vision'], maxTokens: 131072, contextWindow: 131072, status: 'active', description: 'Arena Elo 1463', features: { streaming: true, vision: true } },
+  { id: 'grok-3', name: 'Grok 3', providerId: 'xai', capabilities: ['text', 'vision'], maxTokens: 131072, contextWindow: 131072, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'grok-2', name: 'Grok 2', providerId: 'xai', capabilities: ['text', 'vision'], maxTokens: 131072, contextWindow: 131072, status: 'active', features: { streaming: true, vision: true } },
+
+  // ==================== Mistral AI ====================
+  { id: 'mistral-large-2', name: 'Mistral Large 2', providerId: 'mistral', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true, functionCalling: true } },
   { id: 'mistral-medium', name: 'Mistral Medium', providerId: 'mistral', capabilities: ['text'], maxTokens: 32000, contextWindow: 32000, status: 'active', features: { streaming: true } },
   { id: 'mistral-small', name: 'Mistral Small', providerId: 'mistral', capabilities: ['text'], maxTokens: 32000, contextWindow: 32000, status: 'active', features: { streaming: true } },
+  { id: 'codestral', name: 'Codestral', providerId: 'mistral', capabilities: ['text'], maxTokens: 32000, contextWindow: 32000, status: 'active', features: { streaming: true } },
 
-  // Stability AI - Image
-  { id: 'sdxl-1.0', name: 'Stable Diffusion XL', providerId: 'stability', capabilities: ['image'], maxTokens: 4000, status: 'active' },
-  { id: 'sd-3', name: 'Stable Diffusion 3', providerId: 'stability', capabilities: ['image'], maxTokens: 4000, status: 'active' },
+  // ==================== Amazon Bedrock ====================
+  { id: 'nova-pro', name: 'Nova Pro', providerId: 'aws', capabilities: ['text', 'vision'], maxTokens: 300000, contextWindow: 300000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'nova-lite', name: 'Nova Lite', providerId: 'aws', capabilities: ['text', 'vision'], maxTokens: 300000, contextWindow: 300000, status: 'active', features: { streaming: true, vision: true } },
+  { id: 'nova-micro', name: 'Nova Micro', providerId: 'aws', capabilities: ['text'], maxTokens: 128000, contextWindow: 128000, status: 'active', features: { streaming: true } },
+
+  // ==================== Image ====================
+  { id: 'sd-3.5-large', name: 'Stable Diffusion 3.5 Large', providerId: 'stability', capabilities: ['image'], maxTokens: 4000, status: 'active' },
   { id: 'sd-3-turbo', name: 'SD 3 Turbo', providerId: 'stability', capabilities: ['image'], maxTokens: 4000, status: 'active' },
-
-  // Midjourney - Image
+  { id: 'sdxl-1.0', name: 'Stable Diffusion XL', providerId: 'stability', capabilities: ['image'], maxTokens: 4000, status: 'active' },
+  { id: 'midjourney-v6.1', name: 'Midjourney V6.1', providerId: 'midjourney', capabilities: ['image'], maxTokens: 4000, status: 'active' },
   { id: 'midjourney-v6', name: 'Midjourney V6', providerId: 'midjourney', capabilities: ['image'], maxTokens: 4000, status: 'active' },
-  { id: 'midjourney-v5', name: 'Midjourney V5', providerId: 'midjourney', capabilities: ['image'], maxTokens: 4000, status: 'active' },
 
-  // ElevenLabs - Audio
+  // ==================== Audio ====================
   { id: 'eleven-multilingual-v2', name: 'Multilingual V2', providerId: 'elevenlabs', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
-  { id: 'eleven-turbo-v2', name: 'Turbo V2', providerId: 'elevenlabs', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
+  { id: 'eleven-turbo-v2.5', name: 'Turbo V2.5', providerId: 'elevenlabs', capabilities: ['audio'], maxTokens: 4000, status: 'active' },
 
-  // Runway - Video
+  // ==================== Video ====================
+  { id: 'gen-3-alpha-turbo', name: 'Gen-3 Alpha Turbo', providerId: 'runway', capabilities: ['video'], maxTokens: 4000, status: 'active' },
   { id: 'gen-3-alpha', name: 'Gen-3 Alpha', providerId: 'runway', capabilities: ['video'], maxTokens: 4000, status: 'active' },
-  { id: 'gen-2', name: 'Gen-2', providerId: 'runway', capabilities: ['video'], maxTokens: 4000, status: 'active' },
-
-  // Pika - Video
-  { id: 'pika-1.0', name: 'Pika 1.0', providerId: 'pika', capabilities: ['video'], maxTokens: 4000, status: 'active' },
-
-  // OpenAI - Video (Sora)
-  { id: 'sora', name: 'Sora', providerId: 'openai', capabilities: ['video'], maxTokens: 4000, status: 'beta' },
+  { id: 'pika-2.0', name: 'Pika 2.0', providerId: 'pika', capabilities: ['video'], maxTokens: 4000, status: 'active' },
+  { id: 'pika-1.5', name: 'Pika 1.5', providerId: 'pika', capabilities: ['video'], maxTokens: 4000, status: 'active' },
 ];
 
 export class ModelService {
@@ -119,10 +140,10 @@ export class ModelService {
   // ============================================
 
   // Get all models and providers
-  async getModels(query?: QueryModelsInput) {
+  async getModels(query?: QueryModelsInput, userId?: string) {
     await this.ensureDefaults();
 
-    const { category, providerId, status, search } = query || {};
+    const { category, providerId, status, search, sourceType, includeUserModels } = query || {};
 
     // Build where clause for models
     const modelWhere: Record<string, unknown> = {};
@@ -139,6 +160,24 @@ export class ModelService {
       modelWhere.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    // Filter by source type
+    if (sourceType) {
+      modelWhere.sourceType = sourceType;
+    } else if (includeUserModels && userId) {
+      // Include system models and user's own models
+      modelWhere.OR = [
+        { sourceType: 'system' },
+        { sourceType: 'user', userId },
+        { sourceType: 'user', reviewStatus: 'approved' }, // Include approved user models
+      ];
+    } else {
+      // By default, only show system models and approved user models
+      modelWhere.OR = [
+        { sourceType: 'system' },
+        { sourceType: 'user', reviewStatus: 'approved' },
       ];
     }
 

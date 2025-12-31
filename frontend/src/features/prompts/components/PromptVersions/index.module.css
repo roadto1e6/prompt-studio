@@ -109,14 +109,17 @@
 
 .versionCardCurrent {
   background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-accent);
 }
 
 .versionCardNormal {
-  background-color: transparent;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid transparent;
 }
 
 .versionCardNormal:hover {
-  background-color: color-mix(in srgb, var(--color-bg-secondary) 50%, transparent);
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border);
 }
 
 .versionHeader {
